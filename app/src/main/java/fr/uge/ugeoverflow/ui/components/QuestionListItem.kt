@@ -32,11 +32,11 @@ fun QuestionListItem(question : Question) {
                         Text("user and image here")
                     }
                     Column(modifier = Modifier.weight(0.8F).fillMaxHeight().background(Color.Blue)){
-                        Text("Visual Basic, insert a function to one column, based on the range of another ")
+                        question.getTitle?.let { Text(text = it) }
                     }
                 }
                 Row(modifier = Modifier.weight(0.2F).fillMaxWidth().background(Color.Green).padding(horizontal = 16.dp)){
-                    Text("javascript  java  c++  windows")
+                    question.getTags?.let {   Text(it.map { tag -> tag.getTAG_TYPE }.joinToString(" ")) }
                 }
             }
             Column(modifier = Modifier.weight(0.17F).fillMaxHeight().background(Color.Gray).padding(horizontal = 4.dp, vertical = 23.dp).align(alignment = CenterVertically)) {

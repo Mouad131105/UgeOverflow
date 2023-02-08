@@ -4,12 +4,19 @@ import java.util.*
 
 data class Question(
     private val id: UUID?,
-    private val title : String?,
+    private val title : String?="",
     private val tags: Set<Tag>? = mutableSetOf(),
     private val votes: Set<Vote>? = mutableSetOf(),
     private val content: Content?,
     private val description: String?,
-)
+){
+    val getId: UUID? get() = id
+    val getTitle: String? get() = title
+    val getTags: Set<Tag>? get() = tags
+    val getVotes: Set<Vote>? get() = votes
+    val getContent: Content? get() = content
+    val getDescription: String? get() = description
+}
 
  class QuestionBuilder{
 
