@@ -9,5 +9,4 @@ data class User(
     private val username : String,
     private val email : String,
     private val address : Address,
-    private val role : Role
 )

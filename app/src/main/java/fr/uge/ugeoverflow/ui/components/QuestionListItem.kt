@@ -10,13 +10,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.ugeoverflow.model.Question
+import fr.uge.ugeoverflow.R
+
+
 
 
 @Composable
 fun QuestionListItem(question : Question) {
+
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
@@ -40,9 +45,9 @@ fun QuestionListItem(question : Question) {
                 }
             }
             Column(modifier = Modifier.weight(0.17F).fillMaxHeight().background(Color.Gray).padding(horizontal = 4.dp, vertical = 23.dp).align(alignment = CenterVertically)) {
-                Text("0 votes",fontSize = 12.sp)
-                Text("3 answers",fontSize = 12.sp)
-                Text("2 votes ",fontSize = 12.sp)
+                Text("${question.getVotes.size} ${if (question.getVotes.isEmpty()) stringResource(R.string.vote) else stringResource(R.string.votes)}", fontSize = 12.sp)
+                Text("${question.getAnswers?.size} ${stringResource(R.string.answers)}" , fontSize = 12.sp)
+
 
             }
         }

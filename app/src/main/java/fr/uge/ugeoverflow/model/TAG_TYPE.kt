@@ -4,5 +4,7 @@ enum class TAG_TYPE {
     spring,
     java,
     javascript,
-    css
+    css,
+    linux,
+    dev
 }
