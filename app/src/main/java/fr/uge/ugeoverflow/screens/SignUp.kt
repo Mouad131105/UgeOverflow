@@ -41,12 +41,30 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val lastname = remember { mutableStateOf(TextFieldValue()) }
+                val firstname = remember { mutableStateOf(TextFieldValue()) }
                 val username = remember { mutableStateOf(TextFieldValue()) }
                 val password = remember { mutableStateOf(TextFieldValue()) }
                 val email = remember { mutableStateOf(TextFieldValue()) }
                 val passwordConfirm = remember { mutableStateOf(TextFieldValue()) }
 
                 Text(text = "Sign up", style = TextStyle(fontSize = 40.sp, fontFamily = poppins_medium))
+
+                TextField(  value = lastname.value,
+                    onValueChange = { lastname.value = it },
+                    label = { Text(text = "lastname", style = TextStyle(fontFamily = poppins_light)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    shape = RoundedCornerShape(10.dp) )
+
+                TextField(  value = firstname.value,
+                    onValueChange = { firstname.value = it },
+                    label = { Text(text = "firstname", style = TextStyle(fontFamily = poppins_light)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    shape = RoundedCornerShape(10.dp) )
 
                 TextField(
                     value = username.value,
