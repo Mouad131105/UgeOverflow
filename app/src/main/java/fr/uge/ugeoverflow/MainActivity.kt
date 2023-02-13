@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.uge.ugeoverflow.screens.ScreenMain
+import fr.uge.ugeoverflow.ui.components.QuestionsHome
 import fr.uge.ugeoverflow.ui.theme.UGEoverflowTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ScreenMain()
+                    QuestionsHome()
                 }
             }
 
@@ -34,6 +35,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     UGEoverflowTheme {
-        ScreenMain()
+        QuestionsHome()
     }
 }
