@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.ugeoverflow.model.Question
@@ -31,9 +32,9 @@ fun QuestionListItem(question : Question) {
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .height(120.dp),
+            .height(100.dp),
         elevation = 2.dp,
-        backgroundColor = Color.White,
+        backgroundColor = Color(0xFFE7ECF4),
         shape = RoundedCornerShape(corner = CornerSize(16.dp))
     ) {
 
@@ -42,7 +43,6 @@ fun QuestionListItem(question : Question) {
                 Row(modifier = Modifier
                     .weight(0.25F)
                     .fillMaxWidth()
-                    .background(Color.LightGray)
                     .padding(horizontal = 16.dp)){
 
                     Row {
@@ -50,9 +50,11 @@ fun QuestionListItem(question : Question) {
                         Text(
                             text = "UserName",
                             style = TextStyle(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 13.sp
-                            )
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 12.sp,
+                                color = Color(0xFF604969)
+                            ),
+                            modifier = Modifier.padding(5.dp)
                         )
                     }
                 }
@@ -60,31 +62,57 @@ fun QuestionListItem(question : Question) {
                 Row(modifier = Modifier
                     .weight(0.65F)
                     .fillMaxWidth()){
-                    Row {
-                        question.getTitle?.let { Text(text = it) }
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        question.getTitle?.let {
+                            Text(
+                                text = it,
+                                modifier = Modifier.padding(start = 5.dp),
+                                fontWeight = FontWeight.W800,
+                                color = Color(0xFF4552B8),
+                                fontSize = 15.sp
+                            )
+                        }
+                        question.getContent?.getText?.let {
+                            Text(
+                                modifier = Modifier.padding(start = 5.dp),
+                                text = "${it.take(128)}...", fontSize = 12.sp)
+                        }
                     }
-                    }
+
+
+                }
                 Row(modifier = Modifier
-                    .weight(0.15F)
+                    .weight(0.14F)
                     .fillMaxWidth()
-                    .background(Color.Green)
-                    .padding(horizontal = 16.dp)){
+                    .padding(horizontal = 16.dp)) {
                     Column(modifier = Modifier
                         .weight(0.5F)
                         .fillMaxHeight()){
-                        question.getTags?.let {   Text(it.map { tag -> tag.getTAG_TYPE }.joinToString(" ")) }
+                        Row{
+                            question.getTags?.let {
+                                for (tag in it) {
+
+                                    Text(
+                                        text = tag.getTAG_TYPE.toString(),
+                                        fontSize = 12.sp,
+                                        modifier = Modifier.background(color = Color.Yellow)
+                                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    )
+
+
+
+                                }
+                            }
+                        }
+
                     }
                     Column(modifier = Modifier
                         .weight(0.5F)
                         .fillMaxHeight()
                         .background(Color.LightGray)) {
-                            Box{
-                                Text("${question.getVotes.size} ${if (question.getVotes.isEmpty()) stringResource(R.string.vote) else stringResource(R.string.votes)}" +
-                                        "     ${question.getAnswers?.size} ${stringResource(R.string.answers)}", fontSize = 12.sp)
-                            }
-
+                        Text("${question.getVotes.size} ${if (question.getVotes.isEmpty()) stringResource(R.string.vote) else stringResource(R.string.votes)}" +
+                                "     ${question.getAnswers?.size} ${stringResource(R.string.answers)}", fontSize = 12.sp, modifier = Modifier.padding(start=30.dp))
                     }
-
                 }
             }
 
@@ -99,11 +127,13 @@ private fun userImage(question: Question) {
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
-            .padding(8.dp)
-            .size(40.dp)
+            .padding(4.dp)
+            .size(28.dp)
             .clip(RoundedCornerShape(corner = CornerSize(10.dp)))
     )
 }
+
+
 
 
 
