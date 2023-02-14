@@ -28,17 +28,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
-                    MainComponent()/*
-                    val navController = rememberNavController()
-                    val scaffoldState = rememberScaffoldState()
-                    val scope = rememberCoroutineScope()
-                    AppTopBar(onNavItemClick = {
-                        scope.launch {
-                            scaffoldState.drawerState.open()
-                        }
-                    },
-                        navController = navController)*/
+                    MainComponent()
                 }
             }
 

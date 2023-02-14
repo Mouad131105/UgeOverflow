@@ -49,12 +49,14 @@ fun MainComponent(){
             composable(Routes.Login.route) {
                 LoginPage(navController = navController)
             }
-
             composable(Routes.SignUp.route) {
                 SignUp(navController = navController)
             }
             composable(Routes.Questions.route) {
                 QuestionsHome()
+            }
+            composable(Routes.ForgotPassword.route) {
+                ForgotPassword(navController)
             }
         }
     }
