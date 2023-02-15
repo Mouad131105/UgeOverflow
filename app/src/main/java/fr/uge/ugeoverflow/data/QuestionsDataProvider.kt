@@ -35,6 +35,46 @@ object QuestionsDataProvider {
                 ,"Feri","Gabriel","gab","gab@gmail.com",
                 AddressBuilder.builder().street("avenue président wilson").city("Montreuil").country("France").build()))),
                 ContentBuilder.builder().
+                text("Combined with the minimal data (see above)").build()))).build(),
+
+        QuestionBuilder.builder().title("removing duplicates of second column of csv via sort")
+            .tags(mutableSetOf(Tag(UUID.randomUUID(),TAG_TYPE.dev),Tag(UUID.randomUUID(),TAG_TYPE.linux))).
+            content(ContentBuilder.builder().
+            text("My program correctly shows the list of meanings in checkbox from all items for choose. And when I choose option in checkbox and press a button, I have the following error: website shows nothing of results, but there are some items with checked option").build()).
+            answers(mutableSetOf(Answer(mutableSetOf(Vote(VOTE_TYPE.DOWNVOTE,User(UUID.randomUUID()
+                ,"Feri","Gabriel","gab","gab@gmail.com",
+                AddressBuilder.builder().street("avenue président wilson").city("Montreuil").country("France").build()))),
+                ContentBuilder.builder().
+                text("Combined with the minimal data (see above)").build()))).build(),
+
+        QuestionBuilder.builder().title("removing duplicates of second column of csv via sort")
+            .tags(mutableSetOf(Tag(UUID.randomUUID(),TAG_TYPE.dev),Tag(UUID.randomUUID(),TAG_TYPE.linux))).
+            content(ContentBuilder.builder().
+            text("My program correctly shows the list of meanings in checkbox from all items for choose. And when I choose option in checkbox and press a button, I have the following error: website shows nothing of results, but there are some items with checked option").build()).
+            answers(mutableSetOf(Answer(mutableSetOf(Vote(VOTE_TYPE.DOWNVOTE,User(UUID.randomUUID()
+                ,"Feri","Gabriel","gab","gab@gmail.com",
+                AddressBuilder.builder().street("avenue président wilson").city("Montreuil").country("France").build()))),
+                ContentBuilder.builder().
+                text("Combined with the minimal data (see above)").build()))).build(),
+
+        QuestionBuilder.builder().title("removing duplicates of second column of csv via sort")
+            .tags(mutableSetOf(Tag(UUID.randomUUID(),TAG_TYPE.dev),Tag(UUID.randomUUID(),TAG_TYPE.linux))).
+            content(ContentBuilder.builder().
+            text("My program correctly shows the list of meanings in checkbox from all items for choose. And when I choose option in checkbox and press a button, I have the following error: website shows nothing of results, but there are some items with checked option").build()).
+            answers(mutableSetOf(Answer(mutableSetOf(Vote(VOTE_TYPE.DOWNVOTE,User(UUID.randomUUID()
+                ,"Feri","Gabriel","gab","gab@gmail.com",
+                AddressBuilder.builder().street("avenue président wilson").city("Montreuil").country("France").build()))),
+                ContentBuilder.builder().
+                text("Combined with the minimal data (see above)").build()))).build(),
+
+        QuestionBuilder.builder().title("removing duplicates of second column of csv via sort")
+            .tags(mutableSetOf(Tag(UUID.randomUUID(),TAG_TYPE.dev),Tag(UUID.randomUUID(),TAG_TYPE.linux))).
+            content(ContentBuilder.builder().
+            text("My program correctly shows the list of meanings in checkbox from all items for choose. And when I choose option in checkbox and press a button, I have the following error: website shows nothing of results, but there are some items with checked option").build()).
+            answers(mutableSetOf(Answer(mutableSetOf(Vote(VOTE_TYPE.DOWNVOTE,User(UUID.randomUUID()
+                ,"Feri","Gabriel","gab","gab@gmail.com",
+                AddressBuilder.builder().street("avenue président wilson").city("Montreuil").country("France").build()))),
+                ContentBuilder.builder().
                 text("Combined with the minimal data (see above)").build()))).build()
 
     )
