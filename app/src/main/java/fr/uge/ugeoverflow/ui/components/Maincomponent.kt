@@ -1,4 +1,5 @@
 package fr.uge.ugeoverflow.ui.components
+
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,8 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.Top
@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
-fun MainComponent(){
+fun MainComponent() {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -62,15 +62,16 @@ fun MainComponent(){
                         scaffoldState.drawerState.open()
                     }
                 },
-                navController = navController)
-        },drawerContent = {
-            drawerContent(items = listOf("Questions","Tags","Users"), onItemClick ={ item ->
+                navController = navController
+            )
+        }, drawerContent = {
+            drawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
                 navController.navigate(item)
                 scope.launch {
                     scaffoldState.drawerState.close()
                 }
             }, navController = navController, scaffoldState = scaffoldState, scope = scope)
-        }){
+        }) {
         NavHost(navController = navController, startDestination = Routes.Login.route) {
             composable(Routes.Login.route) {
                 LoginPage(navController = navController)
@@ -92,81 +93,124 @@ fun MainComponent(){
 fun AppTopBar(
     onNavItemClick: () -> Unit,
     navController: NavHostController
-){
+) {
     val context = LocalContext.current.applicationContext
-    TopAppBar(
-        title = {
-            Box(modifier = Modifier.fillMaxWidth(1f).fillMaxHeight()) {
-            Icon(tint = Gray, painter = painterResource(id = R.drawable.ugeoverflowlogo),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize())}},
-        actions = {
-                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)){
+    var searchText by remember { mutableStateOf("") }
+    var isSearchVisible by remember { mutableStateOf(false) }
+    Column{
+        TopAppBar(
+            title = {
+                Box(modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .fillMaxHeight()) {
+                    Icon(
+                        tint = Gray, painter = painterResource(id = R.drawable.ugeoverflowlogo),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            },
+            actions = {
+                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)) {
                     // search icon
                     IconButton(onClick = {
-                        Toast.makeText(context,"Search", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Search", Toast.LENGTH_LONG).show()
+                        isSearchVisible = true
                     }, modifier = Modifier.fillMaxWidth(0.2f)) {
-                        Icon(imageVector = Icons.Outlined.Search,
-                            contentDescription = "Search", tint = Gray)
+                        Icon(
+                            imageVector = Icons.Outlined.Search,
+                            contentDescription = "Search", tint = Gray
+                        )
                     }
                     // log in
-                    Button(onClick = {navController.navigate(Routes.Login.route)},
+                    Button(
+                        onClick = { navController.navigate(Routes.Login.route) },
                         colors = ButtonDefaults.buttonColors(backgroundColor = White200),
                         contentPadding = PaddingValues(0.dp),
-                        modifier = Modifier.fillMaxWidth(0.48f)) {
-                        Text(text = "Log in", textAlign = TextAlign.Center, style = MaterialTheme.typography.button.copy(fontSize = 10.sp, color = Blue200))
+                        modifier = Modifier.fillMaxWidth(0.48f)
+                    ) {
+                        Text(
+                            text = "Log in",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.button.copy(
+                                fontSize = 10.sp,
+                                color = Blue200
+                            )
+                        )
                     }
                     Spacer(modifier = Modifier.width(2.dp))
                     // Sign up
-                    Button(onClick = { navController.navigate(Routes.SignUp.route)},
+                    Button(
+                        onClick = { navController.navigate(Routes.SignUp.route) },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),
                         contentPadding = PaddingValues(0.dp),
                         modifier = Modifier.fillMaxWidth(0.75f)
                     ) {
-                        Text(text = "Sign up", textAlign = TextAlign.Center, style = MaterialTheme.typography.button.copy(fontSize = 10.sp))
+                        Text(
+                            text = "Sign up",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
+                        )
                     }
                 }
-        },
-        navigationIcon = {
-            TextButton(onClick = { onNavItemClick() }, modifier = Modifier.background(Transparent)) {
-            Icon(Icons.Default.Menu, "Home", tint = Gray)
+            },
+            navigationIcon = {
+                TextButton(
+                    onClick = { onNavItemClick() },
+                    modifier = Modifier.background(Transparent)
+                ) {
+                    Icon(Icons.Default.Menu, "Home", tint = Gray)
+                }
+            },
+            backgroundColor = Gray200,
+            contentColor = White,
+            elevation = 10.dp
+        )
+        if (isSearchVisible) {
+            TextField(
+                value = searchText,
+                onValueChange = { searchText = it },
+                modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
+            )
         }
-        },
-        backgroundColor = Gray200,
-        contentColor = White,
-        elevation = 10.dp)
+    }
+
 }
 
 @Composable
 fun drawerContent(
-    items : List<String>,
+    items: List<String>,
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
     navController: NavHostController,
-    scaffoldState : ScaffoldState,
-    scope : CoroutineScope
-){
-    ClickableText(text = AnnotatedString("Home"),
-        onClick = { navController.navigate(Routes.Login.route)
+    scaffoldState: ScaffoldState,
+    scope: CoroutineScope
+) {
+    ClickableText(
+        text = AnnotatedString("Home"),
+        onClick = {
+            navController.navigate(Routes.Login.route)
             scope.launch {
                 scaffoldState.drawerState.close()
-            }},
+            }
+        },
         style = TextStyle(
             fontSize = 20.sp,
             fontFamily = poppins_bold
         ), modifier = Modifier.padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
     )
     Text(text = "Public", fontFamily = poppins_bold, fontSize = 20.sp)
-    LazyColumn(modifier){
-        items(items) {
-                item ->
+    LazyColumn(modifier) {
+        items(items) { item ->
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
                 .clickable { onItemClick(item) }) {
-                Box(modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 10.dp)) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 10.dp)
+                ) {
                     Text(text = item)
                 }
                 Spacer(modifier = Modifier.width(16.dp))
