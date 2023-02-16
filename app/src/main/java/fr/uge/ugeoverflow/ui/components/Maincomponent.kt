@@ -44,6 +44,7 @@ import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.ui.theme.poppins_bold
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
@@ -63,12 +64,14 @@ fun MainComponent(){
                 },
                 navController = navController)
         },drawerContent = {
-            drawerContent(items = listOf("Questions","Login","Users"), onItemClick ={ item ->
+            drawerContent(items = listOf("Questions","Tags","Users"), onItemClick ={ item ->
                 navController.navigate(item)
-            }, navController = navController)
+                scope.launch {
+                    scaffoldState.drawerState.close()
+                }
+            }, navController = navController, scaffoldState = scaffoldState, scope = scope)
         }){
-        NavHost(navController = navController, startDestination = Routes.Questions.route) {
-
+        NavHost(navController = navController, startDestination = Routes.Login.route) {
             composable(Routes.Login.route) {
                 LoginPage(navController = navController)
             }
@@ -139,10 +142,15 @@ fun drawerContent(
     items : List<String>,
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    scaffoldState : ScaffoldState,
+    scope : CoroutineScope
 ){
     ClickableText(text = AnnotatedString("Home"),
-        onClick = { navController.navigate(Routes.Login.route)},
+        onClick = { navController.navigate(Routes.Login.route)
+            scope.launch {
+                scaffoldState.drawerState.close()
+            }},
         style = TextStyle(
             fontSize = 20.sp,
             fontFamily = poppins_bold

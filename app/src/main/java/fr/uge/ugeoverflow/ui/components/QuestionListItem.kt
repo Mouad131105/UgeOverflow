@@ -79,7 +79,6 @@ fun QuestionListItem(question: Question) {
                     )
                 }
             }
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
