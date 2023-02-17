@@ -1,26 +1,33 @@
 package fr.uge.ugeoverflow.screens
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import fr.uge.ugeoverflow.api.RegisterRequest
+import fr.uge.ugeoverflow.api.UgeOverflowApi
 import fr.uge.ugeoverflow.components.CustomTopAppBar
+import fr.uge.ugeoverflow.model.User
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.Purple700
 import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
+import kotlinx.coroutines.*
+import java.time.Duration
 
 
 @Composable
@@ -32,10 +39,15 @@ fun SignUp(navController: NavHostController) {
 
 @Composable
 fun ScaffoldWithTopBar(navController: NavHostController) {
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
+    val context= LocalContext.current;
     Scaffold(
+        scaffoldState = rememberScaffoldState(snackbarHostState = scaffoldState.snackbarHostState),
         topBar = {
             CustomTopAppBar(navController, "Signup", true)
-        }, content = {
+        },
+        content = {
             Column(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.Center,
@@ -109,7 +121,13 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                 )
 
                 Button(
-                    onClick = {navController.navigate(Routes.SignUp.route)  },
+                    onClick = {navController.navigate(Routes.SignUp.route)
+                            scope.launch {
+                                val registerRequest = RegisterRequest(firstname.value.text, lastname.value.text, email.value.text, username.value.text, password.value.text)
+                                onRegisterClick( context, registerRequest )
+                                Log.e("test", "test");
+                            }
+                              },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
@@ -121,3 +139,26 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
             }
         })
 }
+
+private suspend fun onRegisterClick(context: Context, registerRequest: RegisterRequest) {
+    val ugeOverflowApiService = UgeOverflowApi.create()
+    val responseFlag = mutableStateOf(false);
+        CoroutineScope(Dispatchers.IO).launch {
+        val response = ugeOverflowApiService.registerUser(registerRequest)
+        withContext(Dispatchers.Main) {
+            if (response.isSuccessful) {
+                Toast.makeText(context, "Successfully registered", Toast.LENGTH_SHORT).show();
+            }else
+            {
+                Toast.makeText(context, "Error "+response.code() +" "+ response.message(), Toast.LENGTH_SHORT).show(); //(must be handle)
+            }
+        }
+    }
+
+
+}
+
+
+
+
+

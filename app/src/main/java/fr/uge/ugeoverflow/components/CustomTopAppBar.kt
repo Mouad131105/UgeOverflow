@@ -23,7 +23,7 @@ fun CustomTopAppBar(navController: NavHostController, title: String, showBackIco
                         contentDescription = "Back"
                     )
                 }
-            }
+                }
         } else {
             null
         }

@@ -3,14 +3,16 @@ package fr.uge.ugeoverflow.ui.components
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,11 +23,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.api.ApiException
+import fr.uge.ugeoverflow.api.QuestionResponse
+import fr.uge.ugeoverflow.api.UgeOverflowApi
+import fr.uge.ugeoverflow.api.UserSession
 import fr.uge.ugeoverflow.ui.theme.White200
 
 @Composable
@@ -135,7 +140,7 @@ fun QuestionListItem(question: Question) {
 }
 
 @Composable
-private fun userImage(question: Question) {
+fun userImage(question: Question?) {
     Image(
         painter = painterResource(id = R.drawable.user2),
         contentDescription = null,
@@ -146,6 +151,58 @@ private fun userImage(question: Question) {
             .clip(RoundedCornerShape(corner = CornerSize(10.dp)))
     )
 }
+@Composable
+fun AllQuestionsScreen() {
+    val ugeOverflowApiSerivce = UgeOverflowApi.createWithAuth(userSession = UserSession)
+    val coroutineScope = rememberCoroutineScope()
+
+    var questions by remember { mutableStateOf(emptyList<QuestionResponse>()) }
+    Log.i("ugeOverflowApiSerivce", ugeOverflowApiSerivce.toString())
+    // Use the LaunchedEffect to execute the API call once and update the UI
+    LaunchedEffect(Unit) {
+        try {
+            val response = ugeOverflowApiSerivce.getAllQuestions()
+            if (response.isSuccessful) {
+                questions = response.body() ?: emptyList()
+                Log.d(response.code().toString(), response.body().toString())
+            } else {
+                Log.d(response.code().toString(), response.message())
+            }
+        } catch (e: Exception) {
+            throw e.message?.let { ApiException(e.hashCode(), it) }!!
+        }
+    }
+
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("All Questions") }) },
+        content = {
+            LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp,vertical = 15.dp ) ){
+                items(questions) { question ->
+                    QuestionItem(question)
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun QuestionItem(question: QuestionResponse) {
+    Card(
+        shape = RoundedCornerShape(5.dp),
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = question.title, fontWeight = FontWeight.Bold)
+            Text(text = question.id.toString(), modifier = Modifier.padding(top = 8.dp))
+        }
+    }
+}
+
+
+
+
 
 
 

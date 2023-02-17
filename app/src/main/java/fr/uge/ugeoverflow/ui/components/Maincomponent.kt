@@ -1,30 +1,29 @@
 package fr.uge.ugeoverflow.ui.components
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import fr.uge.ugeoverflow.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlurEffect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.graphics.Color.Companion.Yellow
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -36,6 +35,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.uge.ugeoverflow.api.UserSession
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.screens.ForgotPassword
 import fr.uge.ugeoverflow.screens.LoginPage
@@ -45,13 +45,14 @@ import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.ui.theme.poppins_bold
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun MainComponent(){
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -82,18 +83,21 @@ fun MainComponent(){
                 ForgotPassword(navController)
             }
         }
+
     }
 }
 
 @Composable
 fun AppTopBar(
     onNavItemClick: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
 ){
     val context = LocalContext.current.applicationContext
     TopAppBar(
         title = {
-            Box(modifier = Modifier.fillMaxWidth(1f).fillMaxHeight()) {
+            Box(modifier = Modifier
+                .fillMaxWidth(1f)
+                .fillMaxHeight()) {
             Icon(tint = Gray, painter = painterResource(id = R.drawable.ugeoverflowlogo),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize())}},
@@ -106,22 +110,29 @@ fun AppTopBar(
                         Icon(imageVector = Icons.Outlined.Search,
                             contentDescription = "Search", tint = Gray)
                     }
-                    // log in
-                    Button(onClick = {navController.navigate(Routes.Login.route)},
-                        colors = ButtonDefaults.buttonColors(backgroundColor = White200),
-                        contentPadding = PaddingValues(0.dp),
-                        modifier = Modifier.fillMaxWidth(0.48f)) {
-                        Text(text = "Log in", textAlign = TextAlign.Center, style = MaterialTheme.typography.button.copy(fontSize = 10.sp, color = Blue200))
+                    if (UserSession.isAuthenticated()){
+                        Log.d("hey", UserSession.getToken().toString())
+                        UserAvatar();
+                    }else{
+                        Log.d("hey", UserSession.getToken().toString())
+                        //Log in
+                        Button(onClick = {navController.navigate(Routes.Login.route)},
+                            colors = ButtonDefaults.buttonColors(backgroundColor = White200),
+                            contentPadding = PaddingValues(0.dp),
+                            modifier = Modifier.fillMaxWidth(0.48f)) {
+                            Text(text = "Log in", textAlign = TextAlign.Center, style = MaterialTheme.typography.button.copy(fontSize = 10.sp, color = Blue200))
+                        }
+                        Spacer(modifier = Modifier.width(2.dp))
+                        // Sign up
+                        Button(onClick = { navController.navigate(Routes.SignUp.route)},
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),
+                            contentPadding = PaddingValues(0.dp),
+                            modifier = Modifier.fillMaxWidth(0.75f)
+                        ) {
+                            Text(text = "Sign up", textAlign = TextAlign.Center, style = MaterialTheme.typography.button.copy(fontSize = 10.sp))
+                        }
                     }
-                    Spacer(modifier = Modifier.width(2.dp))
-                    // Sign up
-                    Button(onClick = { navController.navigate(Routes.SignUp.route)},
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),
-                        contentPadding = PaddingValues(0.dp),
-                        modifier = Modifier.fillMaxWidth(0.75f)
-                    ) {
-                        Text(text = "Sign up", textAlign = TextAlign.Center, style = MaterialTheme.typography.button.copy(fontSize = 10.sp))
-                    }
+
                 }
         },
         navigationIcon = {
@@ -167,4 +178,24 @@ fun drawerContent(
     }
 }
 
+@Composable
+fun UserAvatar() {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = UserSession.getUsername() ?: "",
+            style = MaterialTheme.typography.body2,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.user2),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding(4.dp)
+                .size(28.dp)
+                .clip(RoundedCornerShape(corner = CornerSize(10.dp)))
+        )
+
+    }
+}
 

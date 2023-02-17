@@ -29,6 +29,7 @@ val Typography = Typography(
     */
 )
 
+
 // L'AJOUT DU FONT PERSONALISE
 val poppins_semibold = FontFamily(Font(R.font.poppins_semibold))
 val poppins_bold = FontFamily(Font(R.font.poppins_bold))
