@@ -32,10 +32,6 @@ fun SignUp(navController: NavHostController) {
 
 @Composable
 fun ScaffoldWithTopBar(navController: NavHostController) {
-    Scaffold(
-        topBar = {
-            CustomTopAppBar(navController, "Signup", true)
-        }, content = {
             Column(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.Center,
@@ -119,5 +115,4 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                     Text(text = "Sign up", style = TextStyle(color = Color.White, fontFamily = poppins_medium))
                 }
             }
-        })
 }
