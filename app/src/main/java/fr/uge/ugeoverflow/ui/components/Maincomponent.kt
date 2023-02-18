@@ -77,7 +77,7 @@ fun MainComponent(){
                 SignUp(navController = navController)
             }
             composable(Routes.Questions.route) {
-                QuestionsHome()
+                QuestionsHome(navController = navController)
             }
             composable(Routes.ForgotPassword.route) {
                 ForgotPassword(navController)
@@ -186,6 +186,7 @@ fun UserAvatar() {
             style = MaterialTheme.typography.body2,
             modifier = Modifier.padding(start = 8.dp)
         )
+        // Use Coil or Glide to load the user's profile picture from the imageUrl
         Image(
             painter = painterResource(id = R.drawable.user2),
             contentDescription = null,

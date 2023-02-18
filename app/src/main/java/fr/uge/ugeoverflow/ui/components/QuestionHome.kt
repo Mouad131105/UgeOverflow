@@ -7,14 +7,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.ApiException
 import fr.uge.ugeoverflow.api.QuestionResponse
 import fr.uge.ugeoverflow.api.UgeOverflowApi
 import fr.uge.ugeoverflow.api.UserSession
 import fr.uge.ugeoverflow.data.QuestionsDataProvider
+import fr.uge.ugeoverflow.services.UgeOverflowApiService
 
 @Composable
-fun QuestionsHome(){
+fun QuestionsHome(navController: NavHostController){
     /*
     val questions = remember {QuestionsDataProvider.questionLists}
     LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp,vertical = 15.dp ) ){
@@ -28,16 +30,9 @@ fun QuestionsHome(){
      */
 
     //from db
-    AllQuestionsScreen()
+   // AllQuestionsScreen()
+    QuestionForm(navController)
     Log.e("USER CONNECTED ?",UserSession.getToken().toString() )
 }
 
-suspend fun getAllQuestions(userSession: UserSession): List<QuestionResponse> {
-    val apiService = UgeOverflowApi.createWithAuth(userSession)
-    val response = apiService.getAllQuestions()
-    if (response.isSuccessful) {
-        return response.body() ?: emptyList()
-    } else {
-        throw ApiException(response.code(), response.message())
-    }
-}
+

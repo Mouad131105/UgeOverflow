@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.routes.Routes
+import fr.uge.ugeoverflow.ui.components.QuestionForm
 
 @Preview
 @Composable
@@ -20,6 +21,9 @@ fun ScreenMain(){
 
         composable(Routes.SignUp.route) {
             SignUp(navController = navController)
+        }
+        composable(Routes.Questions.route){
+            QuestionForm(navController = navController)
         }
 
         composable(Routes.ForgotPassword.route) { navBackStack ->

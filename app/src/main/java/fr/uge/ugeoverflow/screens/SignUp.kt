@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.RegisterRequest
 import fr.uge.ugeoverflow.api.UgeOverflowApi
+import fr.uge.ugeoverflow.api.UserSession
 import fr.uge.ugeoverflow.components.CustomTopAppBar
 import fr.uge.ugeoverflow.model.User
 import fr.uge.ugeoverflow.routes.Routes
@@ -125,8 +126,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                             scope.launch {
                                 val registerRequest = RegisterRequest(firstname.value.text, lastname.value.text, email.value.text, username.value.text, password.value.text)
                                 onRegisterClick( context, registerRequest )
-                                Log.e("test", "test");
-                            }
+                               }
                               },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -142,7 +142,6 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
 
 private suspend fun onRegisterClick(context: Context, registerRequest: RegisterRequest) {
     val ugeOverflowApiService = UgeOverflowApi.create()
-    val responseFlag = mutableStateOf(false);
         CoroutineScope(Dispatchers.IO).launch {
         val response = ugeOverflowApiService.registerUser(registerRequest)
         withContext(Dispatchers.Main) {

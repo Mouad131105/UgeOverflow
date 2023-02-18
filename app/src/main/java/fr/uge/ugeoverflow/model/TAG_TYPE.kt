@@ -1,10 +1,7 @@
 package fr.uge.ugeoverflow.model
 
 enum class TAG_TYPE {
-    spring,
-    java,
-    javascript,
-    css,
-    linux,
-    dev
+    SPRING,
+    JAVA,
+    ANDROID
 }

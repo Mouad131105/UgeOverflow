@@ -21,11 +21,11 @@ object UgeOverflowApi {
         return retrofit.create(UgeOverflowApiService::class.java)
     }
 
-    fun createWithAuth(userSession: UserSession): UgeOverflowApiService {
+    fun createWithAuth(): UgeOverflowApiService {
         val httpClient = OkHttpClient.Builder().apply {
             addInterceptor { chain ->
                 val originalRequest = chain.request()
-                val token = userSession.getToken()
+                val token = UserSession.getToken()
                 if (token == null) {
                     chain.proceed(originalRequest)
                 } else {

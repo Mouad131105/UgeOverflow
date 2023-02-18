@@ -40,6 +40,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     UGEoverflowTheme {
-        QuestionsHome()
+        //QuestionsHome()
     }
 }

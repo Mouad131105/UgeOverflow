@@ -1,14 +1,12 @@
 package fr.uge.ugeoverflow.services
 
-import fr.uge.ugeoverflow.api.LoginRequest
-import fr.uge.ugeoverflow.api.LoginResponse
-import fr.uge.ugeoverflow.api.QuestionResponse
-import fr.uge.ugeoverflow.api.RegisterRequest
+import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.model.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface UgeOverflowApiService {
@@ -20,5 +18,8 @@ interface UgeOverflowApiService {
 
     @GET("api/v1/questions")
     suspend fun getAllQuestions(): Response<List<QuestionResponse>>
+
+    @POST("/auth/api/v1/questions/create")
+    suspend fun postQuestion(@Header("Authorization") token: String, @Body question: QuestionRequest): Response<Question>
 
 }
