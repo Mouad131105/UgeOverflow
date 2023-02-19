@@ -11,7 +11,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 object UgeOverflowApi {
-    private const val BASE_URL = "http://192.168.1.13:8080" //Ici il faut mettre l'address ipv4 local
+    private const val BASE_URL = "http://192.168.1.69:8080" //Ici il faut mettre l'address ipv4 local
 
     fun create(): UgeOverflowApiService {
         val retrofit = Retrofit.Builder()
@@ -42,6 +42,7 @@ object UgeOverflowApi {
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient) //  adding client
             .build()
+
         return retrofit.create(UgeOverflowApiService::class.java)
     }
 

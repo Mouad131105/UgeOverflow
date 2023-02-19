@@ -9,7 +9,7 @@ object UserSession {
     private var username:String? = null
 
 
-    fun setUserSession(username:String, newToken: String) {
+    fun setUserSession(username:String="user_auth", newToken: String) {
         token = newToken
         isAuthenticated = true
         this.username = username

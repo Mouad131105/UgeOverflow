@@ -125,7 +125,7 @@ private fun onLoginClick(context: Context, navController:NavHostController, logi
                     Toast.LENGTH_SHORT
                 ).show()
                 //save and username token
-                response.body()?.authentication?.principal?.let { UserSession.setUserSession(it.username, it.token) }
+                response.body()?.data?.let { UserSession.setUserSession(newToken = it) }
                 navController.navigate("Questions")
             } else {
                 Toast.makeText(
