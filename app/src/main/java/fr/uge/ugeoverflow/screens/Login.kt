@@ -31,10 +31,7 @@ import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
 
 @Composable
-fun LoginPage(navController: NavHostController, apiManager: ApiManager) {
-    val context = LocalContext.current
-    val sessionManager  = remember { SessionManager(context) }
-
+fun LoginPage(navController: NavHostController, apiManager: ApiManager, sessionManager: SessionManager) {
     Box(modifier = Modifier.fillMaxSize()) {
         ClickableText(
             text = AnnotatedString("Sign up here"),
@@ -79,7 +76,7 @@ fun LoginPage(navController: NavHostController, apiManager: ApiManager) {
         Spacer(modifier = Modifier.height(20.dp))
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
             Button(
-                onClick = { handleLogin(apiManager, username.value.text, password.value.text , sessionManager = sessionManager) },
+                onClick = { handleLogin(username.value.text, password.value.text , sessionManager = sessionManager) },
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -101,7 +98,7 @@ fun LoginPage(navController: NavHostController, apiManager: ApiManager) {
     }
 }
 
-fun handleLogin(apiManager: ApiManager, text: String, text1: String,sessionManager: SessionManager) {
+fun handleLogin(text: String, text1: String,sessionManager: SessionManager) {
     /*apiManager.makeRequest(
         method = "GET",
         endpoint = "https://example.com/api/data",

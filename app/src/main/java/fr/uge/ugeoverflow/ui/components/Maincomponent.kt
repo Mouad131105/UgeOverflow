@@ -78,7 +78,7 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
         }) {
         NavHost(navController = navController, startDestination = Routes.Login.route) {
             composable(Routes.Login.route) {
-                //LoginPage(navController = navController , apiManager: apiManager)
+                LoginPage(navController = navController, apiManager = apiManager, sessionManager = sessionManager)
             }
             composable(Routes.SignUp.route) {
                 SignUp(navController = navController)

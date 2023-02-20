@@ -1,5 +1,6 @@
 package fr.uge.ugeoverflow.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 
@@ -10,12 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import fr.uge.ugeoverflow.SessionManager.SessionManager
 import fr.uge.ugeoverflow.components.CustomTopAppBar
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.Purple700
@@ -32,6 +35,7 @@ fun SignUp(navController: NavHostController) {
 
 @Composable
 fun ScaffoldWithTopBar(navController: NavHostController) {
+
             Column(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.Center,
@@ -105,7 +109,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                 )
 
                 Button(
-                    onClick = {navController.navigate(Routes.SignUp.route)  },
+                    onClick = {  },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
@@ -115,4 +119,9 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                     Text(text = "Sign up", style = TextStyle(color = Color.White, fontFamily = poppins_medium))
                 }
             }
+}
+
+fun handleLogin(sessionManager: SessionManager) {
+    sessionManager.logIn()
+
 }
