@@ -37,6 +37,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.SessionManager.ApiManager
+import fr.uge.ugeoverflow.SessionManager.SessionManager
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.screens.ForgotPassword
 import fr.uge.ugeoverflow.screens.LoginPage
@@ -50,7 +51,7 @@ import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
-fun MainComponent( apiManager: ApiManager) {
+fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -63,7 +64,9 @@ fun MainComponent( apiManager: ApiManager) {
                         scaffoldState.drawerState.open()
                     }
                 },
-                navController = navController
+                navController = navController,
+                sessionManager = sessionManager
+
             )
         }, drawerContent = {
             drawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
@@ -90,10 +93,12 @@ fun MainComponent( apiManager: ApiManager) {
     }
 }
 
+
+
 @Composable
 fun AppTopBar(
     onNavItemClick: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController, sessionManager: SessionManager
 ) {
     val context = LocalContext.current.applicationContext
     var searchText by remember { mutableStateOf("") }
@@ -123,35 +128,55 @@ fun AppTopBar(
                             contentDescription = "Search", tint = Gray
                         )
                     }
-                    // log in
-                    Button(
-                        onClick = { navController.navigate(Routes.Login.route) },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = White200),
-                        contentPadding = PaddingValues(0.dp),
-                        modifier = Modifier.fillMaxWidth(0.48f)
-                    ) {
-                        Text(
-                            text = "Log in",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.button.copy(
-                                fontSize = 10.sp,
-                                color = Blue200
+                    if (sessionManager.isUserLoggedIn.value) {
+                        Button(
+                            onClick = { sessionManager.logOut() },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = White200),
+                            contentPadding = PaddingValues(0.dp),
+                            modifier = Modifier.fillMaxWidth(0.48f)
+                        ) {
+                            Text(
+                                text = "loug out ",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.button.copy(
+                                    fontSize = 10.sp,
+                                    color = Blue200
+                                )
                             )
-                        )
+                        }
                     }
-                    Spacer(modifier = Modifier.width(2.dp))
-                    // Sign up
-                    Button(
-                        onClick = { navController.navigate(Routes.SignUp.route) },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),
-                        contentPadding = PaddingValues(0.dp),
-                        modifier = Modifier.fillMaxWidth(0.75f)
-                    ) {
-                        Text(
-                            text = "Sign up",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
-                        )
+
+                    else {
+                        Button(
+                            onClick = { navController.navigate(Routes.Login.route) },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = White200),
+                            contentPadding = PaddingValues(0.dp),
+                            modifier = Modifier.fillMaxWidth(0.48f)
+                        ) {
+                            Text(
+                                text = "Log in",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.button.copy(
+                                    fontSize = 10.sp,
+                                    color = Blue200
+                                )
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(2.dp))
+                        // Sign up
+                        Button(
+                            onClick = { navController.navigate(Routes.SignUp.route) },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),
+                            contentPadding = PaddingValues(0.dp),
+                            modifier = Modifier.fillMaxWidth(0.75f)
+                        ) {
+                            Text(
+                                text = "Sign up",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
+                            )
+                        }
+
                     }
                 }
             },

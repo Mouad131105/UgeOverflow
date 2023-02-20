@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.SessionManager.ApiManager
+import fr.uge.ugeoverflow.SessionManager.SessionManager
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.Purple700
 import fr.uge.ugeoverflow.ui.theme.poppins_light
@@ -30,6 +32,9 @@ import fr.uge.ugeoverflow.ui.theme.poppins_medium
 
 @Composable
 fun LoginPage(navController: NavHostController, apiManager: ApiManager) {
+    val context = LocalContext.current
+    val sessionManager  = remember { SessionManager(context) }
+
     Box(modifier = Modifier.fillMaxSize()) {
         ClickableText(
             text = AnnotatedString("Sign up here"),
@@ -74,7 +79,7 @@ fun LoginPage(navController: NavHostController, apiManager: ApiManager) {
         Spacer(modifier = Modifier.height(20.dp))
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
             Button(
-                onClick = { handleLogin(apiManager, username.value.text, password.value.text)},
+                onClick = { handleLogin(apiManager, username.value.text, password.value.text , sessionManager = sessionManager) },
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,8 +101,8 @@ fun LoginPage(navController: NavHostController, apiManager: ApiManager) {
     }
 }
 
-fun handleLogin(apiManager: ApiManager, text: String, text1: String, ) {
-    apiManager.makeRequest(
+fun handleLogin(apiManager: ApiManager, text: String, text1: String,sessionManager: SessionManager) {
+    /*apiManager.makeRequest(
         method = "GET",
         endpoint = "https://example.com/api/data",
         successCallback = { responseBody ->
@@ -106,5 +111,7 @@ fun handleLogin(apiManager: ApiManager, text: String, text1: String, ) {
         errorCallback = { exception ->
             // handle the API error here
         }
-    )
+    )*/
+
+    sessionManager.logIn()
 }

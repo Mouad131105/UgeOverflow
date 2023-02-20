@@ -37,20 +37,8 @@ class MainActivity : ComponentActivity() {
 fun DefaultPreview() {
     val context = LocalContext.current
     val sessionManager  = remember { SessionManager(context) }
-    if (sessionManager.isUserLoggedIn.value) {
-        MainComponent()
-    } else {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Text(text = "Login")
-                Text(text = "Sign Up")
-                Text(text = "Forgot Password")
-            }
-        }
+    val apiManager = remember { ApiManager(context) }
+    MainComponent(sessionManager = sessionManager, apiManager = apiManager)
     }
 
-    sessionManager.logIn() // call this when the user logs in
-    sessionManager.logOut()
-    val apiManager = remember { ApiManager(context) }
-    MainComponent()
-}
+
