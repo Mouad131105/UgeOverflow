@@ -36,6 +36,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.uge.ugeoverflow.SessionManager.ApiManager
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.screens.ForgotPassword
 import fr.uge.ugeoverflow.screens.LoginPage
@@ -49,7 +50,7 @@ import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
-fun MainComponent() {
+fun MainComponent( apiManager: ApiManager) {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -74,7 +75,7 @@ fun MainComponent() {
         }) {
         NavHost(navController = navController, startDestination = Routes.Login.route) {
             composable(Routes.Login.route) {
-                LoginPage(navController = navController)
+                //LoginPage(navController = navController , apiManager: apiManager)
             }
             composable(Routes.SignUp.route) {
                 SignUp(navController = navController)

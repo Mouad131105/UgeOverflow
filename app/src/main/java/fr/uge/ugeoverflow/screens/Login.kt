@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import fr.uge.ugeoverflow.api.ApiManager
+import fr.uge.ugeoverflow.SessionManager.ApiManager
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.Purple700
 import fr.uge.ugeoverflow.ui.theme.poppins_light

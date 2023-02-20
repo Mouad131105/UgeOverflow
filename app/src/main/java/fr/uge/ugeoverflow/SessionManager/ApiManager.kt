@@ -1,4 +1,4 @@
-package fr.uge.ugeoverflow.api
+package fr.uge.ugeoverflow.SessionManager
 
 import android.content.Context
 import okhttp3.*
