@@ -76,7 +76,7 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
                 }
             }, navController = navController, scaffoldState = scaffoldState, scope = scope)
         }) {
-        NavHost(navController = navController, startDestination = Routes.Login.route) {
+        NavHost(navController = navController, startDestination = Routes.Questions.route) {
             composable(Routes.Login.route) {
                 LoginPage(navController = navController, apiManager = apiManager, sessionManager = sessionManager)
             }
@@ -84,7 +84,7 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
                 SignUp(navController = navController)
             }
             composable(Routes.Questions.route) {
-                QuestionsHome()
+                QuestionsHome(sessionManager = sessionManager)
             }
             composable(Routes.ForgotPassword.route) {
                 ForgotPassword(navController)
@@ -129,6 +129,7 @@ fun AppTopBar(
                         )
                     }
                     if (sessionManager.isUserLoggedIn.value) {
+
                         Button(
                             onClick = { sessionManager.logOut() },
                             colors = ButtonDefaults.buttonColors(backgroundColor = White200),
@@ -196,7 +197,9 @@ fun AppTopBar(
             TextField(
                 value = searchText,
                 onValueChange = { searchText = it },
-                modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
             )
         }
     }
