@@ -50,7 +50,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
 
                 Text(text = "Sign up", style = TextStyle(fontSize = 40.sp, fontFamily = poppins_medium))
 
-                TextField(  value = lastname.value,
+                TextField( value = lastname.value,
                     onValueChange = { lastname.value = it },
                     label = { Text(text = "lastname", style = TextStyle(fontFamily = poppins_light)) },
                     modifier = Modifier
@@ -121,7 +121,3 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
             }
 }
 
-fun handleLogin(sessionManager: SessionManager) {
-    sessionManager.logIn()
-
-}
