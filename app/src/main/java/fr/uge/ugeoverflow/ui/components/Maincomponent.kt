@@ -137,7 +137,7 @@ fun AppTopBar(
                             modifier = Modifier.fillMaxWidth(0.48f)
                         ) {
                             Text(
-                                text = "loug out ",
+                                text = "Log out",
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.button.copy(
                                     fontSize = 10.sp,

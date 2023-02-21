@@ -112,15 +112,9 @@ fun handleLogin(text: String, text1: String,sessionManager: SessionManager , nav
         }
     )
     */
-    val user = User(  id = 56, // génère un nouveau UUID
-        firstName = "John",
-        lastName = "Doe",
-        username = "jdoe",
-        email = "jdoe@example.com",
-        address = "city 56 logement",
-        )
+    val token  = "to do"
 
-    sessionManager.logIn(user)
+    sessionManager.logIn(token)
     navController.navigate(Routes.Questions.route)
 
 }

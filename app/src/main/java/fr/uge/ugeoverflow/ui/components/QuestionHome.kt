@@ -19,7 +19,7 @@ fun QuestionsHome(sessionManager: SessionManager) {
 
     if(sessionManager.isUserLoggedIn.value) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            Text(text = sessionManager.getUserfromSharedPref()?.firstName?: "No user")
+            Text(text = sessionManager.getTokenrfromSharedPref()?: "No Token")
         }
     }
 
