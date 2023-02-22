@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-interface UgeOverflowApiService {
+interface RestController {
     @POST("auth/api/v1/register")
     suspend fun registerUser(@Body registerRequest: RegisterRequest): Response<Unit>
 

@@ -1,31 +1,20 @@
-package fr.uge.ugeoverflow.api
+package fr.uge.ugeoverflow.session
 
-import fr.uge.ugeoverflow.model.Question
-import fr.uge.ugeoverflow.model.User
-import fr.uge.ugeoverflow.services.UgeOverflowApiService
+import fr.uge.ugeoverflow.services.RestController
 import okhttp3.OkHttpClient
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.POST
 
-object UgeOverflowApi {
-    private const val BASE_URL = "http://192.168.1.69:8080" //Ici il faut mettre l'address ipv4 local
+object ApiService {
+    private const val BASE_URL =
+        "http://192.168.1.69:8080" //Ici il faut mettre l'address ipv4 local
 
-    fun create(): UgeOverflowApiService {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        return retrofit.create(UgeOverflowApiService::class.java)
-    }
 
-    fun createWithAuth(): UgeOverflowApiService {
+    fun init(): RestController {
         val httpClient = OkHttpClient.Builder().apply {
             addInterceptor { chain ->
                 val originalRequest = chain.request()
-                val token = UserSession.getToken()
+                val token = SessionManagerSingleton.sessionManager.getToken()
                 if (token == null) {
                     chain.proceed(originalRequest)
                 } else {
@@ -43,7 +32,7 @@ object UgeOverflowApi {
             .client(httpClient) //  adding client
             .build()
 
-        return retrofit.create(UgeOverflowApiService::class.java)
+        return retrofit.create(RestController::class.java)
     }
 
 

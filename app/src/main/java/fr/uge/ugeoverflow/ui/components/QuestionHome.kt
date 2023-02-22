@@ -1,19 +1,10 @@
 package fr.uge.ugeoverflow.ui.components
 
 import android.util.Log
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import fr.uge.ugeoverflow.api.ApiException
-import fr.uge.ugeoverflow.api.QuestionResponse
-import fr.uge.ugeoverflow.api.UgeOverflowApi
-import fr.uge.ugeoverflow.api.UserSession
-import fr.uge.ugeoverflow.data.QuestionsDataProvider
-import fr.uge.ugeoverflow.services.UgeOverflowApiService
+import fr.uge.ugeoverflow.session.SessionManager
+import fr.uge.ugeoverflow.session.SessionManagerSingleton
 
 @Composable
 fun QuestionsHome(navController: NavHostController){
@@ -32,7 +23,7 @@ fun QuestionsHome(navController: NavHostController){
     //from db
    // AllQuestionsScreen()
     QuestionForm(navController)
-    Log.e("USER CONNECTED ?",UserSession.getToken().toString() )
+    Log.e("USER CONNECTED ?",SessionManagerSingleton.sessionManager.getToken().toString() )
 }
 
 

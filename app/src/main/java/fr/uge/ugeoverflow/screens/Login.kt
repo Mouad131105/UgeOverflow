@@ -1,7 +1,5 @@
 package fr.uge.ugeoverflow.screens
 
-import android.content.Context
-import android.graphics.fonts.FontFamily
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -12,7 +10,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,17 +24,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.routes.Routes
+import fr.uge.ugeoverflow.services.LoginService
+import fr.uge.ugeoverflow.session.SessionManager
 import fr.uge.ugeoverflow.ui.theme.Purple700
 import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 fun LoginPage(navController: NavHostController) {
@@ -87,11 +81,27 @@ fun LoginPage(navController: NavHostController) {
         Spacer(modifier = Modifier.height(20.dp))
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
             Button(
-
                 onClick = {
-                    Log.i("user", username.value.text+" "+password.value.text)
-                    onLoginClick(context, navController, LoginRequest(username.value.text,password.value.text))
-                          },
+                    Log.i("user", username.value.text + " " + password.value.text)
+                    LoginService.login(
+                        LoginRequest(username.value.text, password.value.text),
+                        {
+                            Toast.makeText(
+                                context,
+                                "Login successful",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navController.navigate("Questions")
+                        },
+                        {
+                            Toast.makeText(
+                                context,
+                                "Invalid login credentials",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    )
+                },
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -114,26 +124,4 @@ fun LoginPage(navController: NavHostController) {
     }
 }
 
-private fun onLoginClick(context: Context, navController:NavHostController, loginRequest: LoginRequest) {
-    CoroutineScope(Dispatchers.IO).launch {
-        val response = UgeOverflowApi.create().loginUser(loginRequest)
-        withContext(Dispatchers.Main) {
-            if (response.isSuccessful) {
-                Toast.makeText(
-                    context,
-                    "Login successful",
-                    Toast.LENGTH_SHORT
-                ).show()
-                //save and username token
-                response.body()?.data?.let { UserSession.setUserSession(newToken = it) }
-                navController.navigate("Questions")
-            } else {
-                Toast.makeText(
-                    context,
-                    "Invalid login credentials",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-}
+

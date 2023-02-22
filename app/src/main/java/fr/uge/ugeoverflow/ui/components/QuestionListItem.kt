@@ -26,12 +26,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.routes.Routes
+import fr.uge.ugeoverflow.session.ApiService
+import fr.uge.ugeoverflow.session.SessionManager
+import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.utils.SearchableMultiSelect
 import kotlinx.coroutines.launch
@@ -159,7 +161,7 @@ fun userImage(question: Question?) {
 
 @Composable
 fun AllQuestionsScreen() {
-    val ugeOverflowApiSerivce = UgeOverflowApi.createWithAuth()
+    val ugeOverflowApiSerivce = ApiService.init()
     val coroutineScope = rememberCoroutineScope()
 
     var questions by remember { mutableStateOf(emptyList<QuestionResponse>()) }
@@ -204,7 +206,7 @@ fun AllQuestionsScreen() {
 }
 
 fun getTagsFromServer(): List<String> = runBlocking {
-    val re = UgeOverflowApi.createWithAuth().getTags()
+    val re = ApiService.init().getTags()
     val tags: List<String> = if (re.isSuccessful) {
         re.body() ?: listOf()
     } else listOf()
@@ -214,7 +216,7 @@ fun getTagsFromServer(): List<String> = runBlocking {
 
 @Composable
 fun QuestionForm(navController: NavHostController) {
-    val ugeOverflowApiSerivce = UgeOverflowApi.createWithAuth()
+    val ugeOverflowApiSerivce = ApiService.init()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
@@ -265,7 +267,7 @@ fun QuestionForm(navController: NavHostController) {
             Button(
                 onClick = {
                     val question = QuestionRequest(title.value, body.value, tags)
-                    val token = UserSession.getToken()
+                    val token = SessionManagerSingleton.sessionManager.getToken()
                     if (token != null) {
                         scope.launch {
                             try {
