@@ -12,10 +12,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import fr.uge.ugeoverflow.SessionManager.ApiManager
 import fr.uge.ugeoverflow.SessionManager.SessionManager
+import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.ui.components.MainComponent
+import fr.uge.ugeoverflow.ui.components.UserList
 import fr.uge.ugeoverflow.ui.theme.UGEoverflowTheme
 
 class MainActivity : ComponentActivity() {
+    val users = UserDataProvider.generateUsers()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -24,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    DefaultPreview()
+                    UserList(users)
                 }
             }
 
@@ -39,6 +42,6 @@ fun DefaultPreview() {
     val sessionManager  = remember { SessionManager(context) }
     val apiManager = remember { ApiManager(context) }
     MainComponent(sessionManager = sessionManager, apiManager = apiManager)
-    }
+}
 
 
