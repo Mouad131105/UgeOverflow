@@ -38,6 +38,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.SessionManager.ApiManager
 import fr.uge.ugeoverflow.SessionManager.SessionManager
+import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.screens.ForgotPassword
 import fr.uge.ugeoverflow.screens.LoginPage
@@ -49,7 +50,9 @@ import fr.uge.ugeoverflow.ui.theme.poppins_bold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import java.util.*
 
+val users = UserDataProvider.generateUsers()
 @Composable
 fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
     val navController = rememberNavController()
@@ -76,7 +79,7 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
                 }
             }, navController = navController, scaffoldState = scaffoldState, scope = scope)
         }) {
-        NavHost(navController = navController, startDestination = Routes.Login.route) {
+        NavHost(navController = navController, startDestination = Routes.Users.route) {
             composable(Routes.Login.route) {
                 LoginPage(navController = navController, apiManager = apiManager, sessionManager = sessionManager)
             }
@@ -88,6 +91,20 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
             }
             composable(Routes.ForgotPassword.route) {
                 ForgotPassword(navController)
+            }
+            composable(Routes.Users.route) {
+                UserList(users, navController)
+            }
+            composable("${Routes.UserDetails.route}/{userId}" ) { backStackEntry ->
+                val userIdToFind: UUID = UUID.fromString(backStackEntry.arguments?.getString("userId"))
+                val user = users.find { it.id == userIdToFind }
+                // Display user details screen
+                if (user != null) {
+                    UserDetailScreen(user)
+                }
+            }
+            composable(Routes.Tags.route) {
+                Text(text = " we will fix that soon")
             }
         }
     }

@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.model.User
 import fr.uge.ugeoverflow.ui.theme.White200
 
 @Composable
