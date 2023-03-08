@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -30,12 +29,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fr.uge.ugeoverflow.routes.Routes
-import fr.uge.ugeoverflow.screens.ForgotPassword
-import fr.uge.ugeoverflow.screens.LoginPage
-import fr.uge.ugeoverflow.screens.SignUp
-import fr.uge.ugeoverflow.session.SessionManager
+import fr.uge.ugeoverflow.ui.routes.Routes
+import fr.uge.ugeoverflow.ui.screens.ForgotPassword
+import fr.uge.ugeoverflow.ui.screens.LoginPage
+import fr.uge.ugeoverflow.ui.screens.SignUp
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
+import fr.uge.ugeoverflow.ui.screens.question.AskQuestion
+import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
@@ -52,16 +52,19 @@ fun MainComponent() {
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            AppTopBar(
-                onNavItemClick = {
-                    scope.launch {
-                        scaffoldState.drawerState.open()
-                    }
-                },
-                navController = navController
-            )
-        }, drawerContent = {
-            drawerContent(items = listOf("Questions", "Login", "Users"), onItemClick = { item ->
+            if (navController.currentDestination?.route !in listOf(Routes.Questions.route, Routes.Tags.route)) {
+                AppTopBar(
+                    onNavItemClick = {
+                        scope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    },
+                    navController = navController
+                )
+            }
+        },
+        drawerContent = {
+            drawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
                 navController.navigate(item)
             }, navController = navController)
         }) {
@@ -79,6 +82,12 @@ fun MainComponent() {
             composable(Routes.ForgotPassword.route) {
                 ForgotPassword(navController)
             }
+            composable(Routes.AskQuestion.route) {
+                AskQuestion(navController)
+            }
+            composable(Routes.Tags.route) {
+                Text(text = "Tags")
+            }
         }
 
     }
@@ -90,7 +99,7 @@ fun AppTopBar(
     navController: NavHostController,
 ) {
     val context = LocalContext.current.applicationContext
-    val sessionManager=SessionManagerSingleton.sessionManager
+    val sessionManager = SessionManagerSingleton.sessionManager
     TopAppBar(
         title = {
             Box(
@@ -118,6 +127,15 @@ fun AppTopBar(
                 }
                 if (sessionManager.isUserLoggedIn.value) {
                     Log.d("hey", sessionManager.getToken().toString())
+
+//                    MyButton(
+//                        text = "Log out",
+//                        onClick = { sessionManager.logOut() },
+//                        modifier = Modifier.fillMaxWidth(0.8f),
+//                        componentType = ComponentTypes.DangerOutline,
+//                        componentSize = ComponentSize.Small
+//                    )
+
                     Button(
                         onClick = { sessionManager.logOut() },
                         colors = ButtonDefaults.buttonColors(backgroundColor = White200),
@@ -137,6 +155,22 @@ fun AppTopBar(
                 } else {
                     Log.d("hey", sessionManager.getToken().toString())
                     //Log in
+//                    MyButton(
+//                        content = {
+//                            Text(
+//                                text = "Log in",
+//                                textAlign = TextAlign.Center,
+//                                style = MaterialTheme.typography.button.copy(
+//                                    fontSize = 10.sp,
+//                                    color = Blue200
+//                                )
+//                            )
+//                        },
+//                        onClick = { navController.navigate(Routes.Login.route) },
+////                        modifier = Modifier.fillMaxWidth(0.48f),
+//                        componentType = ComponentTypes.Secondary,
+//                        componentSize = ComponentSize.Small
+//                    )
                     Button(
                         onClick = { navController.navigate(Routes.Login.route) },
                         colors = ButtonDefaults.buttonColors(backgroundColor = White200),
@@ -154,6 +188,20 @@ fun AppTopBar(
                     }
                     Spacer(modifier = Modifier.width(2.dp))
                     // Sign up
+
+//                    MyButton(
+//                        content = {
+//                            Text(
+//                                text = "Sign up",
+//                                textAlign = TextAlign.Center,
+//                                style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
+//                            )
+//                        },
+//                        onClick = { navController.navigate(Routes.SignUp.route) },
+////                        modifier = Modifier.fillMaxWidth(0.48f),
+//                        componentType = ComponentTypes.Primary,
+//                        componentSize = ComponentSize.Small
+//                    )
                     Button(
                         onClick = { navController.navigate(Routes.SignUp.route) },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),

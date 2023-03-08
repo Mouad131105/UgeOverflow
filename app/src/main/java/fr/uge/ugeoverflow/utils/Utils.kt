@@ -1,10 +1,8 @@
 package fr.uge.ugeoverflow.utils
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,7 +11,12 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import fr.uge.ugeoverflow.ui.components.ComponentSize
+import fr.uge.ugeoverflow.ui.components.ComponentTypes
+import fr.uge.ugeoverflow.ui.components.MyTag
+
 
 
 @Composable
@@ -22,7 +25,7 @@ fun SearchableMultiSelect(
     onSelectionChanged: (List<String>) -> Unit,
 ) {
     var searchText by remember { mutableStateOf("") }
-    var selectedOptions by remember { mutableStateOf(setOf<String>()) }
+    var selectedOptions by remember { mutableStateOf(listOf<String>()) }
     var expanded by remember { mutableStateOf(false) }
 
     val filteredOptions = options.filter {
@@ -38,17 +41,47 @@ fun SearchableMultiSelect(
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp)
             )
 
+
+
             Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.border(
+                    width = 1.dp,
+                    color = Color.LightGray,
+                    shape = RoundedCornerShape(4.dp)
+                ).fillMaxWidth(),
+//                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+//                contentPadding = PaddingValues(horizontal = 8.dp),
+//                verticalArrangement = Arrangement.SpaceBetween,
+
             ) {
+//                    items(selectedOptions) { option ->
+//                        MyTag(text = option,
+//                            componentSize = ComponentSize.Small,
+//                            componentType = ComponentTypes.PrimaryOutline,
+//                            onDismiss = {
+//                                selectedOptions -= option
+//                                onSelectionChanged(selectedOptions.toList())
+//                            }
+//                        )
+//                    }
+
                 selectedOptions.forEach { option ->
-                    Tag(
-                        text = option,
+                    MyTag(text = option,
+                        componentSize = ComponentSize.Small,
+                        componentType = ComponentTypes.PrimaryOutline,
                         onDismiss = {
                             selectedOptions -= option
                             onSelectionChanged(selectedOptions.toList())
-                        }
+                        },
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
                     )
+//                    Tag(
+//                        text = option,
+//                        onDismiss = {
+//                            selectedOptions -= option
+//                            onSelectionChanged(selectedOptions.toList())
+//                        }
+//                    )
                 }
             }
         }

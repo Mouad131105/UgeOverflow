@@ -1,4 +1,4 @@
-package fr.uge.ugeoverflow.ui.components
+package fr.uge.ugeoverflow.ui.screens.question
 
 import android.util.Log
 import android.widget.Toast
@@ -13,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,10 +31,13 @@ import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
-import fr.uge.ugeoverflow.routes.Routes
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.session.ApiService
-import fr.uge.ugeoverflow.session.SessionManager
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
+import fr.uge.ugeoverflow.ui.components.ComponentType
+import fr.uge.ugeoverflow.ui.components.ComponentTypes
+import fr.uge.ugeoverflow.ui.components.MyButton
+import fr.uge.ugeoverflow.ui.components.MyCard
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.utils.SearchableMultiSelect
 import kotlinx.coroutines.launch
@@ -205,113 +209,99 @@ fun AllQuestionsScreen() {
     )
 }
 
-fun getTagsFromServer(): List<String> = runBlocking {
-    val re = ApiService.init().getTags()
-    val tags: List<String> = if (re.isSuccessful) {
-        re.body() ?: listOf()
-    } else listOf()
-    tags
-}
-
-
-@Composable
-fun QuestionForm(navController: NavHostController) {
-    val ugeOverflowApiSerivce = ApiService.init()
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
-
-    val title = remember { mutableStateOf("") }
-    val body = remember { mutableStateOf("") }
-    var tags = getTagsFromServer()
-//    val tags = remember { mutableStateOf(listOf(
-//        Tag("JAVA"), Tag("SPRING"), Tag("ANDROID")
-//    )) }
-
-
-    Scaffold(
-        scaffoldState = scaffoldState,
-        topBar = {
-            TopAppBar(
-                title = { Text("Ask a Question") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            // Title field
-            OutlinedTextField(
-                value = title.value,
-                onValueChange = { title.value = it },
-                label = { Text("Title") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Content field
-            OutlinedTextField(
-                value = body.value,
-                onValueChange = { body.value = it },
-                label = { Text("Content") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            SearchableMultiSelect(
-                options = tags,
-                onSelectionChanged = { tags = it }
-            )
-            // Post button
-            Button(
-                onClick = {
-                    val question = QuestionRequest(title.value, body.value, tags)
-                    val token = SessionManagerSingleton.sessionManager.getToken()
-                    if (token != null) {
-                        scope.launch {
-                            try {
-                                Log.e("Send", question.toString())
-                                val response =
-                                    ugeOverflowApiSerivce.postQuestion("Bearer $token", question)
-                                if (response.isSuccessful) {
-                                    scaffoldState.snackbarHostState.showSnackbar("Success")
-                                } else {
-                                    scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
-                                }
-                            } catch (e: Exception) {
-                                scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
-                            }
-                        }
-                    } else {
-                        Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT)
-                        //scaffoldState.snackbarHostState.showSnackbar("User not authenticated")
-                        navController.navigate(Routes.Login.route)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text("Post")
-            }
-        }
-    }
-}
 
 @Composable
 fun QuestionItem(question: QuestionResponse) {
-    Card(
-        shape = RoundedCornerShape(5.dp),
+    MyCard(
         modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = question.title, fontWeight = FontWeight.Bold)
-            Text(text = question.id.toString(), modifier = Modifier.padding(top = 8.dp))
+            .fillMaxWidth(),
+        cardType = ComponentTypes.LightOutline,
+        header = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.user2),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(28.dp)
+                        .clip(RoundedCornerShape(corner = CornerSize(10.dp)))
+                )
+                Text(
+                    text = question.title,
+                    modifier = Modifier.padding(start = 5.dp),
+                    fontWeight = FontWeight.W800,
+                    color = Color(0xFF4552B8),
+                    fontSize = 15.sp
+                )
+            }
+        },
+        body = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+
+                Text(
+                    modifier = Modifier.padding(start = 5.dp),
+                    text = "${question.body.take(128)}...", fontSize = 12.sp
+                )
+            }
+        },
+        footer = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Row(
+                    Modifier
+                        .fillMaxWidth(0.5f)
+                        .padding(bottom = 6.dp)
+                        .align(CenterVertically)
+                ) {
+                    question.tags.let {
+                        for (tag in it) {
+                            Log.d("tag05", tag.toString())
+                            Row(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(5.dp))
+                                    .background(
+                                        White200
+                                    )
+                            ) {
+                                Text(
+                                    text = tag,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier
+                                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(5.dp))
+                        }
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(CenterVertically)
+                ) {
+                    Text(
+                        text = question.creationTime.toString(),
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 30.dp),
+                        color = Color.Gray
+                    )
+
+                }
+            }
         }
-    }
+    )
 }
 
 

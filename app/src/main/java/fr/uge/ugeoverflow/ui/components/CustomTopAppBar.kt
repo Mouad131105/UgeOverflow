@@ -1,4 +1,4 @@
-package fr.uge.ugeoverflow.components
+package fr.uge.ugeoverflow.ui.components
 
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
-fun CustomTopAppBar(navController: NavHostController, title: String, showBackIcon : Boolean) {
+fun CustomTopAppBar(navController: NavHostController, title: String, showBackIcon: Boolean) {
     TopAppBar(
         title = {
             Text(text = title)
@@ -23,7 +23,7 @@ fun CustomTopAppBar(navController: NavHostController, title: String, showBackIco
                         contentDescription = "Back"
                     )
                 }
-                }
+            }
         } else {
             null
         }

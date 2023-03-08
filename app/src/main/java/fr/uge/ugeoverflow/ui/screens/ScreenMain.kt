@@ -1,12 +1,12 @@
-package fr.uge.ugeoverflow.screens
+package fr.uge.ugeoverflow.ui.screens
 //
 //import androidx.compose.runtime.Composable
 //import androidx.compose.ui.tooling.preview.Preview
 //import androidx.navigation.compose.NavHost
 //import androidx.navigation.compose.composable
 //import androidx.navigation.compose.rememberNavController
-//import fr.uge.ugeoverflow.routes.Routes
-//import fr.uge.ugeoverflow.ui.components.QuestionForm
+//import fr.uge.ugeoverflow.ui.routes.Routes
+//import fr.uge.ugeoverflow.ui.screens.question.QuestionForm
 //
 //@Preview
 //@Composable

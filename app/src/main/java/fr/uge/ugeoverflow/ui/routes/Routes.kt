@@ -1,4 +1,4 @@
-package fr.uge.ugeoverflow.routes
+package fr.uge.ugeoverflow.ui.routes
 
 sealed class Routes(val route: String) {
     object Login : Routes("Login")
@@ -7,4 +7,6 @@ sealed class Routes(val route: String) {
     object Tags : Routes("Tags")
     object Questions : Routes("Questions")
     object Users : Routes("Users")
+    object Question : Routes("Qestion")
+    object AskQuestion : Routes("AskQuestion")
 }

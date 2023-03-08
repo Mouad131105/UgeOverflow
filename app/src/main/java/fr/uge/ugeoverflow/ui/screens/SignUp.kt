@@ -1,8 +1,6 @@
-package fr.uge.ugeoverflow.screens
+package fr.uge.ugeoverflow.ui.screens
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 
@@ -20,10 +18,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.RegisterRequest
 import fr.uge.ugeoverflow.session.ApiService
-import fr.uge.ugeoverflow.components.CustomTopAppBar
-import fr.uge.ugeoverflow.routes.Routes
-import fr.uge.ugeoverflow.session.SessionManager
+import fr.uge.ugeoverflow.ui.components.CustomTopAppBar
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
+import fr.uge.ugeoverflow.ui.components.ComponentType
+import fr.uge.ugeoverflow.ui.components.ComponentTypes
+import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.theme.Purple700
 import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
@@ -152,9 +152,9 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                     visualTransformation = PasswordVisualTransformation()
                 )
 
-                Button(
+                MyButton(
+                    text = "Sign up",
                     onClick = {
-                        navController.navigate(Routes.SignUp.route)
                         scope.launch {
                             val registerRequest = RegisterRequest(
                                 firstname.value.text,
@@ -169,16 +169,38 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Purple700)
-                ) {
-                    Text(
-                        text = "Sign up",
-                        style = TextStyle(color = Color.White, fontFamily = poppins_medium)
-                    )
-                }
+                    componentType = ComponentTypes.Primary
+                )
+
+
+//                Button(
+//                    onClick = {
+//                        navController.navigate(Routes.SignUp.route)
+//                        scope.launch {
+//                            val registerRequest = RegisterRequest(
+//                                firstname.value.text,
+//                                lastname.value.text,
+//                                email.value.text,
+//                                username.value.text,
+//                                password.value.text
+//                            )
+//                            onRegisterClick(registerRequest)
+//                        }
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(10.dp),
+//                    shape = RoundedCornerShape(10.dp),
+//                    colors = ButtonDefaults.buttonColors(backgroundColor = Purple700)
+//                ) {
+//                    Text(
+//                        text = "Sign up",
+//                        style = TextStyle(color = Color.White, fontFamily = poppins_medium)
+//                    )
+//                }
             }
-        })
+        }
+    )
 }
 
 private suspend fun onRegisterClick(registerRequest: RegisterRequest) {
