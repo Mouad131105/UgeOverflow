@@ -4,11 +4,11 @@ import java.util.*
 
 data class Question(
     private val id: UUID?,
-    private val title : String?="",
+    private val title: String?="",
     private val tags: Set<Tag>? = mutableSetOf(),
     private val votes: Set<Vote> = mutableSetOf(),
     private val content: Content?,
-    private val answers : Set<Answer>?= mutableSetOf()
+    private val answers: Set<Answer>?= mutableSetOf()
 ){
     val getId: UUID? get() = id
     val getTitle: String? get() = title
@@ -36,7 +36,8 @@ data class Question(
      fun answers(answers: Set<Answer>) = apply { this.answers = answers }
 
      fun build(): Question {
-         return Question(id = id, title = title, tags = tags, votes = votes,
+         return Question(
+             id = id, title = title, tags = tags, votes = votes,
          content = content, answers = answers
          )
      }

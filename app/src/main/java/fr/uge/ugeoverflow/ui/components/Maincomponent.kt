@@ -7,24 +7,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
-import fr.uge.ugeoverflow.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlurEffect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -36,20 +27,24 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.SessionManager.ApiManager
 import fr.uge.ugeoverflow.SessionManager.SessionManager
 import fr.uge.ugeoverflow.data.UserDataProvider
+import fr.uge.ugeoverflow.model.Question
+import fr.uge.ugeoverflow.model.TAG_TYPE
+import fr.uge.ugeoverflow.model.Tag
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.screens.ForgotPassword
 import fr.uge.ugeoverflow.screens.LoginPage
 import fr.uge.ugeoverflow.screens.SignUp
+import fr.uge.ugeoverflow.screens.TagDetails
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.ui.theme.poppins_bold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import java.util.*
 
 val users = UserDataProvider.generateUsers()
@@ -104,7 +99,25 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
                 }
             }
             composable(Routes.Tags.route) {
-                Text(text = " we will fix that soon")
+                val questions = listOf(
+                    Question(
+                        UUID.randomUUID(), "How do I use Jetpack Compose?", content = null, tags =  setOf(
+                        Tag(UUID.randomUUID(), tag_type = TAG_TYPE.dev, "A modern Android UI toolkit")
+                    )
+                    ),
+                    Question(
+                        UUID.randomUUID(), "How do I use Jetpack Compose?", content = null, tags =  setOf(
+                            Tag(UUID.randomUUID(), tag_type = TAG_TYPE.javascript, "Asfsdffs t")
+                        )),
+                    Question(
+                        UUID.randomUUID(), "How do I sfsfsdfse?", content = null, tags =  setOf(
+                            Tag(UUID.randomUUID(), tag_type = TAG_TYPE.dev, "A modern Android UI toolkit")
+                        )),
+                )
+
+                val tag = Tag(UUID.randomUUID(), tag_type = TAG_TYPE.dev, "A modern Android UI toolkit")
+                val filteredQuestions = questions.filter { (it.getTags?.contains(tag) ?: setOf<Tag>(tag)) as Boolean }
+                TagDetails(tag = tag, questions = filteredQuestions)
             }
         }
     }
@@ -153,7 +166,7 @@ fun AppTopBar(
                             modifier = Modifier.fillMaxWidth(0.48f)
                         ) {
                             Text(
-                                text = "loug out ",
+                                text = "log out ",
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.button.copy(
                                     fontSize = 10.sp,
@@ -213,7 +226,9 @@ fun AppTopBar(
             TextField(
                 value = searchText,
                 onValueChange = { searchText = it },
-                modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
             )
         }
     }

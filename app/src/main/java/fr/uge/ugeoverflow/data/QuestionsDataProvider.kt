@@ -4,6 +4,7 @@ import fr.uge.ugeoverflow.model.*
 import java.util.*
 
 object QuestionsDataProvider {
+    /*
     val questionLists = listOf(
         QuestionBuilder.builder().title("How to make a great R reproducible example")
             .tags(mutableSetOf(Tag(UUID.randomUUID(),TAG_TYPE.css),Tag(UUID.randomUUID(),TAG_TYPE.java))).
@@ -75,4 +76,6 @@ object QuestionsDataProvider {
                 ContentBuilder.builder().
                 text("Combined with the minimal data (see above)").build()))).build()
     )
+
+     */
 }
