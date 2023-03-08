@@ -36,14 +36,17 @@ fun TagDetails(tag: Tag, questions: List<Question>) {
                 Text(
                     text = "Add Question",
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.button.copy(fontSize = 12.sp, color = Color.White)
+                    style = MaterialTheme.typography.button.copy(fontSize = 10.sp, color = Color.White)
                 )
             }
         }
         Spacer(modifier = Modifier
             .fillMaxWidth()
             .size(10.dp))
-        Text(text = tag.getDescription.toString(), fontSize = 10.sp)
+        Text(text = tag.getDescription.toString(), fontSize = 12.sp)
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .size(10.dp))
         LazyColumn {
             items(questions) { question ->
                 QuestionListItem(question = question)

@@ -117,7 +117,7 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
 
                 val tag = Tag(UUID.randomUUID(), tag_type = TAG_TYPE.dev, "A modern Android UI toolkit")
                 val filteredQuestions = questions.filter { (it.getTags?.contains(tag) ?: setOf<Tag>(tag)) as Boolean }
-                TagDetails(tag = tag, questions = filteredQuestions)
+                TagDetails(tag = tag, questions = questions)
             }
         }
     }
