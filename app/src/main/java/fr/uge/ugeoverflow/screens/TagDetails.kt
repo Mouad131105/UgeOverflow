@@ -46,6 +46,10 @@ fun TagDetails(tag: Tag, questions: List<Question>) {
         Text(text = tag.getDescription.toString(), fontSize = 12.sp)
         Spacer(modifier = Modifier
             .fillMaxWidth()
+            .size(13.dp))
+        Text(text = "${questions.size} questions", fontSize = 17.sp)
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
             .size(10.dp))
         LazyColumn {
             items(questions) { question ->
