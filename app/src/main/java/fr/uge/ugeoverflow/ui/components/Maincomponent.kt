@@ -89,7 +89,7 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
                 SignUp(navController = navController)
             }
             composable(Routes.Questions.route) {
-                QuestionsHome()
+                QuestionsHome(sessionManager = sessionManager)
             }
             composable(Routes.ForgotPassword.route) {
                 ForgotPassword(navController)
@@ -166,6 +166,7 @@ fun AppTopBar(
                         )
                     }
                     if (sessionManager.isUserLoggedIn.value) {
+
                         Button(
                             onClick = { sessionManager.logOut() },
                             colors = ButtonDefaults.buttonColors(backgroundColor = White200),
@@ -233,7 +234,9 @@ fun AppTopBar(
             TextField(
                 value = searchText,
                 onValueChange = { searchText = it },
-                modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
             )
         }
     }
