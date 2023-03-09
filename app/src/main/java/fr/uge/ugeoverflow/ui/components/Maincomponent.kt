@@ -1,5 +1,6 @@
 package fr.uge.ugeoverflow.ui.components
 
+import TagScreen
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.SessionManager.ApiManager
 import fr.uge.ugeoverflow.SessionManager.SessionManager
 import fr.uge.ugeoverflow.data.UserDataProvider
+import fr.uge.ugeoverflow.model.Tag
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.screens.ForgotPassword
 import fr.uge.ugeoverflow.screens.LoginPage
@@ -104,7 +106,25 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
                 }
             }
             composable(Routes.Tags.route) {
-                Text(text = " we will fix that soon")
+
+                val tags = listOf(
+                    Tag(1, "Programming", "Questions related to programming and software development hfdjshfkldshkfjsdmfjsmfjdsmljfmldsjfsdlmqjfmdsqjfmdlsjflsdmjfqlsdmjfsdlfefEZFEZFezfZEFDzefgergtrefezfrgtrgtrtrtrgsDNFJKDSHFJKSDHFJSDHFJKSDHFJKHSDJKFHDSJKHFkjdshfjkHDFJKHsqdjkdfhsjkqfhsdjkfhkjsdhfjsdkhfkjsdhfjk"),
+                    Tag(2, "Java", "Questions related to the Java programming language sdvqhdskvjdskmvjsdkljvmsdlqjvmlsqdjvlmsdqjflmsdjflmjsdlmqfjlmsdqjflmsdjqflmsdjqmlfjqsdmlfjmsdlqfjrgretrtgtretrgthet'rgtht'rgerthetrgtrethre DSFSDJKhfjksdHFJKSDHFJKHSDKJFHDSJKHFKJdshfjkSDHFKJsdhfjksdhfjkSDHF"),
+                    Tag(3, "Kotlin", "Questions related to the Kotlin programming languagesdqvsdnflksdjklsdfkjsdmklfjlsdmjflmsdjflmsj kldfshqvklsfhvkhsfdklhsdlkhfqskldfhlksdqhflksdqhfregrergretggretgtnhgthgndfthhnhhtrhtrhnhrth dsfhdjfkhdsjkfhjkdshfkjHFJKHDfkjdhsjkfhKJSDHFJKSDHFKJSDHF"),
+                    Tag(4, "Android", "Questions related to the Android mobile operating system dskvbqsdjkbvkjsdbvjkdsbhvjsdqhfklsdhqfklsdhqlfkhsdqklfhsdqkfhsdqlfhsdklqfhlksdqhfsdklqftthgtrgtreghtehtrndthehtrhendrtheztrtherhtregh jsdfhqjdskhfjdkhfjkdqshfjkshqfjkhdskjqfhdjskhfjkdsqhfjksdhfkjqsdhfkjsdhqfjksdhqkf"),
+                    Tag(5, "iOS", "Questions related to the iOS mobile operating system jsdfbvklsdnhklvsdhqfklhsdqklfhsdklqhfklsdqhflksdqhflksdncklsdncklsdqncklsdqhvlkdsnfdsnkcnsdklqncvgret'reghghtnthrngfnghg,nthrnh,thrnrthynthrthrrthtrhrrdsjkfhqsdjkfhdjkshfqkjdshfkjqsdhjkfhqsdkjfhdskjfhqsjkf"),
+                    Tag(6, "Web Development", "Questions related to web development technologies and frameworks ksjdbhvfjksdhfjkhsdjkfhsdjkhfjksdqfbkjsqdfhjksqdfjksdqhfvjksdqhvbkjsdqvhsdjkqhfhtreth(erythrhthy(rthr(ythrhythhrjrh(ythry(thrthretds,f;sd,f,;sdf;:n,qsdnf,dsnf,;nd,;fnsd,;fn,qs;nfse;,d:fds"),
+                    Tag(7, "JavaScript", "Questions related to the JavaScript programming language nbsdkjvsdjkhfjksdhfjksdhqfjksdhqfjksdhqfjkhsdqjkfgsdqjkfgsdqjkfgsdjkqfdsjkqfhsdjklhflksdhfdfjkdhjfhsjdhfksdjhfjskdhfjksdhfjsdhfjkhsdjkfhjsdkfhjsdkhfjksdhfjksdhfjksdhfjksdhfkjsdhfkjsdhfksdjfhsdjkfhsdjkf"),
+                    Tag(8, "Python", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf") ,
+                    Tag(9, "hamid", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"),
+                    Tag(10, "JEE", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"),
+                    Tag(11, "Spring", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"),
+                    Tag(12, "Hibernate", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf")
+
+
+                )
+
+                TagScreen(tags = tags)
             }
         }
     }
