@@ -6,7 +6,6 @@ data class Image(
     private val id : UUID,
     private val image: ByteArray? = null
 ) {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -21,7 +20,6 @@ data class Image(
 
         return true
     }
-
     override fun hashCode(): Int {
         var result = id.hashCode()
         result = 31 * result + (image?.contentHashCode() ?: 0)

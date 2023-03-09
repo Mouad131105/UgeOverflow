@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.model.User
 import fr.uge.ugeoverflow.ui.theme.White200
 
 @Composable
@@ -47,7 +49,7 @@ fun QuestionListItem(question: Question) {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
-                userImage(question = question)
+                userImage()
                 Text(
                     text = "UserName",
                     style = TextStyle(
@@ -134,14 +136,16 @@ fun QuestionListItem(question: Question) {
 }
 
 @Composable
-private fun userImage(question: Question) {
+fun userImage() {
+    val imageList = remember { listOf(R.drawable.user1, R.drawable.user2, R.drawable.user3, R.drawable.user4) }
+    val randomImageId = remember { imageList.random() }
     Image(
-        painter = painterResource(id = R.drawable.user2),
+        painter = painterResource(id = randomImageId),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .padding(4.dp)
-            .size(28.dp)
+            .fillMaxSize()
             .clip(RoundedCornerShape(corner = CornerSize(10.dp)))
     )
 }

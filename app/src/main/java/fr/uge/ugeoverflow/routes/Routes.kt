@@ -7,4 +7,5 @@ sealed class Routes(val route: String) {
     object Tags : Routes("Tags")
     object Questions : Routes("Questions")
     object Users : Routes("Users")
+    object UserDetails : Routes("UserDetails/{userId}")
 }

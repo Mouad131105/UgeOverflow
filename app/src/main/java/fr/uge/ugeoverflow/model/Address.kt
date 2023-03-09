@@ -18,15 +18,11 @@ data class Address(
 }
 
 class AddressBuilder{
-
     private var id: UUID? = null
     private var street : String ?= ""
     private var city : String ?= ""
     private var country : String ?= ""
     private var zipCode : String ?= ""
-
-
-
 
     fun id(id: UUID) = apply { this.id = id }
     fun street(street: String) = apply { this.street = street }
@@ -34,13 +30,11 @@ class AddressBuilder{
     fun country(country: String) = apply { this.country = country }
     fun zipCode(zipCode: String) = apply { this.zipCode = zipCode }
 
-
     fun build(): Address {
         return Address(id = id, street = street, city = city, country = country,
             zipCode = zipCode
         )
     }
-
     companion object {
         fun builder() = AddressBuilder()
     }

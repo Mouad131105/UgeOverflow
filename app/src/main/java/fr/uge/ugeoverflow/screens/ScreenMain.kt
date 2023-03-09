@@ -1,5 +1,6 @@
 package fr.uge.ugeoverflow.screens
 
+import TagScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
@@ -25,6 +26,10 @@ fun ScreenMain(apiManager :ApiManager, sessionManager : SessionManager) {
 
         composable(Routes.ForgotPassword.route) { navBackStack ->
             ForgotPassword(navController = navController)
+        }
+
+        composable(Routes.Tags.route) {navBackStack ->
+
         }
     }
 }

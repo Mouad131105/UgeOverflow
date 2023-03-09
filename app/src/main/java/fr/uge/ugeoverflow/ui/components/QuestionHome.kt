@@ -14,15 +14,8 @@ import fr.uge.ugeoverflow.SessionManager.SessionManager
 import fr.uge.ugeoverflow.data.QuestionsDataProvider
 
 @Composable
-fun QuestionsHome(sessionManager: SessionManager) {
-    val questions = remember {QuestionsDataProvider.questionLists}
-
-    if(sessionManager.isUserLoggedIn.value) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Text(text = sessionManager.getUserfromSharedPref()?.firstName?: "No user")
-        }
-    }
-
+fun QuestionsHome(){
+    /*val questions = remember {QuestionsDataProvider.questionLists}
     LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp,vertical = 15.dp ) ){
         items(
             items = questions,
@@ -30,5 +23,5 @@ fun QuestionsHome(sessionManager: SessionManager) {
                 QuestionListItem(question=it)
             }
         )
-    }
+    }*/
 }

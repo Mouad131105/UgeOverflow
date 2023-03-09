@@ -4,10 +4,8 @@ import fr.uge.ugeoverflow.model.*
 import java.util.*
 
 object QuestionsDataProvider {
-
-
-    val questionLists = listOf(
-        /*QuestionBuilder.builder().title("How to make a great R reproducible example")
+    /*val questionLists = listOf(
+        QuestionBuilder.builder().title("How to make a great R reproducible example")
             .tags(mutableSetOf(Tag(UUID.randomUUID(),TAG_TYPE.css),Tag(UUID.randomUUID(),TAG_TYPE.java))).
             content(ContentBuilder.builder().
             text("our code should exactly reproduce the problem on another machine by simply copying and pasting it.").build()).
@@ -76,9 +74,5 @@ object QuestionsDataProvider {
                 "avenue président wilson Montreuil France"))),
                 ContentBuilder.builder().
                 text("Combined with the minimal data (see above)").build()))).build()
-
-    )
-
-
-
+    )*/
 }
