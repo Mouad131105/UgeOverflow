@@ -3,10 +3,12 @@ package fr.uge.ugeoverflow.model
 import java.util.UUID
 
 data class User(
-    private val id : UUID,
-    private val firstName : String,
-    private val lastName : String,
-    private val username : String,
-    private val email : String,
-    private val address : Address,
+     val id: Int,
+     val firstName: String,
+     val lastName: String,
+     val username: String,
+     val email: String,
+     val address: String,
+     //val token : String
+
 )
