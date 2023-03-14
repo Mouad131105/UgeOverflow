@@ -8,4 +8,6 @@ sealed class Routes(val route: String) {
     object Questions : Routes("Questions")
     object Users : Routes("Users")
     object UserDetails : Routes("UserDetails/{userId}")
+    object Question : Routes("Qestion")
+    object AskQuestion : Routes("AskQuestion")
 }

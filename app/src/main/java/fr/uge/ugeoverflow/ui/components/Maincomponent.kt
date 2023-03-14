@@ -1,6 +1,5 @@
 package fr.uge.ugeoverflow.ui.components
 
-import TagScreen
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,15 +7,24 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
+import fr.uge.ugeoverflow.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlurEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -28,6 +36,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.uge.ugeoverflow.session.SessionManagerSingleton
+import fr.uge.ugeoverflow.ui.routes.Routes
+import fr.uge.ugeoverflow.ui.screens.ForgotPassword
+import fr.uge.ugeoverflow.ui.screens.LoginPage
+import fr.uge.ugeoverflow.ui.screens.SignUp
+import fr.uge.ugeoverflow.ui.screens.question.AskQuestion
+import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.SessionManager.ApiManager
 import fr.uge.ugeoverflow.SessionManager.SessionManager
@@ -44,47 +59,58 @@ import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.ui.theme.poppins_bold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.*
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-val users = UserDataProvider.generateUsers()
 @Composable
-fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
+fun MainComponent() {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            AppTopBar(
-                onNavItemClick = {
-                    scope.launch {
-                        scaffoldState.drawerState.open()
-                    }
-                },
-                navController = navController,
-                sessionManager = sessionManager
-
-            )
-        }, drawerContent = {
-            drawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
+            if (navController.currentDestination?.route !in listOf(
+                    Routes.Questions.route,
+                    Routes.Tags.route
+                )
+            ) {
+                AppTopBar(
+                    onNavItemClick = {
+                        scope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    },
+                    navController = navController
+                )
+            }
+        },
+        drawerContent = {
+            DrawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
                 navController.navigate(item)
                 scope.launch {
                     scaffoldState.drawerState.close()
                 }
             }, navController = navController, scaffoldState = scaffoldState, scope = scope)
         }) {
-        NavHost(navController = navController, startDestination = Routes.Users.route) {
+        NavHost(navController = navController, startDestination = Routes.Questions.route) {
+
             composable(Routes.Login.route) {
-                LoginPage(navController = navController, apiManager = apiManager, sessionManager = sessionManager)
+                LoginPage(navController = navController)
             }
             composable(Routes.SignUp.route) {
                 SignUp(navController = navController)
             }
             composable(Routes.Questions.route) {
-                QuestionsHome(sessionManager = sessionManager)
+                QuestionsHome(navController = navController)
             }
             composable(Routes.ForgotPassword.route) {
                 ForgotPassword(navController)
+            }
+            composable(Routes.AskQuestion.route) {
+                AskQuestion(navController)
+            }
+            composable(Routes.Tags.route) {
+                Text(text = "Tags")
             }
             composable(Routes.Users.route) {
                 UserList(users, navController)
@@ -127,37 +153,45 @@ fun MainComponent( apiManager: ApiManager , sessionManager: SessionManager) {
 @Composable
 fun AppTopBar(
     onNavItemClick: () -> Unit,
-    navController: NavHostController, sessionManager: SessionManager
+    navController: NavHostController,
 ) {
     val context = LocalContext.current.applicationContext
-    var searchText by remember { mutableStateOf("") }
-    var isSearchVisible by remember { mutableStateOf(false) }
-    Column{
-        TopAppBar(
-            title = {
-                Box(modifier = Modifier
+    val sessionManager = SessionManagerSingleton.sessionManager
+    TopAppBar(
+        title = {
+            Box(
+                modifier = Modifier
                     .fillMaxWidth(1f)
-                    .fillMaxHeight()) {
+                    .fillMaxHeight()
+            ) {
+                Icon(
+                    tint = Gray, painter = painterResource(id = R.drawable.ugeoverflowlogo),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        },
+        actions = {
+            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)) {
+                // search icon
+                IconButton(onClick = {
+                    Toast.makeText(context, "Search", Toast.LENGTH_LONG).show()
+                }, modifier = Modifier.fillMaxWidth(0.2f)) {
                     Icon(
-                        tint = Gray, painter = painterResource(id = R.drawable.ugeoverflowlogo),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = "Search", tint = Gray
                     )
                 }
-            },
-            actions = {
-                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)) {
-                    // search icon
-                    IconButton(onClick = {
-                        Toast.makeText(context, "Search", Toast.LENGTH_LONG).show()
-                        isSearchVisible = true
-                    }, modifier = Modifier.fillMaxWidth(0.2f)) {
-                        Icon(
-                            imageVector = Icons.Outlined.Search,
-                            contentDescription = "Search", tint = Gray
-                        )
-                    }
-                    if (sessionManager.isUserLoggedIn.value) {
+                if (sessionManager.isUserLoggedIn.value) {
+                    Log.d("hey", sessionManager.getToken().toString())
+
+//                    MyButton(
+//                        text = "Log out",
+//                        onClick = { sessionManager.logOut() },
+//                        modifier = Modifier.fillMaxWidth(0.8f),
+//                        componentType = ComponentTypes.DangerOutline,
+//                        componentSize = ComponentSize.Small
+//                    )
 
                         Button(
                             onClick = { sessionManager.logOut() },
@@ -166,7 +200,7 @@ fun AppTopBar(
                             modifier = Modifier.fillMaxWidth(0.48f)
                         ) {
                             Text(
-                                text = "log out ",
+                                text = "loug out ",
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.button.copy(
                                     fontSize = 10.sp,

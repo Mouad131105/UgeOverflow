@@ -1,4 +1,4 @@
-package fr.uge.ugeoverflow.screens
+package fr.uge.ugeoverflow.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import fr.uge.ugeoverflow.components.CustomTopAppBar
+import fr.uge.ugeoverflow.ui.components.CustomTopAppBar
 
 @Composable
 fun ForgotPassword(navController: NavHostController) {
