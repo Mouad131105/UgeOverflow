@@ -88,7 +88,7 @@ fun QuestionListItem(question: Question) {
                         fontSize = 15.sp
                     )
                 }
-                question.getContent?.getText?.let {
+                question.getBody?.let {
                     Text(
                         modifier = Modifier.padding(start = 5.dp),
                         text = "${it.take(128)}...", fontSize = 12.sp
@@ -118,7 +118,7 @@ fun QuestionListItem(question: Question) {
                                     )
                             ) {
                                 Text(
-                                    text = tag.getTag.toString(),
+                                    text = tag.toString(),
                                     fontSize = 12.sp,
                                     modifier = Modifier
                                         .padding(horizontal = 4.dp, vertical = 2.dp)

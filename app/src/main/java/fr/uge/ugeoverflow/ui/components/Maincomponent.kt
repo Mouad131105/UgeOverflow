@@ -1,4 +1,6 @@
 package fr.uge.ugeoverflow.ui.components
+
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,9 +12,9 @@ import fr.uge.ugeoverflow.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.Top
@@ -36,26 +38,34 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fr.uge.ugeoverflow.routes.Routes
-import fr.uge.ugeoverflow.screens.ForgotPassword
-import fr.uge.ugeoverflow.screens.LoginPage
-import fr.uge.ugeoverflow.screens.SignUp
+import fr.uge.ugeoverflow.session.SessionManagerSingleton
+import fr.uge.ugeoverflow.ui.routes.Routes
+import fr.uge.ugeoverflow.ui.screens.ForgotPassword
+import fr.uge.ugeoverflow.ui.screens.LoginPage
+import fr.uge.ugeoverflow.ui.screens.SignUp
+import fr.uge.ugeoverflow.ui.screens.question.AskQuestion
+import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.ui.theme.poppins_bold
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
-fun MainComponent(){
+fun MainComponent() {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            if (navController.currentDestination?.route !in listOf(Routes.Questions.route, Routes.Tags.route)) {
+            if (navController.currentDestination?.route !in listOf(
+                    Routes.Questions.route,
+                    Routes.Tags.route
+                )
+            ) {
                 AppTopBar(
                     onNavItemClick = {
                         scope.launch {
@@ -67,9 +77,9 @@ fun MainComponent(){
             }
         },
         drawerContent = {
-            drawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
+            DrawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
                 navController.navigate(item)
-            }, navController = navController)
+            }, navController = navController, scope = scope, scaffoldState = scaffoldState)
         }) {
         NavHost(navController = navController, startDestination = Routes.Questions.route) {
 
@@ -215,114 +225,129 @@ fun AppTopBar(
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
                         )
-    var searchText by remember { mutableStateOf("") }
-    var isSearchVisible by remember { mutableStateOf(false) }
-    Column{
-        TopAppBar(
-            title = {
-                Box(modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .fillMaxHeight()) {
-                    Icon(
-                        tint = Gray, painter = painterResource(id = R.drawable.ugeoverflowlogo),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            },
-            actions = {
-                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)) {
-                    // search icon
-                    IconButton(onClick = {
-                        Toast.makeText(context, "Search", Toast.LENGTH_LONG).show()
-                        isSearchVisible = true
-                    }, modifier = Modifier.fillMaxWidth(0.2f)) {
-                        Icon(
-                            imageVector = Icons.Outlined.Search,
-                            contentDescription = "Search", tint = Gray
-                        )
-                    }
-                    if (sessionManager.isUserLoggedIn.value) {
-
-                        Button(
-                            onClick = { sessionManager.logOut() },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = White200),
-                            contentPadding = PaddingValues(0.dp),
-                            modifier = Modifier.fillMaxWidth(0.48f)
-                        ) {
-                            Text(
-                                text = "Log out",
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.button.copy(
-                                    fontSize = 10.sp,
-                                    color = Blue200
-                                )
-                            )
-                        }
-                    }
-
-                    else {
-                        Button(
-                            onClick = { navController.navigate(Routes.Login.route) },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = White200),
-                            contentPadding = PaddingValues(0.dp),
-                            modifier = Modifier.fillMaxWidth(0.48f)
-                        ) {
-                            Text(
-                                text = "Log in",
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.button.copy(
-                                    fontSize = 10.sp,
-                                    color = Blue200
-                                )
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(2.dp))
-                        // Sign up
-                        Button(
-                            onClick = { navController.navigate(Routes.SignUp.route) },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),
-                            contentPadding = PaddingValues(0.dp),
-                            modifier = Modifier.fillMaxWidth(0.75f)
-                        ) {
-                            Text(
-                                text = "Sign up",
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
-                            )
-                        }
-
                     }
                 }
-            },
-            navigationIcon = {
-                TextButton(
-                    onClick = { onNavItemClick() },
-                    modifier = Modifier.background(Transparent)
-                ) {
-                    Icon(Icons.Default.Menu, "Home", tint = Gray)
-                }
-            },
-            backgroundColor = Gray200,
-            contentColor = White,
-            elevation = 10.dp
-        )
-        if (isSearchVisible) {
-            TextField(
-                value = searchText,
-                onValueChange = { searchText = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
-            )
+            }
+        },
+        navigationIcon = {
+            IconButton(onClick = { onNavItemClick() }) {
+                Icon(
+                    imageVector = Icons.Outlined.Menu,
+                    contentDescription = "Menu", tint = Gray
+                )
+            }
         }
-    }
-
+    )
 }
 
+//var searchText by remember { mutableStateOf("") }
+//var isSearchVisible by remember { mutableStateOf(false) }
+//Column{
+//    TopAppBar(
+//        title = {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth(1f)
+//                    .fillMaxHeight()
+//            ) {
+//                Icon(
+//                    tint = Gray, painter = painterResource(id = R.drawable.ugeoverflowlogo),
+//                    contentDescription = null,
+//                    modifier = Modifier.fillMaxSize()
+//                )
+//            }
+//        },
+//        actions = {
+//            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)) {
+//                // search icon
+//                IconButton(onClick = {
+//                    Toast.makeText(context, "Search", Toast.LENGTH_LONG).show()
+//                    isSearchVisible = true
+//                }, modifier = Modifier.fillMaxWidth(0.2f)) {
+//                    Icon(
+//                        imageVector = Icons.Outlined.Search,
+//                        contentDescription = "Search", tint = Gray
+//                    )
+//                }
+//                if (sessionManager.isUserLoggedIn.value) {
+//
+//                    Button(
+//                        onClick = { sessionManager.logOut() },
+//                        colors = ButtonDefaults.buttonColors(backgroundColor = White200),
+//                        contentPadding = PaddingValues(0.dp),
+//                        modifier = Modifier.fillMaxWidth(0.48f)
+//                    ) {
+//                        Text(
+//                            text = "Log out",
+//                            textAlign = TextAlign.Center,
+//                            style = MaterialTheme.typography.button.copy(
+//                                fontSize = 10.sp,
+//                                color = Blue200
+//                            )
+//                        )
+//                    }
+//                } else {
+//                    Button(
+//                        onClick = { navController.navigate(Routes.Login.route) },
+//                        colors = ButtonDefaults.buttonColors(backgroundColor = White200),
+//                        contentPadding = PaddingValues(0.dp),
+//                        modifier = Modifier.fillMaxWidth(0.48f)
+//                    ) {
+//                        Text(
+//                            text = "Log in",
+//                            textAlign = TextAlign.Center,
+//                            style = MaterialTheme.typography.button.copy(
+//                                fontSize = 10.sp,
+//                                color = Blue200
+//                            )
+//                        )
+//                    }
+//                    Spacer(modifier = Modifier.width(2.dp))
+//                    // Sign up
+//                    Button(
+//                        onClick = { navController.navigate(Routes.SignUp.route) },
+//                        colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),
+//                        contentPadding = PaddingValues(0.dp),
+//                        modifier = Modifier.fillMaxWidth(0.75f)
+//                    ) {
+//                        Text(
+//                            text = "Sign up",
+//                            textAlign = TextAlign.Center,
+//                            style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
+//                        )
+//                    }
+//
+//                }
+//            }
+//        },
+//        navigationIcon = {
+//            TextButton(
+//                onClick = { onNavItemClick() },
+//                modifier = Modifier.background(Transparent)
+//            ) {
+//                Icon(Icons.Default.Menu, "Home", tint = Gray)
+//            }
+//        },
+//        backgroundColor = Gray200,
+//        contentColor = White,
+//        elevation = 10.dp
+//    )
+//    if (isSearchVisible) {
+//        TextField(
+//            value = searchText,
+//            onValueChange = { searchText = it },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(top = 10.dp)
+//        )
+//    }
+//}
+//
+//}
+
 @Composable
-fun drawerContent(
-    items : List<String>,
+fun DrawerContent(
+    items: List<String>,
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
     navController: NavHostController,
@@ -343,16 +368,17 @@ fun drawerContent(
         ), modifier = Modifier.padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
     )
     Text(text = "Public", fontFamily = poppins_bold, fontSize = 20.sp)
-    LazyColumn(modifier){
-        items(items) {
-                item ->
+    LazyColumn(modifier) {
+        items(items) { item ->
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
                 .clickable { onItemClick(item) }) {
-                Box(modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 10.dp)) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 10.dp)
+                ) {
                     Text(text = item)
                 }
                 Spacer(modifier = Modifier.width(16.dp))

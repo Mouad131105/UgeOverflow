@@ -1,5 +1,6 @@
 package fr.uge.ugeoverflow.api
 
+import fr.uge.ugeoverflow.model.Location
 import java.util.*
 
 data class QuestionResponse(
@@ -7,8 +8,9 @@ data class QuestionResponse(
     val title: String,
     val body: String,
     val tags: List<String>,
-    val userId: UUID,
-    val creationTime: String
+    val user: UserBoxResponse,
+    val creationTime: String,
+    val location: Location
 )
 
 data class LoginResponse(
@@ -20,7 +22,7 @@ data class TagsResponse(
     val tags: List<String>
 )
 
-data class userBoxResponse(
+data class UserBoxResponse(
     val id: UUID,
     val username:String,
     val email:String,

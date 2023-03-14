@@ -23,13 +23,5 @@ interface RestController {
     @GET("/api/v1/tags")
     suspend fun getTags():Response<List<String>>
 
-    @POST("/api/v1/location")
-    suspend fun saveLocation(@Header("Authorization") token: String, @Body location: Location): Response<Unit>
-
-    @GET("/api/v1/location/{userId}")
-    suspend fun getLocation(@Header("Authorization") token: String, @Path("userId") userId: String): Response<Location>
-
-    @PUT("/api/v1/location")
-    suspend fun updateLocation(@Header("Authorization") token: String, @Body location: Location): Response<Unit>
 
 }

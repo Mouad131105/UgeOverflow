@@ -17,6 +17,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.QuestionRequest
+import fr.uge.ugeoverflow.model.Location
+import fr.uge.ugeoverflow.services.LocationService
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
@@ -79,22 +81,27 @@ fun AskQuestion(navController: NavHostController) {
                 MyButton(
                     text = "Post",
                     onClick = {
-                        val question = QuestionRequest(title.value, body.value, tags)
+                        val location:Location? = LocationService.getLocation(context)
+                        val question = location?.let { it1 -> QuestionRequest(title.value, body.value, tags, location= it1) }
                         val token = SessionManagerSingleton.sessionManager.getToken()
                         if (token != null) {
                             scope.launch {
                                 try {
                                     Log.e("Send", question.toString())
                                     val response =
-                                        ugeOverflowApiSerivce.postQuestion(
-                                            "Bearer $token",
-                                            question
-                                        )
-                                    if (response.isSuccessful) {
-                                        navController.popBackStack()
-                                        scaffoldState.snackbarHostState.showSnackbar("Success")
-                                    } else {
-                                        scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
+                                        question?.let { it1 ->
+                                            ugeOverflowApiSerivce.postQuestion(
+                                                "Bearer $token",
+                                                it1
+                                            )
+                                        }
+                                    if (response != null) {
+                                        if (response.isSuccessful) {
+                                            navController.popBackStack()
+                                            scaffoldState.snackbarHostState.showSnackbar("Success")
+                                        } else {
+                                            scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
+                                        }
                                     }
                                 } catch (e: Exception) {
                                     scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
