@@ -32,7 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.model.Tag
-import fr.uge.ugeoverflow.routes.Routes
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.screens.ForgotPassword
 import fr.uge.ugeoverflow.ui.screens.LoginPage

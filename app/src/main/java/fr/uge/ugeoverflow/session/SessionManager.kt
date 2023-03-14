@@ -1,7 +1,7 @@
 package fr.uge.ugeoverflow.session
 
 /**
- * implémenté par Achraf et Fares(Trex)
+ * implémenté par Achraf et Fares
  */
 import android.content.Context
 import androidx.compose.runtime.State
