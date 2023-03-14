@@ -63,7 +63,7 @@ fun QuestionListItem(question: Question) {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
-                userImage(question = question)
+                userImage()
                 Text(
                     text = "UserName",
                     style = TextStyle(
@@ -151,9 +151,12 @@ fun QuestionListItem(question: Question) {
 }
 
 @Composable
-fun userImage(question: Question?) {
+fun userImage() {
+    val imageList =
+        remember { listOf(R.drawable.user1, R.drawable.user2, R.drawable.user3, R.drawable.user4) }
+    val randomImageId = remember { imageList.random() }
     Image(
-        painter = painterResource(id = R.drawable.user2),
+        painter = painterResource(id = randomImageId),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier

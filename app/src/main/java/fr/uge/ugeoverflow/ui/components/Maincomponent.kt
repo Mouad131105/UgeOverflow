@@ -30,6 +30,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.model.Tag
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
@@ -45,6 +46,8 @@ import fr.uge.ugeoverflow.ui.theme.poppins_bold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
+
+val users = UserDataProvider.generateUsers()
 
 @Composable
 fun MainComponent() {
@@ -100,8 +103,9 @@ fun MainComponent() {
             composable(Routes.Users.route) {
                 UserList(users, navController)
             }
-            composable("${Routes.UserDetails.route}/{userId}" ) { backStackEntry ->
-                val userIdToFind: UUID = UUID.fromString(backStackEntry.arguments?.getString("userId"))
+            composable("${Routes.UserDetails.route}/{userId}") { backStackEntry ->
+                val userIdToFind: UUID =
+                    UUID.fromString(backStackEntry.arguments?.getString("userId"))
                 val user = users.find { it.id == userIdToFind }
                 // Display user details screen
                 if (user != null) {
@@ -111,18 +115,66 @@ fun MainComponent() {
             composable(Routes.Tags.route) {
 
                 val tags = listOf(
-                    Tag(1, "Programming", "Questions related to programming and software development hfdjshfkldshkfjsdmfjsmfjdsmljfmldsjfsdlmqjfmdsqjfmdlsjflsdmjfqlsdmjfsdlfefEZFEZFezfZEFDzefgergtrefezfrgtrgtrtrtrgsDNFJKDSHFJKSDHFJSDHFJKSDHFJKHSDJKFHDSJKHFkjdshfjkHDFJKHsqdjkdfhsjkqfhsdjkfhkjsdhfjsdkhfkjsdhfjk"),
-                    Tag(2, "Java", "Questions related to the Java programming language sdvqhdskvjdskmvjsdkljvmsdlqjvmlsqdjvlmsdqjflmsdjflmjsdlmqfjlmsdqjflmsdjqflmsdjqmlfjqsdmlfjmsdlqfjrgretrtgtretrgthet'rgtht'rgerthetrgtrethre DSFSDJKhfjksdHFJKSDHFJKHSDKJFHDSJKHFKJdshfjkSDHFKJsdhfjksdhfjkSDHF"),
-                    Tag(3, "Kotlin", "Questions related to the Kotlin programming languagesdqvsdnflksdjklsdfkjsdmklfjlsdmjflmsdjflmsj kldfshqvklsfhvkhsfdklhsdlkhfqskldfhlksdqhflksdqhfregrergretggretgtnhgthgndfthhnhhtrhtrhnhrth dsfhdjfkhdsjkfhjkdshfkjHFJKHDfkjdhsjkfhKJSDHFJKSDHFKJSDHF"),
-                    Tag(4, "Android", "Questions related to the Android mobile operating system dskvbqsdjkbvkjsdbvjkdsbhvjsdqhfklsdhqfklsdhqlfkhsdqklfhsdqkfhsdqlfhsdklqfhlksdqhfsdklqftthgtrgtreghtehtrndthehtrhendrtheztrtherhtregh jsdfhqjdskhfjdkhfjkdqshfjkshqfjkhdskjqfhdjskhfjkdsqhfjksdhfkjqsdhfkjsdhqfjksdhqkf"),
-                    Tag(5, "iOS", "Questions related to the iOS mobile operating system jsdfbvklsdnhklvsdhqfklhsdqklfhsdklqhfklsdqhflksdqhflksdncklsdncklsdqncklsdqhvlkdsnfdsnkcnsdklqncvgret'reghghtnthrngfnghg,nthrnh,thrnrthynthrthrrthtrhrrdsjkfhqsdjkfhdjkshfqkjdshfkjqsdhjkfhqsdkjfhdskjfhqsjkf"),
-                    Tag(6, "Web Development", "Questions related to web development technologies and frameworks ksjdbhvfjksdhfjkhsdjkfhsdjkhfjksdqfbkjsqdfhjksqdfjksdqhfvjksdqhvbkjsdqvhsdjkqhfhtreth(erythrhthy(rthr(ythrhythhrjrh(ythry(thrthretds,f;sd,f,;sdf;:n,qsdnf,dsnf,;nd,;fnsd,;fn,qs;nfse;,d:fds"),
-                    Tag(7, "JavaScript", "Questions related to the JavaScript programming language nbsdkjvsdjkhfjksdhfjksdhqfjksdhqfjksdhqfjkhsdqjkfgsdqjkfgsdqjkfgsdjkqfdsjkqfhsdjklhflksdhfdfjkdhjfhsjdhfksdjhfjskdhfjksdhfjsdhfjkhsdjkfhjsdkfhjsdkhfjksdhfjksdhfjksdhfjksdhfkjsdhfkjsdhfksdjfhsdjkfhsdjkf"),
-                    Tag(8, "Python", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf") ,
-                    Tag(9, "hamid", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"),
-                    Tag(10, "JEE", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"),
-                    Tag(11, "Spring", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"),
-                    Tag(12, "Hibernate", "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf")
+                    Tag(
+                        1,
+                        "Programming",
+                        "Questions related to programming and software development hfdjshfkldshkfjsdmfjsmfjdsmljfmldsjfsdlmqjfmdsqjfmdlsjflsdmjfqlsdmjfsdlfefEZFEZFezfZEFDzefgergtrefezfrgtrgtrtrtrgsDNFJKDSHFJKSDHFJSDHFJKSDHFJKHSDJKFHDSJKHFkjdshfjkHDFJKHsqdjkdfhsjkqfhsdjkfhkjsdhfjsdkhfkjsdhfjk"
+                    ),
+                    Tag(
+                        2,
+                        "Java",
+                        "Questions related to the Java programming language sdvqhdskvjdskmvjsdkljvmsdlqjvmlsqdjvlmsdqjflmsdjflmjsdlmqfjlmsdqjflmsdjqflmsdjqmlfjqsdmlfjmsdlqfjrgretrtgtretrgthet'rgtht'rgerthetrgtrethre DSFSDJKhfjksdHFJKSDHFJKHSDKJFHDSJKHFKJdshfjkSDHFKJsdhfjksdhfjkSDHF"
+                    ),
+                    Tag(
+                        3,
+                        "Kotlin",
+                        "Questions related to the Kotlin programming languagesdqvsdnflksdjklsdfkjsdmklfjlsdmjflmsdjflmsj kldfshqvklsfhvkhsfdklhsdlkhfqskldfhlksdqhflksdqhfregrergretggretgtnhgthgndfthhnhhtrhtrhnhrth dsfhdjfkhdsjkfhjkdshfkjHFJKHDfkjdhsjkfhKJSDHFJKSDHFKJSDHF"
+                    ),
+                    Tag(
+                        4,
+                        "Android",
+                        "Questions related to the Android mobile operating system dskvbqsdjkbvkjsdbvjkdsbhvjsdqhfklsdhqfklsdhqlfkhsdqklfhsdqkfhsdqlfhsdklqfhlksdqhfsdklqftthgtrgtreghtehtrndthehtrhendrtheztrtherhtregh jsdfhqjdskhfjdkhfjkdqshfjkshqfjkhdskjqfhdjskhfjkdsqhfjksdhfkjqsdhfkjsdhqfjksdhqkf"
+                    ),
+                    Tag(
+                        5,
+                        "iOS",
+                        "Questions related to the iOS mobile operating system jsdfbvklsdnhklvsdhqfklhsdqklfhsdklqhfklsdqhflksdqhflksdncklsdncklsdqncklsdqhvlkdsnfdsnkcnsdklqncvgret'reghghtnthrngfnghg,nthrnh,thrnrthynthrthrrthtrhrrdsjkfhqsdjkfhdjkshfqkjdshfkjqsdhjkfhqsdkjfhdskjfhqsjkf"
+                    ),
+                    Tag(
+                        6,
+                        "Web Development",
+                        "Questions related to web development technologies and frameworks ksjdbhvfjksdhfjkhsdjkfhsdjkhfjksdqfbkjsqdfhjksqdfjksdqhfvjksdqhvbkjsdqvhsdjkqhfhtreth(erythrhthy(rthr(ythrhythhrjrh(ythry(thrthretds,f;sd,f,;sdf;:n,qsdnf,dsnf,;nd,;fnsd,;fn,qs;nfse;,d:fds"
+                    ),
+                    Tag(
+                        7,
+                        "JavaScript",
+                        "Questions related to the JavaScript programming language nbsdkjvsdjkhfjksdhfjksdhqfjksdhqfjksdhqfjkhsdqjkfgsdqjkfgsdqjkfgsdjkqfdsjkqfhsdjklhflksdhfdfjkdhjfhsjdhfksdjhfjskdhfjksdhfjsdhfjkhsdjkfhjsdkfhjsdkhfjksdhfjksdhfjksdhfjksdhfkjsdhfkjsdhfksdjfhsdjkfhsdjkf"
+                    ),
+                    Tag(
+                        8,
+                        "Python",
+                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
+                    ),
+                    Tag(
+                        9,
+                        "hamid",
+                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
+                    ),
+                    Tag(
+                        10,
+                        "JEE",
+                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
+                    ),
+                    Tag(
+                        11,
+                        "Spring",
+                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
+                    ),
+                    Tag(
+                        12,
+                        "Hibernate",
+                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
+                    )
 
 
                 )
@@ -134,7 +186,6 @@ fun MainComponent() {
 }
 
 
-
 @Composable
 fun AppTopBar(
     onNavItemClick: () -> Unit,
@@ -142,6 +193,9 @@ fun AppTopBar(
 ) {
     val context = LocalContext.current.applicationContext
     val sessionManager = SessionManagerSingleton.sessionManager
+    val isSearchVisible by remember { mutableStateOf(false) }
+    var searchText by remember { mutableStateOf("") }
+
     TopAppBar(
         title = {
             Box(
@@ -178,81 +232,78 @@ fun AppTopBar(
 //                        componentSize = ComponentSize.Small
 //                    )
 
-                        Button(
-                            onClick = { sessionManager.logOut() },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = White200),
-                            contentPadding = PaddingValues(0.dp),
-                            modifier = Modifier.fillMaxWidth(0.48f)
-                        ) {
-                            Text(
-                                text = "loug out ",
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.button.copy(
-                                    fontSize = 10.sp,
-                                    color = Blue200
-                                )
+                    Button(
+                        onClick = { sessionManager.logOut() },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = White200),
+                        contentPadding = PaddingValues(0.dp),
+                        modifier = Modifier.fillMaxWidth(0.48f)
+                    ) {
+                        Text(
+                            text = "loug out ",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.button.copy(
+                                fontSize = 10.sp,
+                                color = Blue200
                             )
-                        }
+                        )
+                    }
+                } else {
+                    Button(
+                        onClick = { navController.navigate(Routes.Login.route) },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = White200),
+                        contentPadding = PaddingValues(0.dp),
+                        modifier = Modifier.fillMaxWidth(0.48f)
+                    ) {
+                        Text(
+                            text = "Log in",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.button.copy(
+                                fontSize = 10.sp,
+                                color = Blue200
+                            )
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(2.dp))
+                    // Sign up
+                    Button(
+                        onClick = { navController.navigate(Routes.SignUp.route) },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),
+                        contentPadding = PaddingValues(0.dp),
+                        modifier = Modifier.fillMaxWidth(0.75f)
+                    ) {
+                        Text(
+                            text = "Sign up",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
+                        )
                     }
 
-                    else {
-                        Button(
-                            onClick = { navController.navigate(Routes.Login.route) },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = White200),
-                            contentPadding = PaddingValues(0.dp),
-                            modifier = Modifier.fillMaxWidth(0.48f)
-                        ) {
-                            Text(
-                                text = "Log in",
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.button.copy(
-                                    fontSize = 10.sp,
-                                    color = Blue200
-                                )
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(2.dp))
-                        // Sign up
-                        Button(
-                            onClick = { navController.navigate(Routes.SignUp.route) },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Blue200),
-                            contentPadding = PaddingValues(0.dp),
-                            modifier = Modifier.fillMaxWidth(0.75f)
-                        ) {
-                            Text(
-                                text = "Sign up",
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
-                            )
-                        }
-
-                    }
                 }
-            },
-            navigationIcon = {
-                TextButton(
-                    onClick = { onNavItemClick() },
-                    modifier = Modifier.background(Transparent)
-                ) {
-                    Icon(Icons.Default.Menu, "Home", tint = Gray)
-                }
-            },
-            backgroundColor = Gray200,
-            contentColor = White,
-            elevation = 10.dp
+            }
+        },
+        navigationIcon = {
+            TextButton(
+                onClick = { onNavItemClick() },
+                modifier = Modifier.background(Transparent)
+            ) {
+                Icon(Icons.Default.Menu, "Home", tint = Gray)
+            }
+        },
+        backgroundColor = Gray200,
+        contentColor = White,
+        elevation = 10.dp
+    )
+    if (isSearchVisible) {
+        TextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
         )
-        if (isSearchVisible) {
-            TextField(
-                value = searchText,
-                onValueChange = { searchText = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
-            )
-        }
     }
-
 }
+
 
 @Composable
 fun drawerContent(

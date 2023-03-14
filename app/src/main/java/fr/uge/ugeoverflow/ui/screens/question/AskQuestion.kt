@@ -82,8 +82,15 @@ fun AskQuestion(navController: NavHostController) {
                 MyButton(
                     text = "Post",
                     onClick = {
-                        val location:Location? = LocationService.getLocation(context)
-                        val question = location?.let { it1 -> QuestionRequest(title.value, body.value, tags, location= it1) }
+                        val location: Location? = LocationService.getLocation(context)
+                        val question = location?.let { it1 ->
+                            QuestionRequest(
+                                title.value,
+                                body.value,
+                                tags,
+                                location = it1
+                            )
+                        }
                         val token = SessionManagerSingleton.sessionManager.getToken()
                         if (token != null) {
                             scope.launch {
@@ -109,7 +116,8 @@ fun AskQuestion(navController: NavHostController) {
                                 }
                             }
                         } else {
-                            Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT)
+                                .show()
                             //scaffoldState.snackbarHostState.showSnackbar("User not authenticated")
                             navController.navigate(Routes.Login.route)
                         }
