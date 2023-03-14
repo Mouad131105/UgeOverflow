@@ -1,5 +1,7 @@
 package fr.uge.ugeoverflow.ui.components
 
+import TagScreen
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,24 +9,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
-import fr.uge.ugeoverflow.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlurEffect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -36,30 +29,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.model.Tag
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.screens.ForgotPassword
 import fr.uge.ugeoverflow.ui.screens.LoginPage
 import fr.uge.ugeoverflow.ui.screens.SignUp
 import fr.uge.ugeoverflow.ui.screens.question.AskQuestion
 import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
-import fr.uge.ugeoverflow.R
-import fr.uge.ugeoverflow.SessionManager.ApiManager
-import fr.uge.ugeoverflow.SessionManager.SessionManager
-import fr.uge.ugeoverflow.data.UserDataProvider
-import fr.uge.ugeoverflow.model.Tag
-import fr.uge.ugeoverflow.routes.Routes
-import fr.uge.ugeoverflow.screens.ForgotPassword
-import fr.uge.ugeoverflow.screens.LoginPage
-import fr.uge.ugeoverflow.screens.SignUp
-import fr.uge.ugeoverflow.screens.TagDetails
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.ui.theme.poppins_bold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import java.util.*
 
 @Composable
 fun MainComponent() {
@@ -85,7 +70,7 @@ fun MainComponent() {
             }
         },
         drawerContent = {
-            DrawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
+            drawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
                 navController.navigate(item)
                 scope.launch {
                     scaffoldState.drawerState.close()

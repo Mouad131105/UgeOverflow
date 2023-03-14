@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
-import fr.uge.ugeoverflow.ui.routes.Routes
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.LoginService
 import fr.uge.ugeoverflow.ui.components.ComponentSize
 import fr.uge.ugeoverflow.ui.components.ComponentType

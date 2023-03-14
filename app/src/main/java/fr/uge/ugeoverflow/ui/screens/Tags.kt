@@ -1,30 +1,19 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.ui.Alignment
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import fr.uge.ugeoverflow.model.Tag
 
 @Composable
@@ -93,7 +82,7 @@ fun Tag(tag: Tag) {
 
             // Add a text with the tag description
             Text(
-                text = tag.getDESCRIPTION ?: "",
+                text = tag.getDescription ?: "",
                 color = Color.Black,
                 fontSize = 13.sp,
                 maxLines = 3,
@@ -114,7 +103,7 @@ fun Tag(tag: Tag) {
                         , fontSize = 16.sp )
                 },
                 text = {
-                    Text(text = tag.getDESCRIPTION ?: "")
+                    Text(text = tag.getDescription ?: "")
                 },
                 confirmButton = {
                     Button(

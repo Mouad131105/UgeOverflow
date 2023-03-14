@@ -1,9 +1,10 @@
 package fr.uge.ugeoverflow.model
 
-import java.util.*
-
 data class Tag(
-    private val tagType: String
+    private val id :Long,
+    private val tag_type : String,
+    private val description : String
 ){
-    val getTag: String? get() = tagType
+    val getTAG_TYPE: String? get() = tag_type
+    val getDescription: String? get() = description
 }

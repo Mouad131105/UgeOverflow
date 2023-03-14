@@ -19,7 +19,6 @@ import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.RegisterRequest
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.ui.components.CustomTopAppBar
-import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.ComponentType
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
