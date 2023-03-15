@@ -199,7 +199,6 @@ fun AllQuestionsScreen() {
                 coroutineScope.launch {
                     val result = mutableStateOf(false)
                     result.value = true
-
                 }
             }) {
                 Icon(Icons.Default.Add, "Ask Question")

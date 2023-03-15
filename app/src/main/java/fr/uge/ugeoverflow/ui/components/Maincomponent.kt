@@ -1,5 +1,6 @@
 package fr.uge.ugeoverflow.ui.components
 
+import QuestionScreen
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -48,7 +49,6 @@ fun MainComponent() {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
-
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -87,6 +87,9 @@ fun MainComponent() {
             }
             composable(Routes.Tags.route) {
                 Text(text = "Tags")
+            }
+            composable(Routes.OneQuestion.route) {
+                QuestionScreen(navController)
             }
         }
 

@@ -3,10 +3,7 @@ package fr.uge.ugeoverflow.services
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.model.Question
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RestController {
     @POST("auth/api/v1/register")
@@ -23,4 +20,7 @@ interface RestController {
 
     @GET("/api/v1/tags")
     suspend fun getTags():Response<List<String>>
+
+    @GET("/auth/api/v1/questions/{questionId}")
+    suspend fun getQuestion(@Path("questionId") questionId: String): Response<OneQuestionResponse>
 }

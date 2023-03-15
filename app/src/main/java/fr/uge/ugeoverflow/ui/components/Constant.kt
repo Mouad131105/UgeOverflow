@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 
 
 object ComponentConstants {
-    val DefaultHorizontalContentPadding = 16.dp
-    val DefaultVerticalContentPadding = 8.dp
+    val DefaultHorizontalContentPadding = 1.dp
+    val DefaultVerticalContentPadding = 1.dp
 }
 
 data class ComponentType(
@@ -25,9 +25,9 @@ data class ComponentType(
 )
 
 sealed class ComponentSize(val size: Dp) {
-    object Small : ComponentSize(12.dp)
-    object Medium : ComponentSize(16.dp)
-    object Large : ComponentSize(20.dp)
+    object Small : ComponentSize(8.dp)
+    object Medium : ComponentSize(12.dp)
+    object Large : ComponentSize(16.dp)
 }
 
 @Composable
@@ -65,7 +65,7 @@ fun MyButtonComponent(
     Button(
         onClick = onClick,
         enabled = active,
-        modifier = modifier.padding(4.dp),
+        modifier = modifier.padding(1.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 5.dp,
             pressedElevation = 15.dp,
