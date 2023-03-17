@@ -23,5 +23,8 @@ interface RestController {
     @GET("/api/v1/tags")
     suspend fun getTags():Response<List<String>>
 
+    @GET("/auth/api/v1/questions/{questionId}")
+    suspend fun getQuestion(@Path("questionId") questionId: String): Response<OneQuestionResponse>
+
 
 }

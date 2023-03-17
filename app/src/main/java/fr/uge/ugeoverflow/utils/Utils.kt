@@ -13,11 +13,46 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.github.marlonlom.utilities.timeago.TimeAgo
+import com.github.marlonlom.utilities.timeago.TimeAgoMessages
 import fr.uge.ugeoverflow.ui.components.ComponentSize
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyTag
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.util.*
 
+object Utils {
+    fun formatDateUsingTimeAgo(creationTime: String): String {
+        val creationTime = LocalDateTime.parse(creationTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        // Need to specify instead System Language to adapt Showing
+        // By default it's English
+        return TimeAgo.using(
+            creationTime.toEpochSecond(ZoneOffset.UTC) * 1000, TimeAgoMessages.Builder().withLocale(
+                Locale.ENGLISH
+            ).build()
+        )
+    }
 
+    enum class SortOption() {
+        CreationTime {
+            override fun toString(): String {
+                return "Creation Time"
+            }
+        },
+        Scores {
+            override fun toString(): String {
+                return "Highest Score (vote)"
+            }
+        },
+        Downvotes {
+            override fun toString(): String {
+                return "Down votes"
+            }
+        }
+    }
+}
 
 @Composable
 fun SearchableMultiSelect(

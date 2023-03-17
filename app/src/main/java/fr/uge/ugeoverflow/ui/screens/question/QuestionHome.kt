@@ -1,12 +1,15 @@
 package fr.uge.ugeoverflow.ui.screens.question
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import fr.uge.ugeoverflow.api.QuestionResponse
 import fr.uge.ugeoverflow.ui.components.ComponentSize
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
@@ -24,8 +27,7 @@ fun QuestionsHome(navController: NavHostController) {
 //        )
 //    }
 
-
-    AllQuestionsScreen()
+    //AllQuestionsScreen()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopEnd
@@ -39,6 +41,23 @@ fun QuestionsHome(navController: NavHostController) {
             componentSize = ComponentSize.Small,
         )
     }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopStart
+    ) {
+        MyButton(
+            text = "Go to One Question",
+            onClick = {
+                navController.navigate("OneQuestion")
+            },
+            componentType = ComponentTypes.Dark,
+            componentSize = ComponentSize.Small,
+        )
+
+    }
+
+
 
 
     //from db

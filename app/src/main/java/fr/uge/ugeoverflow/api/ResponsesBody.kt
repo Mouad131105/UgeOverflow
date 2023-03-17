@@ -30,22 +30,29 @@ data class UserBoxResponse(
 )
 
 
-//data class User(
-//    val id: String,
-//    val firstname: String,
-//    val lastname: String,
-//    val username: String,
-//    val email: String,
-//    val address: Any?,
-//    val role: String,
-//    val image: Any?,
-//    val followers: List<String>,
-//    val following: List<String>,
-//    val questions: List<String>,
-//    val token: String,
-//    val enabled: Boolean,
-//    val authorities: List<Authority>,
-//    val accountNonExpired: Boolean,
-//    val accountNonLocked: Boolean,
-//    val credentialsNonExpired: Boolean
-//)
+data class CommentResponse(
+    val id: String,
+    val body: String,
+    val user: userBoxResponse,
+    val creationTime: String
+)
+data class OneQuestionResponse(
+    val id: String,
+    val title: String,
+    val body: String,
+    val tags: List<String>,
+    val user: userBoxResponse,
+    val creationTime: String,
+    val answersCounter: Int,
+    val comments: List<CommentResponse>,
+    val answers: List<AnswerResponse>
+)
+data class AnswerResponse(
+    val id: String,
+    val body: String,
+    val user: userBoxResponse,
+    val creationTime: String,
+    val score: Int,
+    val votes: List<String>,
+    val comments: List<CommentResponse>
+)

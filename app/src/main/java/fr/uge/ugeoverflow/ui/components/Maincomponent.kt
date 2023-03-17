@@ -1,6 +1,7 @@
 package fr.uge.ugeoverflow.ui.components
 
 import TagScreen
+import QuestionScreen
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
+import fr.uge.ugeoverflow.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -29,7 +31,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.model.Tag
 import fr.uge.ugeoverflow.routes.Routes
@@ -54,6 +55,7 @@ fun MainComponent() {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -178,13 +180,16 @@ fun MainComponent() {
 
 
                 )
+            composable(Routes.OneQuestion.route) {
+                QuestionScreen(navController)
+            }
+        }
 
                 TagScreen(tags = tags)
             }
         }
     }
 }
-
 
 @Composable
 fun AppTopBar(
@@ -239,7 +244,7 @@ fun AppTopBar(
                         modifier = Modifier.fillMaxWidth(0.48f)
                     ) {
                         Text(
-                            text = "loug out ",
+                            text = "Log out",
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.button.copy(
                                 fontSize = 10.sp,
@@ -277,8 +282,8 @@ fun AppTopBar(
                             style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
                         )
                     }
-
                 }
+
             }
         },
         navigationIcon = {

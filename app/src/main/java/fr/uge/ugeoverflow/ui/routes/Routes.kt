@@ -10,4 +10,5 @@ sealed class Routes(val route: String) {
     object UserDetails : Routes("UserDetails/{userId}")
     object Question : Routes("Qestion")
     object AskQuestion : Routes("AskQuestion")
+    object OneQuestion : Routes("OneQuestion")
 }
