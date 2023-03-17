@@ -47,7 +47,8 @@ fun QuestionScreen(navController: NavHostController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
-    val question = getQuestionById("")
+    val questionId = "bd82f0f5-6fdb-4b85-aeea-a6ee018a0b24" // temporary, replace by an existing QuestionId in databse
+    val question = getQuestionById(questionId)
 
     val sortedAnswers = question.answers.sortedByDescending { it.creationTime }
 
@@ -257,7 +258,7 @@ fun AnswerCard(answer: AnswerResponse, navController:NavHostController) {
 
 fun getQuestionById(questionId: String): OneQuestionResponse = runBlocking {
     //TODO : Receive ID from getQuestionById  when clicking on it
-    val response = ApiService.init().getQuestion("bd82f0f5-6fdb-4b85-aeea-a6ee018a0b24") // Question id is passed temporary here
+    val response = ApiService.init().getQuestion(questionId)
     Log.d("response ", response.message())
     if (response.isSuccessful){
         Log.d("response ", response.message())
