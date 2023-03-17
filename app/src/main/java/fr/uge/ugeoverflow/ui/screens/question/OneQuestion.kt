@@ -107,7 +107,6 @@ fun QuestionScreen(navController: NavHostController) {
                 }
             }
         },
-
     )
 }
 
@@ -258,12 +257,11 @@ fun AnswerCard(answer: AnswerResponse, navController:NavHostController) {
 
 fun getQuestionById(questionId: String): OneQuestionResponse = runBlocking {
     //TODO : Receive ID from getQuestionById  when clicking on it
-    val response = ApiService.init().getQuestion("ce2db5a6-00db-4735-96fc-be79c1fe80fd")
+    val response = ApiService.init().getQuestion("bd82f0f5-6fdb-4b85-aeea-a6ee018a0b24") // Question id is passed temporary here
     Log.d("response ", response.message())
     if (response.isSuccessful){
         Log.d("response ", response.message())
     }
-    response.body() ?: throw RuntimeException("Failed to fetch question")
-
+    response.body() ?: throw RuntimeException("Failed to fetch question Do")
 }
 

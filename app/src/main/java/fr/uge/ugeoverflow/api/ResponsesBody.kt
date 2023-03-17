@@ -1,6 +1,7 @@
 package fr.uge.ugeoverflow.api
 
 import fr.uge.ugeoverflow.model.Location
+import fr.uge.ugeoverflow.model.User
 import java.util.*
 
 data class QuestionResponse(
@@ -33,7 +34,7 @@ data class UserBoxResponse(
 data class CommentResponse(
     val id: String,
     val body: String,
-    val user: userBoxResponse,
+    val user: UserBoxResponse,
     val creationTime: String
 )
 data class OneQuestionResponse(
@@ -41,18 +42,28 @@ data class OneQuestionResponse(
     val title: String,
     val body: String,
     val tags: List<String>,
-    val user: userBoxResponse,
+    val user: UserBoxResponse,
     val creationTime: String,
     val answersCounter: Int,
     val comments: List<CommentResponse>,
-    val answers: List<AnswerResponse>
+    val answers: List<AnswerResponse>,
+    val location: Location
 )
 data class AnswerResponse(
     val id: String,
     val body: String,
-    val user: userBoxResponse,
+    val user: UserBoxResponse,
     val creationTime: String,
     val score: Int,
-    val votes: List<String>,
-    val comments: List<CommentResponse>
+    val votes: List<VoteResponse>,
+    val comments: List<CommentResponse>,
+    val upVotedByUser:Boolean,
+    val downVotedByUser:Boolean
+)
+
+data class VoteResponse(
+    val vote: String,
+    val user : UserBoxResponse,
+    val downvote : Boolean,
+    val upvote : Boolean
 )

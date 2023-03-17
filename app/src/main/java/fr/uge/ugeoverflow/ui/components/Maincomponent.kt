@@ -1,7 +1,8 @@
 package fr.uge.ugeoverflow.ui.components
 
-import TagScreen
 import QuestionScreen
+import TagScreen
+
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -180,12 +181,10 @@ fun MainComponent() {
 
 
                 )
+                TagScreen(tags = tags)
+            }
             composable(Routes.OneQuestion.route) {
                 QuestionScreen(navController)
-            }
-        }
-
-                TagScreen(tags = tags)
             }
         }
     }
