@@ -2,8 +2,7 @@ package fr.uge.ugeoverflow.ui.screens.question
 
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,19 +16,9 @@ import fr.uge.ugeoverflow.ui.components.MyButton
 @Composable
 fun QuestionsHome(navController: NavHostController) {
 
-//    val questions = remember { QuestionsDataProvider.questionLists}
-//    LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp,vertical = 15.dp ) ){
-//        items(
-//            items = questions,
-//            itemContent = {
-//                QuestionListItem(question=it)
-//            }
-//        )
-//    }
-
     //AllQuestionsScreen()
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopEnd
     ) {
         MyButton(
@@ -41,19 +30,25 @@ fun QuestionsHome(navController: NavHostController) {
             componentSize = ComponentSize.Small,
         )
     }
+    Column {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.TopStart
+        ) {
+            MyButton(
+                text = "Go to One Question",
+                onClick = {
+                    navController.navigate("OneQuestion")
+                },
+                componentType = ComponentTypes.Dark,
+                componentSize = ComponentSize.Small,
+            )
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.TopStart
-    ) {
-        MyButton(
-            text = "Go to One Question",
-            onClick = {
-                navController.navigate("OneQuestion")
-            },
-            componentType = ComponentTypes.Dark,
-            componentSize = ComponentSize.Small,
-        )
+    }
+        AllQuestionsScreen()
+
+    }
+
 
     }
 
@@ -64,6 +59,6 @@ fun QuestionsHome(navController: NavHostController) {
     // AllQuestionsScreen()
 //    QuestionForm(navController)
 //    Log.e("USER CONNECTED ?",SessionManagerSingleton.sessionManager.getToken().toString() )
-}
+
 
 

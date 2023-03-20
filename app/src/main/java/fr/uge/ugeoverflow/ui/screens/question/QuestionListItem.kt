@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -45,7 +46,7 @@ import kotlinx.coroutines.runBlocking
 
 
 @Composable
-fun QuestionListItem(question: Question) {
+fun QuestionListItem(question: QuestionResponse) {
 
     Card(
         modifier = Modifier
@@ -79,7 +80,7 @@ fun QuestionListItem(question: Question) {
                     .fillMaxWidth()
                     .weight(0.65F)
             ) {
-                question.getTitle?.let {
+                question.title?.let {
                     Text(
                         text = it,
                         modifier = Modifier.padding(start = 5.dp),
@@ -88,7 +89,7 @@ fun QuestionListItem(question: Question) {
                         fontSize = 15.sp
                     )
                 }
-                question.getBody?.let {
+                question.body?.let {
                     Text(
                         modifier = Modifier.padding(start = 5.dp),
                         text = "${it.take(128)}...", fontSize = 12.sp
@@ -107,9 +108,8 @@ fun QuestionListItem(question: Question) {
                         .padding(bottom = 6.dp)
                         .align(CenterVertically)
                 ) {
-                    question.getTags?.let {
+                    question.tags?.let {
                         for (tag in it) {
-                            Log.d("tag05", tag.toString())
                             Row(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(5.dp))
@@ -128,23 +128,19 @@ fun QuestionListItem(question: Question) {
                         }
                     }
                 }
-                Row(
+                /*Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(CenterVertically)
                 ) {
                     Text(
-                        "${question.getVotes.size} ${
-                            if (question.getVotes.isEmpty()) stringResource(
-                                R.string.vote
-                            ) else stringResource(R.string.votes)
-                        }" +
-                                "     ${question.getAnswers?.size} ${stringResource(R.string.answers)}",
+
+                                "     ${question.ans?.size} ${stringResource(R.string.answers)}",
                         fontSize = 12.sp,
                         modifier = Modifier.padding(start = 30.dp),
                         color = Color.Gray
                     )
-                }
+                }*/
             }
         }
     }
@@ -166,49 +162,40 @@ fun userImage() {
     )
 }
 
+@Preview(showBackground = true)
 @Composable
 fun AllQuestionsScreen() {
     val ugeOverflowApiSerivce = ApiService.init()
-    val coroutineScope = rememberCoroutineScope()
-
+    val sessionManager = SessionManagerSingleton.sessionManager
     var questions by remember { mutableStateOf(emptyList<QuestionResponse>()) }
     Log.i("ugeOverflowApiSerivce", ugeOverflowApiSerivce.toString())
     // Use the LaunchedEffect to execute the API call once and update the UI
     LaunchedEffect(Unit) {
         try {
-            val response = ugeOverflowApiSerivce.getAllQuestions()
+            //get all questions from backend
+
+                val response = ugeOverflowApiSerivce.getAllQuestions()
+
             if (response.isSuccessful) {
                 questions = response.body() ?: emptyList()
                 Log.d(response.code().toString(), response.body().toString())
             } else {
                 Log.d(response.code().toString(), response.message())
             }
+
         } catch (e: Exception) {
             throw e.message?.let { ApiException(e.hashCode(), it) }!!
         }
+
     }
 
-    Scaffold(
-        topBar = { TopAppBar(title = { Text("All Questions") }) },
-        content = {
-            LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp, vertical = 15.dp)) {
-                items(questions) { question ->
-                    QuestionItem(question)
-                }
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                coroutineScope.launch {
-                    val result = mutableStateOf(false)
-                    result.value = true
-                }
-            }) {
-                Icon(Icons.Default.Add, "Ask Question")
-            }
+    LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp, vertical = 15.dp)) {
+        items(questions) { question ->
+            QuestionItem(question)
         }
+    }
 
-    )
+
 }
 
 
@@ -294,7 +281,7 @@ fun QuestionItem(question: QuestionResponse) {
                         .align(CenterVertically)
                 ) {
                     Text(
-                        text = question.creationTime.toString(),
+                        text = question.getTimePassedSinceQuestionCreation(question.creationTime),
                         fontSize = 12.sp,
                         modifier = Modifier.padding(start = 30.dp),
                         color = Color.Gray

@@ -2,6 +2,10 @@ package fr.uge.ugeoverflow.api
 
 import fr.uge.ugeoverflow.model.Location
 import fr.uge.ugeoverflow.model.User
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 data class QuestionResponse(
@@ -12,7 +16,30 @@ data class QuestionResponse(
     val user: UserBoxResponse,
     val creationTime: String,
     val location: Location
-)
+){
+    fun getTimePassedSinceQuestionCreation(creationTime: String): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault())
+        val date = dateFormat.parse(creationTime)
+        val now = Date()
+
+        val seconds = ((now.time - date.time) / 1000).toInt()
+        val minutesPassed = seconds / 60
+        val hoursPassed = minutesPassed / 60
+        val daysPassed = hoursPassed / 24
+
+        return when {
+            minutesPassed == 0 -> "just now"
+            minutesPassed == 1 -> "1 minute ago"
+            minutesPassed < 60 -> "$minutesPassed minutes ago"
+            hoursPassed == 1 -> "1 hour ago"
+            hoursPassed < 24 -> "$hoursPassed hours ago"
+            daysPassed == 1 -> "1 day ago"
+            else -> "$daysPassed days ago"
+        }
+    }
+
+}
+
 
 data class LoginResponse(
     val message: String,
