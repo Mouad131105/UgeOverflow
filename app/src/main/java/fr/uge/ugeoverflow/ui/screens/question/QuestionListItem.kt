@@ -32,13 +32,13 @@ import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
+import fr.uge.ugeoverflow.filters.QuestionFilterStrategy
+import fr.uge.ugeoverflow.filters.QuestionFilterType
+import fr.uge.ugeoverflow.filters.QuestionsFilterManager
 
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-import fr.uge.ugeoverflow.ui.components.ComponentType
-import fr.uge.ugeoverflow.ui.components.ComponentTypes
-import fr.uge.ugeoverflow.ui.components.MyButton
-import fr.uge.ugeoverflow.ui.components.MyCard
+import fr.uge.ugeoverflow.ui.components.*
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.utils.SearchableMultiSelect
 import kotlinx.coroutines.launch
@@ -162,45 +162,54 @@ fun userImage() {
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-fun AllQuestionsScreen() {
+fun AllQuestionsScreen(filterOption: String) {
     val ugeOverflowApiSerivce = ApiService.init()
     val sessionManager = SessionManagerSingleton.sessionManager
-    var questions by remember { mutableStateOf(emptyList<QuestionResponse>()) }
-    Log.i("ugeOverflowApiSerivce", ugeOverflowApiSerivce.toString())
-    // Use the LaunchedEffect to execute the API call once and update the UI
-    LaunchedEffect(Unit) {
+    var questions by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
+    var questionsToFilter by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
+
+    val questionsFilterManager = QuestionsFilterManager()
+    questionsFilterManager.init()
+
+    LaunchedEffect(filterOption) {
+        Log.i("",filterOption)
         try {
-            //get all questions from backend
-
-                val response = ugeOverflowApiSerivce.getAllQuestions()
-
-            if (response.isSuccessful) {
-                questions = response.body() ?: emptyList()
-                Log.d(response.code().toString(), response.body().toString())
+            // get questions with the selected filter option from backend
+            val selectedFilter = QuestionFilterType.valueOf(filterOption)
+            if (selectedFilter == QuestionFilterType.ALL) {
+                val response = ugeOverflowApiSerivce.getAllQuestionsDto()
+                if (response.isSuccessful) {
+                    questions = response.body() ?: emptyList()
+                    questionsToFilter = questions
+                    Log.d(response.code().toString(), response.body().toString())
+                } else {
+                    Log.d(response.code().toString(), response.message())
+                }
             } else {
-                Log.d(response.code().toString(), response.message())
-            }
+                Log.i("i",selectedFilter.name)
+                questions = questionsFilterManager.getQuestionsByFilter(selectedFilter.name, questionsToFilter)
 
+            }
         } catch (e: Exception) {
             throw e.message?.let { ApiException(e.hashCode(), it) }!!
         }
-
     }
 
-    LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp, vertical = 15.dp)) {
-        items(questions) { question ->
-            QuestionItem(question)
+    Column(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 6.dp, vertical = 15.dp),
+            modifier = Modifier.weight(1f)
+        ) {
+            items(questions) { question ->
+                QuestionItem(question)
+            }
         }
     }
-
-
 }
 
-
 @Composable
-fun QuestionItem(question: QuestionResponse) {
+fun QuestionItem(question: OneQuestionResponse) {
     MyCard(
         modifier = Modifier
             .fillMaxWidth(),
@@ -281,7 +290,7 @@ fun QuestionItem(question: QuestionResponse) {
                         .align(CenterVertically)
                 ) {
                     Text(
-                        text = question.getTimePassedSinceQuestionCreation(question.creationTime),
+                        text = "asked "+ question.getTimePassedSinceQuestionCreation(question.creationTime),
                         fontSize = 12.sp,
                         modifier = Modifier.padding(start = 30.dp),
                         color = Color.Gray
@@ -291,6 +300,27 @@ fun QuestionItem(question: QuestionResponse) {
             }
         }
     )
+}
+
+@Composable
+fun FilterButtons(
+    filters: List<String>,
+    selectedFilter: String?,
+    onFilterSelected: (String) -> Unit,
+) {
+    Row(modifier = Modifier.padding(vertical = 8.dp)) {
+        for (filter in filters) {
+            Button(
+                onClick = { onFilterSelected(filter) },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = if (filter == selectedFilter) MaterialTheme.colors.primary else MaterialTheme.colors.secondary
+                ),
+                modifier = Modifier.padding(end = 8.dp),
+            ) {
+                Text(text = filter)
+            }
+        }
+    }
 }
 
 

@@ -15,7 +15,10 @@ interface RestController {
     suspend fun loginUser(@Body loginRequest: LoginRequest): Response<LoginResponse>
 
     @GET("api/v1/questions")
-    suspend fun getAllQuestions(): Response<List<QuestionResponse>>
+    suspend fun getAllQuestions(): Response<List<QuestionResponse>>@GET("api/v1/questions")
+
+
+    suspend fun getAllQuestionsDto(): Response<List<OneQuestionResponse>>
 
     @POST("/auth/api/v1/questions")
     suspend fun postQuestion(@Header("Authorization") token: String, @Body question: QuestionRequest): Response<Question>
@@ -25,6 +28,8 @@ interface RestController {
 
     @GET("/auth/api/v1/questions/{questionId}")
     suspend fun getQuestion(@Path("questionId") questionId: String): Response<OneQuestionResponse>
+
+
 
 
 }
