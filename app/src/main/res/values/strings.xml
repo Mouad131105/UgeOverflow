@@ -3,4 +3,5 @@
     <string name="vote">vote</string>
     <string name="votes">votes</string>
     <string name="answers">answers</string>
+    <string name="noFilterOptionsGiven">options</string>
 </resources>
