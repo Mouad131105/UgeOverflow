@@ -19,6 +19,18 @@ data class QuestionRequest(
     val location: Location
 )
 
+data class AnswerRequest(
+    val body: String,
+    //val location: Location
+    )
+
+data class CommentRequest(
+    val body: String,
+    val overflowId: String
+
+)
+
+
 data class ContentRequest(
     val text: String
 )

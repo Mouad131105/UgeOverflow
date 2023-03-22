@@ -14,6 +14,8 @@ data class QuestionResponse(
     val location: Location
 )
 
+
+
 data class LoginResponse(
     val message: String,
     val data: String

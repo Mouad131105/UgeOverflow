@@ -27,6 +27,5 @@ object LoginService {
         } else {
             errorCallback()
         }
-
     }
 }
