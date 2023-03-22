@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.QuestionRequest
 import fr.uge.ugeoverflow.model.Location
-import fr.uge.ugeoverflow.routes.Routes
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.services.LocationService
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton

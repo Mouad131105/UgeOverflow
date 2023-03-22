@@ -2,6 +2,7 @@ package fr.uge.ugeoverflow.ui.components
 
 import QuestionScreen
 import TagScreen
+import android.content.pm.LauncherApps
 
 import android.util.Log
 import android.widget.Toast
@@ -32,9 +33,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.uge.ugeoverflow.api.OneQuestionResponse
+import fr.uge.ugeoverflow.data.QuestionManager
 import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.model.Tag
-import fr.uge.ugeoverflow.routes.Routes
+import fr.uge.ugeoverflow.session.ApiService
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.screens.ForgotPassword
 import fr.uge.ugeoverflow.ui.screens.LoginPage
@@ -50,6 +54,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 val users = UserDataProvider.generateUsers()
+val questionManager = QuestionManager
 
 @Composable
 fun MainComponent() {
@@ -115,6 +120,16 @@ fun MainComponent() {
                     UserDetailScreen(user)
                 }
             }
+
+            composable("${Routes.OneQuestion.route}/{questionId}") { backStackEntry ->
+                val questionId: String? = backStackEntry.arguments?.getString("questionId")
+                val question = questionId?.let { it1 -> questionManager.getQuestionById(it1) }
+
+                if (question != null) {
+                    QuestionScreen(navController,question)
+                }
+            }
+
             composable(Routes.Tags.route) {
 
                 val tags = listOf(
@@ -183,10 +198,8 @@ fun MainComponent() {
                 )
                 TagScreen(tags = tags)
             }
-            composable(Routes.OneQuestion.route) {
-                QuestionScreen(navController)
+
             }
-        }
     }
 }
 
