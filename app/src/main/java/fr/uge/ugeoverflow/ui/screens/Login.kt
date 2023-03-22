@@ -27,7 +27,7 @@ import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
 
 @Composable
-fun LoginPage(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController) {
     val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -145,5 +145,5 @@ fun LoginPage(navController: NavHostController) {
 }
 
 fun tesd(email: String = "infzoe", password: String = "infzoe") {
-    Log.i("user", email + " " + password)
+    Log.i("user", "$email $password")
 }

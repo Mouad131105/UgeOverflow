@@ -9,7 +9,7 @@ data class Question(
     private val votes: Set<Vote> = mutableSetOf(),
     private val body: String?,
     private val answers: Set<Answer>? = mutableSetOf(),
-    private val location: Location = Location(0.0, 0.0),
+    private val myLocation: MyLocation = MyLocation(0.0, 0.0),
     private val creationTime: String = "",
 ) {
     val getId: UUID? get() = id
@@ -18,13 +18,13 @@ data class Question(
     val getVotes: Set<Vote> get() = votes
     val getBody: String? get() = body
     val getAnswers: Set<Answer>? get() = answers
-    val getLocation: Location? get() = location
+    val getMyLocation: MyLocation? get() = myLocation
     val getCreationTime: String? get() = creationTime
 }
 
-data class Location(
-    private val latitude: Double,
-    private val longitude: Double
+data class MyLocation(
+    val latitude: Double,
+    val longitude: Double
 ) {
     val getLatitude: Double get() = latitude
     val getLongitude: Double get() = longitude

@@ -35,7 +35,7 @@ fun UserView(user: User, navController: NavController, onItemClick: (UUID) -> Un
     }
 }
 @Composable
-fun UserList(users: List<User>, navController: NavController) {
+fun UserListScreen(users: List<User>, navController: NavController) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -48,14 +48,4 @@ fun UserList(users: List<User>, navController: NavController) {
     }
 }
 
-@Composable
-fun UserDetailScreen(user: User) {
-    /*val user = User(UUID.randomUUID(),"John","Doe","johndoe","johndoe@example.com",
-        Address(id = UUID.randomUUID(), street = "1 Main St", city = "New York", country = "USA", zipCode = "10001"))*/
-    Column(Modifier.fillMaxSize()) {
-        Text("ID: ${user.id}")
-        Text("Username: ${user.username}")
-        Text("Address: ${user.address}")
-    }
-}
 

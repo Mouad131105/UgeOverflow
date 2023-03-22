@@ -184,7 +184,7 @@ fun AllQuestionsScreen() {
                 Log.d(response.code().toString(), response.message())
             }
         } catch (e: Exception) {
-            throw e.message?.let { ApiException(e.hashCode(), it) }!!
+//            throw e.message?.let { ApiException(e.hashCode(), it) }!!
         }
     }
 
@@ -202,7 +202,6 @@ fun AllQuestionsScreen() {
                 coroutineScope.launch {
                     val result = mutableStateOf(false)
                     result.value = true
-
                 }
             }) {
                 Icon(Icons.Default.Add, "Ask Question")

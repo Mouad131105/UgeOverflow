@@ -21,9 +21,12 @@ object LoginService {
         if (response.isSuccessful) {
             successCallback()
             //save and username token
-            response.body()?.data?.let {
-                SessionManagerSingleton.sessionManager.logIn(it)
-            }
+
+            SessionManagerSingleton.sessionManager.logIn(
+                response.body()!!.token,
+                response.body()!!.username
+            )
+
         } else {
             errorCallback()
         }

@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import fr.uge.ugeoverflow.model.Tag
 
 @Composable
-fun TagScreen(tags: List<Tag>) {
+fun TagsScreen(tags: List<Tag>) {
     var searchFilter by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxSize()) {
         TextField(
