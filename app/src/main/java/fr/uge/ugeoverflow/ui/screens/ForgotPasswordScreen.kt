@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.ui.components.CustomTopAppBar
 
 @Composable
-fun ForgotPassword(navController: NavHostController) {
+fun ForgotPasswordScreen(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
         ScaffoldWithTopBarForgotPass(navController)
     }

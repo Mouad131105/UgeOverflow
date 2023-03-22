@@ -5,27 +5,35 @@ import TagScreen
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import fr.uge.ugeoverflow.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -34,13 +42,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.model.Tag
-import fr.uge.ugeoverflow.routes.Routes
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-import fr.uge.ugeoverflow.ui.screens.ForgotPassword
-import fr.uge.ugeoverflow.ui.screens.LoginPage
-import fr.uge.ugeoverflow.ui.screens.SignUp
-import fr.uge.ugeoverflow.ui.screens.question.AskQuestion
-import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
+import fr.uge.ugeoverflow.ui.screens.ForgotPasswordScreen
+import fr.uge.ugeoverflow.ui.screens.LoginScreen
+import fr.uge.ugeoverflow.ui.screens.SignUpScreen
+import fr.uge.ugeoverflow.ui.screens.profile.UserProfileScreen
+import fr.uge.ugeoverflow.ui.screens.question.AskQuestionScreen
+import fr.uge.ugeoverflow.ui.screens.question.QuestionsHomeScreen
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
@@ -56,13 +65,14 @@ fun MainComponent() {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             if (navController.currentDestination?.route !in listOf(
+                    Routes.UserDetails.route,
                     Routes.Questions.route,
-                    Routes.Tags.route
+                    Routes.Tags.route,
+                    Routes.Profile.route,
                 )
             ) {
                 AppTopBar(
@@ -76,44 +86,49 @@ fun MainComponent() {
             }
         },
         drawerContent = {
-            drawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
-                navController.navigate(item)
-                scope.launch {
-                    scaffoldState.drawerState.close()
-                }
-            }, navController = navController, scaffoldState = scaffoldState, scope = scope)
+            DrawerContent(
+                items = listOf("Questions", "Tags", "Users", "Profile"),
+                onItemClick = { item ->
+                    navController.navigate(item)
+                    scope.launch {
+                        scaffoldState.drawerState.close()
+                    }
+                },
+                navController = navController,
+                scaffoldState = scaffoldState,
+                scope = scope
+            )
         }) {
         NavHost(navController = navController, startDestination = Routes.Questions.route) {
 
             composable(Routes.Login.route) {
-                LoginPage(navController = navController)
+                LoginScreen(navController = navController)
             }
             composable(Routes.SignUp.route) {
-                SignUp(navController = navController)
+                SignUpScreen(navController = navController)
             }
             composable(Routes.Questions.route) {
-                QuestionsHome(navController = navController)
+                QuestionsHomeScreen(navController = navController)
             }
             composable(Routes.ForgotPassword.route) {
-                ForgotPassword(navController)
+                ForgotPasswordScreen(navController)
             }
             composable(Routes.AskQuestion.route) {
-                AskQuestion(navController)
+                AskQuestionScreen(navController)
             }
             composable(Routes.Tags.route) {
                 Text(text = "Tags")
             }
             composable(Routes.Users.route) {
-                UserList(users, navController)
+                UserListScreen(users, navController)
             }
-            composable("${Routes.UserDetails.route}/{userId}") { backStackEntry ->
-                val userIdToFind: UUID =
-                    UUID.fromString(backStackEntry.arguments?.getString("userId"))
-                val user = users.find { it.id == userIdToFind }
-                // Display user details screen
-                if (user != null) {
-                    UserDetailScreen(user)
-                }
+
+            composable(Routes.Profile.route) {
+                UserProfileScreen(navController = navController)
+            }
+            composable("${Routes.Profile.route}/{username}") { backStackEntry ->
+                val username: String = backStackEntry.arguments?.getString("username") ?: throw Exception("Username is null")
+                UserProfileScreen(navController, username)
             }
             composable(Routes.Tags.route) {
 
@@ -181,7 +196,8 @@ fun MainComponent() {
 
 
                 )
-                TagScreen(tags = tags)
+
+                TagsScreen(tags = tags)
             }
             composable(Routes.OneQuestion.route) {
                 QuestionScreen(navController)
@@ -189,6 +205,7 @@ fun MainComponent() {
         }
     }
 }
+
 
 @Composable
 fun AppTopBar(
@@ -227,30 +244,66 @@ fun AppTopBar(
                 }
                 if (sessionManager.isUserLoggedIn.value) {
                     Log.d("hey", sessionManager.getToken().toString())
+                    // profile icon
+                    var expanded by remember { mutableStateOf(false) }
 
-//                    MyButton(
-//                        text = "Log out",
-//                        onClick = { sessionManager.logOut() },
-//                        modifier = Modifier.fillMaxWidth(0.8f),
-//                        componentType = ComponentTypes.DangerOutline,
-//                        componentSize = ComponentSize.Small
-//                    )
-
-                    Button(
-                        onClick = { sessionManager.logOut() },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = White200),
-                        contentPadding = PaddingValues(0.dp),
-                        modifier = Modifier.fillMaxWidth(0.48f)
-                    ) {
-                        Text(
-                            text = "Log out",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.button.copy(
-                                fontSize = 10.sp,
-                                color = Blue200
+                    Box(
+                        modifier = Modifier
+                            .wrapContentSize(Alignment.TopEnd)
+                    )
+                    {
+                        IconButton(onClick = { expanded = true }) {
+                            Image(
+                                //TODO replace by user image url
+                                painter = painterResource(id = R.drawable.user3),
+                                contentDescription = "Profile",
+                                modifier = Modifier
+                                    .padding(3.dp)
+                                    .fillMaxWidth(0.2f)
+                                    .size(30.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
                             )
-                        )
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(onClick = {
+                                navController.navigate(Routes.Profile.route)
+                                expanded = false
+                            }) {
+                                Text("Profile")
+                            }
+                            DropdownMenuItem(onClick = {
+                                expanded = false
+                            }) {
+                                Text("Settings")
+                            }
+                            Divider()
+                            DropdownMenuItem(onClick = {
+                                expanded = false
+                                sessionManager.logOut()
+                            }) {
+                                Text("Log out")
+                            }
+                        }
                     }
+//                    Button(
+//                        onClick = { sessionManager.logOut() },
+//                        colors = ButtonDefaults.buttonColors(backgroundColor = White200),
+//                        contentPadding = PaddingValues(0.dp),
+//                        modifier = Modifier.fillMaxWidth(0.48f)
+//                    ) {
+//                        Text(
+//                            text = "log out ",
+//                            textAlign = TextAlign.Center,
+//                            style = MaterialTheme.typography.button.copy(
+//                                fontSize = 10.sp,
+//                                color = Blue200
+//                            )
+//                        )
+//                    }
                 } else {
                     Button(
                         onClick = { navController.navigate(Routes.Login.route) },
@@ -281,8 +334,8 @@ fun AppTopBar(
                             style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
                         )
                     }
-                }
 
+                }
             }
         },
         navigationIcon = {
@@ -310,7 +363,7 @@ fun AppTopBar(
 
 
 @Composable
-fun drawerContent(
+fun DrawerContent(
     items: List<String>,
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,

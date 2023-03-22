@@ -1,6 +1,6 @@
 package fr.uge.ugeoverflow.api
 
-import fr.uge.ugeoverflow.model.Location
+import fr.uge.ugeoverflow.model.MyLocation
 
 data class RegisterRequest(
     val firstname: String,
@@ -16,7 +16,7 @@ data class QuestionRequest(
     val title: String,
     val body: String,
     val tags: List<String>,
-    val location: Location
+    val myLocation: MyLocation?
 )
 
 data class AnswerRequest(

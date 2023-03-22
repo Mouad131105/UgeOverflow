@@ -8,7 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -20,17 +19,15 @@ import fr.uge.ugeoverflow.api.RegisterRequest
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.ui.components.CustomTopAppBar
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-import fr.uge.ugeoverflow.ui.components.ComponentType
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
-import fr.uge.ugeoverflow.ui.theme.Purple700
 import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
 import kotlinx.coroutines.*
 
 
 @Composable
-fun SignUp(navController: NavHostController) {
+fun SignUpScreen(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
         ScaffoldWithTopBar(navController)
     }

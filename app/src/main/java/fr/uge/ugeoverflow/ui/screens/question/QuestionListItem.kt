@@ -184,7 +184,7 @@ fun AllQuestionsScreen() {
                 Log.d(response.code().toString(), response.message())
             }
         } catch (e: Exception) {
-            throw e.message?.let { ApiException(e.hashCode(), it) }!!
+//            throw e.message?.let { ApiException(e.hashCode(), it) }!!
         }
     }
 

@@ -1,6 +1,5 @@
 package fr.uge.ugeoverflow.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,16 +8,11 @@ import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import fr.uge.ugeoverflow.model.Address
-import fr.uge.ugeoverflow.model.AddressBuilder
 import fr.uge.ugeoverflow.model.User
-import fr.uge.ugeoverflow.model.UserBuilder
-import fr.uge.ugeoverflow.routes.Routes
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.screens.question.userImage
 import java.util.*
 
@@ -41,7 +35,7 @@ fun UserView(user: User, navController: NavController, onItemClick: (UUID) -> Un
     }
 }
 @Composable
-fun UserList(users: List<User>, navController: NavController) {
+fun UserListScreen(users: List<User>, navController: NavController) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -54,14 +48,4 @@ fun UserList(users: List<User>, navController: NavController) {
     }
 }
 
-@Composable
-fun UserDetailScreen(user: User) {
-    /*val user = User(UUID.randomUUID(),"John","Doe","johndoe","johndoe@example.com",
-        Address(id = UUID.randomUUID(), street = "1 Main St", city = "New York", country = "USA", zipCode = "10001"))*/
-    Column(Modifier.fillMaxSize()) {
-        Text("ID: ${user.id}")
-        Text("Username: ${user.username}")
-        Text("Address: ${user.address}")
-    }
-}
 
