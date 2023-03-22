@@ -1,7 +1,5 @@
 package fr.uge.ugeoverflow.services
 
-import android.location.Location
-import android.location.LocationRequest
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.model.Question
 import retrofit2.Response

@@ -20,12 +20,8 @@ import java.util.logging.Level.ALL
 @Composable
 fun QuestionsHome(navController: NavHostController) {
 
-
     var filterOption by remember { mutableStateOf(QuestionFilterType.ALL.getFilterName()) }
 
-
-
-    //AllQuestionsScreen()
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopEnd
@@ -60,22 +56,11 @@ fun QuestionsHome(navController: NavHostController) {
                 filterOption = option
             })
 
-            AllQuestionsScreen(filterOption)
+            AllQuestionsScreen(navController,filterOption)
         }
 
     }
 
 
 }
-
-
-
-
-
-    //from db
-    // AllQuestionsScreen()
-//    QuestionForm(navController)
-//    Log.e("USER CONNECTED ?",SessionManagerSingleton.sessionManager.getToken().toString() )
-
-
 

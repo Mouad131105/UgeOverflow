@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -25,11 +26,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.R
@@ -41,6 +44,7 @@ import fr.uge.ugeoverflow.filters.QuestionsFilterManager
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.*
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.utils.SearchableMultiSelect
 import kotlinx.coroutines.launch
@@ -165,7 +169,7 @@ fun userImage() {
 }
 
 @Composable
-fun AllQuestionsScreen(filterOption: String) {
+fun AllQuestionsScreen( navController :NavController,filterOption: String) {
     val ugeOverflowApiSerivce = ApiService.init()
     val sessionManager = SessionManagerSingleton.sessionManager
     var questions by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
@@ -204,14 +208,14 @@ fun AllQuestionsScreen(filterOption: String) {
             modifier = Modifier.weight(1f)
         ) {
             items(questions) { question ->
-                QuestionItem(question)
+                QuestionItem(navController,question)
             }
         }
     }
 }
 
 @Composable
-fun QuestionItem(question: OneQuestionResponse) {
+fun QuestionItem(navController: NavController ,question: OneQuestionResponse) {
     MyCard(
         modifier = Modifier
             .fillMaxWidth(),
@@ -232,13 +236,16 @@ fun QuestionItem(question: OneQuestionResponse) {
                         .size(28.dp)
                         .clip(RoundedCornerShape(corner = CornerSize(10.dp)))
                 )
-                Text(
-                    text = question.title,
+                ClickableText(
+                    text = AnnotatedString(question.title),
                     modifier = Modifier.padding(start = 5.dp),
-                    fontWeight = FontWeight.W800,
-                    color = Color(0xFF4552B8),
-                    fontSize = 15.sp
+                    style = MaterialTheme.typography.caption.copy(
+                        color = MaterialTheme.colors.secondary
+                    ),
+                    onClick = { navController.navigate("${Routes.OneQuestion.route}/${question.id}") },
+
                 )
+
             }
         },
         body = {
