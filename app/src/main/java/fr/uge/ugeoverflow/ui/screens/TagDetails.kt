@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.QuestionResponse
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.model.Tag
@@ -21,7 +22,8 @@ import fr.uge.ugeoverflow.ui.screens.question.QuestionListItem
 import fr.uge.ugeoverflow.ui.theme.Blue300
 
 @Composable
-fun TagDetails(tag: Tag, questions: List<QuestionResponse>) {
+fun TagDetails(tag: Tag) {
+    val questions: List<QuestionResponse>
     Column( Modifier.padding(15.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Questions tagged [${tag.getTAG_TYPE}]", fontSize = 24.sp, modifier = Modifier.weight(.7F))

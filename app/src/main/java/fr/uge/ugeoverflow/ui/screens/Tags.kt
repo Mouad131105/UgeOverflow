@@ -7,14 +7,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.internal.composableLambda
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import fr.uge.ugeoverflow.api.QuestionResponse
 import fr.uge.ugeoverflow.model.Tag
+import fr.uge.ugeoverflow.ui.screens.TagDetails
+import fr.uge.ugeoverflow.ui.screens.question.QuestionListItem
+import fr.uge.ugeoverflow.ui.theme.Blue300
 
 @Composable
 fun TagScreen(tags: List<Tag>) {
@@ -43,12 +51,17 @@ fun TagList(tags: List<Tag>, filter: String) {
 
 @Composable
 fun Tag(tag: Tag) {
+    var isClicked by mutableStateOf(false)
     var showTooltip by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .background(Color.White)
             .padding(15.dp)
-            .border(1.dp, Color(android.graphics.Color.parseColor("#DBDDDE")), RoundedCornerShape(4.dp))
+            .border(
+                1.dp,
+                Color(android.graphics.Color.parseColor("#DBDDDE")),
+                RoundedCornerShape(4.dp)
+            )
             .clickable(onClick = {
                 // Toggle the tooltip visibility on click
                 showTooltip = true
@@ -68,7 +81,10 @@ fun Tag(tag: Tag) {
                         fontSize = 13.sp,
                     ),
                     modifier = Modifier
-                        .background(Color(android.graphics.Color.parseColor("#DAEFFC")), shape = RoundedCornerShape(4.dp))
+                        .background(
+                            Color(android.graphics.Color.parseColor("#DAEFFC")),
+                            shape = RoundedCornerShape(4.dp)
+                        )
                         .padding(7.dp)
                         .width(IntrinsicSize.Min)
                         .height(IntrinsicSize.Min)
@@ -105,25 +121,35 @@ fun Tag(tag: Tag) {
                 text = {
                     Text(text = tag.getDescription ?: "")
                 },
-                confirmButton = {
+                dismissButton = {
                     Button(
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color(android.graphics.Color.parseColor("#89CDF9") )),
-                                onClick = {
+                        onClick = {
                             // Dismiss the tooltip
                             showTooltip = false
 
                         }
                     ) {
-                        Text(text = "OK"  ,color = Color.White )
+                        Text(text = "Cancel"  ,color = Color.White )
+
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(android.graphics.Color.parseColor("#89CDF9") )),
+                        onClick = { isClicked = true }
+                    ) {
+                        Text(text = "See questions"  ,color = Color.White )
 
                     }
                 }
             )
         }
+        if (isClicked) {
+            TagDetails(tag = tag);
+        }
     }
 }
-
-
 
 
 
