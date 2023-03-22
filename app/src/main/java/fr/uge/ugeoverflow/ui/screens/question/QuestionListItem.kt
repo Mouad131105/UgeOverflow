@@ -4,7 +4,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
@@ -258,26 +260,22 @@ fun QuestionItem(question: OneQuestionResponse) {
                     .padding(horizontal = 16.dp)
             ) {
                 Row(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .padding(bottom = 6.dp)
                         .align(CenterVertically)
                 ) {
                     question.tags.let {
                         for (tag in it) {
-                            Log.d("tag05", tag.toString())
                             Row(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(5.dp))
-                                    .background(
-                                        White200
-                                    )
+                                    .background(White200)
                             ) {
                                 Text(
                                     text = tag,
                                     fontSize = 12.sp,
-                                    modifier = Modifier
-                                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
                                 )
                             }
                             Spacer(modifier = Modifier.width(5.dp))
@@ -286,18 +284,40 @@ fun QuestionItem(question: OneQuestionResponse) {
                 }
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .align(CenterVertically)
                 ) {
-                    Text(
-                        text = "asked "+ question.getTimePassedSinceQuestionCreation(question.creationTime),
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(start = 30.dp),
-                        color = Color.Gray
-                    )
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                if (question.answersCounter > 0) Color.Green else Color.Transparent,
+                                RoundedCornerShape(4.dp)
+                            )
+                    ) {
+                        Text(
+                            text = "${question.answersCounter} ${stringResource(R.string.answers)}",
+                            fontSize = 12.sp,
+                            color = if (question.answersCounter > 0) Color.White else Color.Black,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(start = 30.dp),
+                    ){
+                        Text(
+                            text = "asked " + question.getTimePassedSinceQuestionCreation(question.creationTime),
+                            fontSize = 12.sp,
+
+                            color = Color.Gray
+                        )
+                    }
+
 
                 }
-            }
+
+
+                }
+
         }
     )
 }
