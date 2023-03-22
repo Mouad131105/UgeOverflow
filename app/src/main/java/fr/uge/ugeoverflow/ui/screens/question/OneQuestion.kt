@@ -49,7 +49,7 @@ object OneQuestionGlobals {
 @Composable
 fun QuestionScreen(navController: NavHostController) {
     val scaffoldState = rememberScaffoldState()
-    val questionId = "8fe6dd0d-60c5-4f5b-a1f9-0c0c2387f7a7" // temporary, replace by an existing QuestionId in databse
+    val questionId = "cd414895-39d9-422c-a160-80fc80a4adda" // temporary, replace by an existing QuestionId in databse
     OneQuestionGlobals.questionId = questionId
     val question = remember { getQuestionById(questionId) } // load only once
     val sortedAnswers = remember(question.answers) {

@@ -265,195 +265,201 @@ fun UserProfilePage(
         floatingActionButtonPosition = FabPosition.Center,
 
         content = {
-            Column(
-                modifier = Modifier
-                    .scrollable(
-                        orientation = Orientation.Vertical,
-                        state = rememberScrollState(),
-                        enabled = true,
-                        reverseDirection = true,
-                    )
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+            ) {
+                item {
+
+                    Column(
+//                        modifier = Modifier
+//                            .scrollable(
+//                                orientation = Orientation.Vertical,
+//                                state = rememberScrollState(),
+//                                enabled = true,
+//                                reverseDirection = true,
+//                            )
 //                    .verticalScroll(rememberScrollState())
 //                    .fillMaxSize()
 //                    .padding(bottom = 16.dp)
 
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .fillMaxWidth(0.5f)
                     ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .fillMaxWidth(0.5f)
+                            ) {
 
-                        Image(
+                                Image(
 //                            painter = rememberImagePainter(user.profilePicture),
-                            painter = rememberImagePainter(R.drawable.user2),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(80.dp)
-                                .clip(CircleShape)
-                                .align(Alignment.Start)
-                        )
-                        Text(
-                            text = user.username,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp,
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .align(Alignment.Start)
-                        )
-                        user.bio?.let { it1 ->
-                            Text(
-                                text = it1,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
-                        }
-                        Text(
-                            text = user.address.toString(),
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-
-                    }
-                    Box(
-                        modifier = Modifier
-                            .wrapContentWidth(
-                                align = Alignment.End,
-                                unbounded = true
-                            )
-                            .padding(8.dp),
-                        contentAlignment = Alignment.BottomEnd
-
-                    ) {
-                        if (isMe) {
-                            MyButton(
-                                text = "Edit Profile",
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                componentSize = ComponentSize.Small,
-                                componentType = ComponentTypes.Success,
-                                onClick = { /*TODO*/ }
-                            )
-                        } else {
-                            if (isFollowing) {
-                                MyButton(
-                                    text = "Unfollow",
-                                    componentSize = ComponentSize.Small,
-                                    componentType = ComponentTypes.Warning,
-                                    onClick = {
-                                        ProfileService.unfollowUser(
-                                            username = user.username,
-                                            onSuccess = {
-                                                isFollowing = false
-                                            },
-                                            onError = {
-                                                isFollowing = true
-                                            }
-                                        )
-                                    }
+                                    painter = rememberImagePainter(R.drawable.user2),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(80.dp)
+                                        .clip(CircleShape)
+                                        .align(Alignment.Start)
                                 )
-                            } else {
-                                MyButton(
-                                    text = "Follow",
-                                    componentSize = ComponentSize.Small,
-                                    componentType = ComponentTypes.Info,
-                                    onClick = {
-                                        ProfileService.followUser(
-                                            username = user.username,
-                                            onSuccess = {
-                                                isFollowing = true
-                                            },
-                                            onError = {
-                                                isFollowing = false
-                                            }
-                                        )
-                                    }
+                                Text(
+                                    text = user.username,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 24.sp,
+                                    modifier = Modifier
+                                        .padding(top = 8.dp)
+                                        .align(Alignment.Start)
                                 )
-                            }
-                        }
-                    }
-                }
-                UserFollowReputationSection(
-                    user = userProfile,
-                    navController = navController,
-                    isMe = isMe,
-                    isFollowing = isFollowing
-                )
-
-
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "Tags",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-
-                    LazyVerticalGrid(
-                        cells = GridCells.Adaptive(minSize = 80.dp),
-                        content = {
-                            if (tagList != null) {
-                                items(tagList.size) { index ->
-                                    MyTag(
-                                        text = tagList[index],
-                                        componentSize = ComponentSize.Small,
-                                        componentType = ComponentTypes.Secondary
+                                user.bio?.let { it1 ->
+                                    Text(
+                                        text = it1,
+                                        modifier = Modifier.padding(top = 8.dp)
                                     )
+                                }
+                                Text(
+                                    text = user.address.toString(),
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .wrapContentWidth(
+                                        align = Alignment.End,
+                                        unbounded = true
+                                    )
+                                    .padding(8.dp),
+                                contentAlignment = Alignment.BottomEnd
+
+                            ) {
+                                if (isMe) {
+                                    MyButton(
+                                        text = "Edit Profile",
+                                        modifier = Modifier.align(Alignment.BottomEnd),
+                                        componentSize = ComponentSize.Small,
+                                        componentType = ComponentTypes.Success,
+                                        onClick = { /*TODO*/ }
+                                    )
+                                } else {
+                                    if (isFollowing) {
+                                        MyButton(
+                                            text = "Unfollow",
+                                            componentSize = ComponentSize.Small,
+                                            componentType = ComponentTypes.Warning,
+                                            onClick = {
+                                                ProfileService.unfollowUser(
+                                                    username = user.username,
+                                                    onSuccess = {
+                                                        isFollowing = false
+                                                    },
+                                                    onError = {
+                                                        isFollowing = true
+                                                    }
+                                                )
+                                            }
+                                        )
+                                    } else {
+                                        MyButton(
+                                            text = "Follow",
+                                            componentSize = ComponentSize.Small,
+                                            componentType = ComponentTypes.Info,
+                                            onClick = {
+                                                ProfileService.followUser(
+                                                    username = user.username,
+                                                    onSuccess = {
+                                                        isFollowing = true
+                                                    },
+                                                    onError = {
+                                                        isFollowing = false
+                                                    }
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
+                        UserFollowReputationSection(
+                            user = userProfile,
+                            navController = navController,
+                            isMe = isMe,
+                            isFollowing = isFollowing
+                        )
 
-                    )
 
-                }
+//                        Column(
+//                            modifier = Modifier.padding(16.dp)
+//                        ) {
+//                            Text(
+//                                text = "Tags",
+//                                fontWeight = FontWeight.Bold,
+//                                fontSize = 20.sp,
+//                                modifier = Modifier.padding(bottom = 8.dp)
+//                            )
+//
+//                            LazyVerticalGrid(
+//                                cells = GridCells.Adaptive(minSize = 80.dp),
+//                                content = {
+//                                    if (tagList != null) {
+//                                        items(tagList.size) { index ->
+//                                            MyTag(
+//                                                text = tagList[index],
+//                                                componentSize = ComponentSize.Small,
+//                                                componentType = ComponentTypes.Secondary
+//                                            )
+//                                        }
+//                                    }
+//                                }
+//
+//                            )
+//
+//                        }
 
 
-                //Questions and Answers Tabs
+                        //Questions and Answers Tabs
 
-                val tabs = listOf("Questions", "Answers")
+                        val tabs = listOf("Questions", "Answers")
 
-                var selectedTabIndex by remember { mutableStateOf(0) }
+                        var selectedTabIndex by remember { mutableStateOf(0) }
 
-                Column(
+                        Column(
 //                    modifier = Modifier
 //                        .height(700.dp)
 //                        .fillMaxSize()
-                ) {
-                    // Create TabRow with tabs
-                    TabRow(
-                        selectedTabIndex = selectedTabIndex,
-                        backgroundColor = MaterialTheme.colors.background
-                    ) {
-                        tabs.forEachIndexed { index, text ->
-                            Tab(
-                                selected = selectedTabIndex == index,
-                                onClick = { selectedTabIndex = index }
+                        ) {
+                            // Create TabRow with tabs
+                            TabRow(
+                                selectedTabIndex = selectedTabIndex,
+                                backgroundColor = MaterialTheme.colors.background
                             ) {
-                                Text(
-                                    text = text,
-                                    modifier = Modifier.padding(
-                                        vertical = 8.dp,
-                                        horizontal = 16.dp
-                                    )
-                                )
+                                tabs.forEachIndexed { index, text ->
+                                    Tab(
+                                        selected = selectedTabIndex == index,
+                                        onClick = { selectedTabIndex = index }
+                                    ) {
+                                        Text(
+                                            text = text,
+                                            modifier = Modifier.padding(
+                                                vertical = 8.dp,
+                                                horizontal = 16.dp
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+
+                            if (selectedTabIndex == 0) {
+                                user.questions?.forEach { question ->
+                                    QuestionItem(question = question)
+                                }
+                            } else {
+                                user.answers?.forEach { answer ->
+                                    AnswerItem(answer = answer)
+                                }
                             }
                         }
-                    }
-
-                    if (selectedTabIndex == 0) {
-                        user.questions?.forEach { question ->
-                            QuestionItem(question = question)
-                        }
-                    } else {
-                        user.answers?.forEach { answer ->
-                            AnswerItem(answer = answer)
-                        }
-                    }
-                }
 
 
 //                Column(
@@ -492,6 +498,9 @@ fun UserProfilePage(
 //                        }
 //                    }
 //                }
+                    }
+                }
+
             }
         }
     )

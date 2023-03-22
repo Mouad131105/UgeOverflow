@@ -1,7 +1,7 @@
 package fr.uge.ugeoverflow.ui.components
 
 import QuestionScreen
-import TagScreen
+import TagsScreen
 
 import android.util.Log
 import android.widget.Toast

@@ -54,7 +54,7 @@ interface RestController {
     @POST("/auth/api/v1/users/{username}/reputation")
     suspend fun addReputation(@Header("Authorization") token: String,@Path("username") username: String, note:Int): Response<UserProfileDTO>
 
-    @GET("/auth/api/v1/questions/{questionId}")
+    @GET("/api/v1/questions/{questionId}")
     suspend fun getQuestion(@Path("questionId") questionId: String): Response<OneQuestionResponse>
 
 
