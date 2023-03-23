@@ -271,19 +271,7 @@ fun UserProfilePage(
             ) {
                 item {
 
-                    Column(
-//                        modifier = Modifier
-//                            .scrollable(
-//                                orientation = Orientation.Vertical,
-//                                state = rememberScrollState(),
-//                                enabled = true,
-//                                reverseDirection = true,
-//                            )
-//                    .verticalScroll(rememberScrollState())
-//                    .fillMaxSize()
-//                    .padding(bottom = 16.dp)
-
-                    ) {
+                    Column {
                         Row(
                             modifier = Modifier
                                 .padding(16.dp)
@@ -324,62 +312,6 @@ fun UserProfilePage(
                                 )
 
                             }
-                            Box(
-                                modifier = Modifier
-                                    .wrapContentWidth(
-                                        align = Alignment.End,
-                                        unbounded = true
-                                    )
-                                    .padding(8.dp),
-                                contentAlignment = Alignment.BottomEnd
-
-                            ) {
-                                if (isMe) {
-                                    MyButton(
-                                        text = "Edit Profile",
-                                        modifier = Modifier.align(Alignment.BottomEnd),
-                                        componentSize = ComponentSize.Small,
-                                        componentType = ComponentTypes.Success,
-                                        onClick = { /*TODO*/ }
-                                    )
-                                } else {
-                                    if (isFollowing) {
-                                        MyButton(
-                                            text = "Unfollow",
-                                            componentSize = ComponentSize.Small,
-                                            componentType = ComponentTypes.Warning,
-                                            onClick = {
-                                                ProfileService.unfollowUser(
-                                                    username = user.username,
-                                                    onSuccess = {
-                                                        isFollowing = false
-                                                    },
-                                                    onError = {
-                                                        isFollowing = true
-                                                    }
-                                                )
-                                            }
-                                        )
-                                    } else {
-                                        MyButton(
-                                            text = "Follow",
-                                            componentSize = ComponentSize.Small,
-                                            componentType = ComponentTypes.Info,
-                                            onClick = {
-                                                ProfileService.followUser(
-                                                    username = user.username,
-                                                    onSuccess = {
-                                                        isFollowing = true
-                                                    },
-                                                    onError = {
-                                                        isFollowing = false
-                                                    }
-                                                )
-                                            }
-                                        )
-                                    }
-                                }
-                            }
                         }
                         UserFollowReputationSection(
                             user = userProfile,
@@ -387,121 +319,75 @@ fun UserProfilePage(
                             isMe = isMe,
                             isFollowing = isFollowing
                         )
+                    }
+                }
 
 
-//                        Column(
-//                            modifier = Modifier.padding(16.dp)
-//                        ) {
-//                            Text(
-//                                text = "Tags",
-//                                fontWeight = FontWeight.Bold,
-//                                fontSize = 20.sp,
-//                                modifier = Modifier.padding(bottom = 8.dp)
-//                            )
-//
-//                            LazyVerticalGrid(
-//                                cells = GridCells.Adaptive(minSize = 80.dp),
-//                                content = {
-//                                    if (tagList != null) {
-//                                        items(tagList.size) { index ->
-//                                            MyTag(
-//                                                text = tagList[index],
-//                                                componentSize = ComponentSize.Small,
-//                                                componentType = ComponentTypes.Secondary
-//                                            )
-//                                        }
-//                                    }
-//                                }
-//
-//                            )
-//
-//                        }
-
-
-                        //Questions and Answers Tabs
-
-                        val tabs = listOf("Questions", "Answers")
-
-                        var selectedTabIndex by remember { mutableStateOf(0) }
-
-                        Column(
-//                    modifier = Modifier
-//                        .height(700.dp)
-//                        .fillMaxSize()
-                        ) {
-                            // Create TabRow with tabs
-                            TabRow(
-                                selectedTabIndex = selectedTabIndex,
-                                backgroundColor = MaterialTheme.colors.background
-                            ) {
-                                tabs.forEachIndexed { index, text ->
-                                    Tab(
-                                        selected = selectedTabIndex == index,
-                                        onClick = { selectedTabIndex = index }
-                                    ) {
-                                        Text(
-                                            text = text,
-                                            modifier = Modifier.padding(
-                                                vertical = 8.dp,
-                                                horizontal = 16.dp
-                                            )
-                                        )
-                                    }
-                                }
+                item{
+                    Text(
+                        text = "Tags",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    LazyRow{
+                        items(tagList?.size ?: 0) { tag ->
+                            Column{
+                                MyTag(
+                                    text = tagList?.get(tag) ?: "",
+                                    componentSize = ComponentSize.Small,
+                                    componentType = ComponentTypes.Secondary
+                                )
                             }
+                        }
+                    }
+                }
+                item {
 
-                            if (selectedTabIndex == 0) {
-                                user.questions?.forEach { question ->
-                                    QuestionItem(question = question)
-                                }
-                            } else {
-                                user.answers?.forEach { answer ->
-                                    AnswerItem(answer = answer)
+
+                    //Questions and Answers Tabs
+
+                    val tabs = listOf("Questions", "Answers")
+
+                    var selectedTabIndex by remember { mutableStateOf(0) }
+
+                    Column {
+                        // Create TabRow with tabs
+                        TabRow(
+                            selectedTabIndex = selectedTabIndex,
+                            backgroundColor = MaterialTheme.colors.background
+                        ) {
+                            tabs.forEachIndexed { index, text ->
+                                Tab(
+                                    selected = selectedTabIndex == index,
+                                    onClick = { selectedTabIndex = index }
+                                ) {
+                                    Text(
+                                        text = text,
+                                        modifier = Modifier.padding(
+                                            vertical = 8.dp,
+                                            horizontal = 16.dp
+                                        )
+                                    )
                                 }
                             }
                         }
 
-
-//                Column(
-//                    modifier = Modifier.padding(8.dp)
-//                ) {
-//                    Text(
-//                        text = "Questions",
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 20.sp,
-//                        modifier = Modifier.padding(bottom = 8.dp)
-//                    )
-//                    user.questions?.forEach { question ->
-//                        QuestionItem(question = question)
-//                    }
-//                }
-
-
-//                // Answers Card
-//                Card(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(bottom = 16.dp),
-//                    elevation = 8.dp
-//                ) {
-//                    Column(
-//                        modifier = Modifier.padding(16.dp)
-//                    ) {
-//                        Text(
-//                            text = "Answers",
-//                            fontWeight = FontWeight.Bold,
-//                            fontSize = 20.sp,
-//                            modifier = Modifier.padding(bottom = 8.dp)
-//                        )
-//                        user.answers?.forEach { answer ->
-//                            AnswerItem(answer = answer)
-//                        }
-//                    }
-//                }
+                        if (selectedTabIndex == 0) {
+                            user.questions?.forEach { question ->
+                                QuestionItem(question = question)
+                            }
+                        } else {
+                            user.answers?.forEach { answer ->
+                                AnswerItem(answer = answer)
+                            }
+                        }
                     }
-                }
 
+
+                }
             }
+
         }
     )
 }
@@ -599,8 +485,7 @@ fun UserFollowReputationSection(
             user,
             onDismiss = {
                 showReputationModel.value = false
-            },
-            navController = navController
+            }
         )
     }
 
@@ -669,29 +554,29 @@ fun ColumnContent(
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
-@Preview
-@Composable
-fun GridPreview() {
-    val items = listOf(
-        "Item 1",
-        "Item 2",
-        "Item 3",
-        "Item 4",
-        "Item 5",
-        "Item 6",
-        "Item 7",
-        "Item 8",
-        "Item 9",
-        "Item 10"
-    )
-    LazyVerticalGrid(
-        cells = GridCells.Adaptive(100.dp),
-        content = {
-            items(items.size) { index ->
-                Text(text = items[index], modifier = Modifier.padding(16.dp))
-            }
-        }
-
-    )
-}
+//@OptIn(ExperimentalFoundationApi::class)
+//@Preview
+//@Composable
+//fun GridPreview() {
+//    val items = listOf(
+//        "Item 1",
+//        "Item 2",
+//        "Item 3",
+//        "Item 4",
+//        "Item 5",
+//        "Item 6",
+//        "Item 7",
+//        "Item 8",
+//        "Item 9",
+//        "Item 10"
+//    )
+//    LazyVerticalGrid(
+//        cells = GridCells.Adaptive(100.dp),
+//        content = {
+//            items(items.size) { index ->
+//                Text(text = items[index], modifier = Modifier.padding(16.dp))
+//            }
+//        }
+//
+//    )
+//}

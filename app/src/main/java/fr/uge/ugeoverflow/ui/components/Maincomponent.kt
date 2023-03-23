@@ -2,6 +2,10 @@ package fr.uge.ugeoverflow.ui.components
 
 import QuestionScreen
 import TagsScreen
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 
 import android.util.Log
 import android.widget.Toast
@@ -42,6 +46,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.model.Tag
+import fr.uge.ugeoverflow.services.ImageService
 import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.screens.ForgotPasswordScreen
@@ -55,7 +60,17 @@ import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.ui.theme.poppins_bold
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.runBlocking
 import java.util.*
 
 val users = UserDataProvider.generateUsers()
@@ -127,7 +142,8 @@ fun MainComponent() {
                 UserProfileScreen(navController = navController)
             }
             composable("${Routes.Profile.route}/{username}") { backStackEntry ->
-                val username: String = backStackEntry.arguments?.getString("username") ?: throw Exception("Username is null")
+                val username: String = backStackEntry.arguments?.getString("username")
+                    ?: throw Exception("Username is null")
                 UserProfileScreen(navController, username)
             }
             composable(Routes.Tags.route) {
@@ -207,6 +223,15 @@ fun MainComponent() {
 }
 
 
+//@Composable
+//fun BitmapDrawableImage(bitmapDrawable: BitmapDrawable) {
+//    val bitmap: Bitmap = bitmapDrawable.bitmap
+//    val imageBitmap = bitmap.asImageBitmap()
+//
+//    Image(bitmap = imageBitmap, contentDescription = "Image from BitmapDrawable")
+//}
+
+
 @Composable
 fun AppTopBar(
     onNavItemClick: () -> Unit,
@@ -216,6 +241,16 @@ fun AppTopBar(
     val sessionManager = SessionManagerSingleton.sessionManager
     val isSearchVisible by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
+
+
+//    val userImage =
+//        sessionManager.currentUsername.value?.let {
+//            ImageService.loadUserImageFromLocal(
+//                it,
+//                context
+//            )
+//        }
+
 
     TopAppBar(
         title = {
@@ -252,9 +287,26 @@ fun AppTopBar(
                             .wrapContentSize(Alignment.TopEnd)
                     )
                     {
+
                         IconButton(onClick = { expanded = true }) {
+
+//                            if (userImage != null)
+//                                BitmapDrawableImage(
+//                                    bitmapDrawable = userImage as BitmapDrawable
+//                                )
+//                            Image(bitmap = userImage, contentDescription = "Profile",
+//                                modifier = Modifier
+//                                    .padding(3.dp)
+//                                    .fillMaxWidth(0.2f)
+//                                    .size(30.dp)
+//                                    .clip(CircleShape),
+//                                contentScale = ContentScale.Crop
+//                            )
+
                             Image(
                                 //TODO replace by user image url
+
+//                                painter = userImage,
                                 painter = painterResource(id = R.drawable.user3),
                                 contentDescription = "Profile",
                                 modifier = Modifier

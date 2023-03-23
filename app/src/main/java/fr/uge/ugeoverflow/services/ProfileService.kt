@@ -1,10 +1,9 @@
 package fr.uge.ugeoverflow.services
 
+import fr.uge.ugeoverflow.api.ReputationRequest
 import fr.uge.ugeoverflow.api.UserProfileDTO
-import fr.uge.ugeoverflow.model.User
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 
@@ -96,8 +95,7 @@ object ProfileService {
         val token = SessionManagerSingleton.sessionManager.getToken()
         val response = ApiService.init().addReputation(
             "Bearer $token",
-            username,
-            note
+            ReputationRequest(username, note)
         )
         if (response.isSuccessful) {
             onSuccess(response.body()!!)

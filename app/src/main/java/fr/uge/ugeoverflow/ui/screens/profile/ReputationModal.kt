@@ -27,19 +27,8 @@ import kotlin.math.floor
 fun ReputationModal(
     user: MutableState<UserProfileDTO>,
     onDismiss: () -> Unit,
-    navController: NavController
 ) {
     var rating by remember { mutableStateOf(user.value.reputation) }
-//    val maxScore = 10
-//    val numStars = 10
-//    val selectedStars = remember {
-//        mutableStateListOf<Boolean>().apply {
-//            for (i in 0 until numStars) {
-//                add(i < rating)
-//            }
-//        }
-//    }
-
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -53,12 +42,14 @@ fun ReputationModal(
                         Icon(
                             modifier = Modifier
                                 .size(24.dp)
-                                .clickable {
-                                    rating = i
-                                },
+                                .clickable(
+                                    onClick = {
+                                        rating = i + 1
+                                    }
+                                ),
                             imageVector = Icons.Outlined.Star,
                             contentDescription = null,
-                            tint = if (rating >= i) Color.Yellow else Color.Gray,
+                            tint = if (rating > i) Color.Yellow else Color.Gray,
                         )
                     }
                 }

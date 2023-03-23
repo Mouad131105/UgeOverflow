@@ -30,6 +30,11 @@ data class CommentRequest(
 
 )
 
+data class ReputationRequest(
+    val username: String,
+    val note: Int
+)
+
 
 data class ContentRequest(
     val text: String

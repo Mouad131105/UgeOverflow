@@ -24,8 +24,15 @@ object LoginService {
 
             SessionManagerSingleton.sessionManager.logIn(
                 response.body()!!.token,
-                response.body()!!.username
+                response.body()!!.user.username
             )
+
+            //Save the user image in local storage
+//            ImageService.saveUserImageToLocal(
+//                response.body()!!.user.id.toString(),
+//                response.body()!!.user.profilePicture,
+//                SessionManagerSingleton.sessionManager.context
+//            )
 
         } else {
             errorCallback()

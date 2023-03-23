@@ -1,7 +1,5 @@
 package fr.uge.ugeoverflow.services
 
-import android.location.Location
-import android.location.LocationRequest
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.model.Question
 import okhttp3.ResponseBody
@@ -49,13 +47,14 @@ interface RestController {
     suspend fun followUser(@Header("Authorization") token: String,@Path("username") username: String): Response<UserProfileDTO>
 
     @GET("/auth/api/v1/users/{username}/unfollow")
-    suspend fun unfollowUser(@Header("Authorization") token: String,@Path("username") username: String): Response<UserProfileDTO>
+    suspend fun unfollowUser(@Header("Authorization") token: String, @Path("username") username: String): Response<UserProfileDTO>
 
-    @POST("/auth/api/v1/users/{username}/reputation")
-    suspend fun addReputation(@Header("Authorization") token: String,@Path("username") username: String, note:Int): Response<UserProfileDTO>
+    @POST("/auth/api/v1/users/reputation")
+    suspend fun addReputation(@Header("Authorization") token: String,@Body reputationRequest: ReputationRequest): Response<UserProfileDTO>
 
     @GET("/api/v1/questions/{questionId}")
     suspend fun getQuestion(@Path("questionId") questionId: String): Response<OneQuestionResponse>
 
-
+    @GET("/api/v1/tags/{tagName}")
+    suspend fun getQuestionsByTag(@Path("tagName") tagName: String): Response<List<QuestionResponse>>
 }

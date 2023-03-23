@@ -27,7 +27,8 @@ fun QuestionsHomeScreen(navController: NavHostController) {
 //        )
 //    }
 
-    //AllQuestionsScreen()
+
+    AllQuestionsScreen()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopEnd

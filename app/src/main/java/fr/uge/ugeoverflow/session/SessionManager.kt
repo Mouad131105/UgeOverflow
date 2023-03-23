@@ -7,7 +7,7 @@ import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 
-class SessionManager(private val context: Context) {
+class SessionManager(val context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("SessionManager", Context.MODE_PRIVATE)
     private val _isAuthenticated = mutableStateOf(getToken() != null)
