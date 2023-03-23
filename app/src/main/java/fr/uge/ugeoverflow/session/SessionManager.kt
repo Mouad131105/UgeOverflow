@@ -13,8 +13,17 @@ class SessionManager(context: Context ) {
     private val _isAuthenticated = mutableStateOf(getToken() != null)
     val isUserLoggedIn: State<Boolean> = _isAuthenticated
 
+
     fun getToken(): String? {
         return sharedPreferences.getString("token", null)
+    }
+
+    fun getLoggedInUsername(): String? {
+        return sharedPreferences.getString("username", null)
+    }
+
+    fun setLoggedInUsername(username : String) {
+        sharedPreferences.edit().putString("username", username).apply()
     }
 
     fun logIn(token : String) {

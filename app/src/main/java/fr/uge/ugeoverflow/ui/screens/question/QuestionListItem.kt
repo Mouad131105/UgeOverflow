@@ -1,6 +1,7 @@
 package fr.uge.ugeoverflow.ui.screens.question
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -179,7 +181,7 @@ fun AllQuestionsScreen( navController :NavController,filterOption: String) {
             // get questions with the selected filter option from backend
             val selectedFilter = QuestionFilterType.valueOf(filterOption)
             if (selectedFilter == QuestionFilterType.ALL) {
-                //MailService.sendEmail()
+
                 val response = ugeOverflowApiSerivce.getAllQuestionsDto()
                 if (response.isSuccessful) {
                     questions = response.body() ?: emptyList()
@@ -212,6 +214,8 @@ fun AllQuestionsScreen( navController :NavController,filterOption: String) {
 
 @Composable
 fun QuestionItem(navController: NavController ,question: OneQuestionResponse) {
+    val context = LocalContext.current.applicationContext
+    val sessionManager = SessionManagerSingleton.sessionManager
     MyCard(
         modifier = Modifier
             .fillMaxWidth(),
@@ -248,10 +252,16 @@ fun QuestionItem(navController: NavController ,question: OneQuestionResponse) {
                         .padding(8.dp)
                         .clickable { MainScope().launch {
                             try {
-                                MailService.sendEmailToNotifyAdmin(question = question)
+                                if(sessionManager.isUserLoggedIn.value){
+                                    MailService.sendEmailToNotifyAdmin(question = question)
+                                    Toast.makeText(context, "Signaled to admin!", Toast.LENGTH_LONG).show()
+                                }else{
+                                    Toast.makeText(context, "You should be logged in to signal a question!", Toast.LENGTH_LONG).show()
+                                    navController.navigate(Routes.Login.route)
+                                }
 
                             } catch (e: Exception) {
-
+                                Toast.makeText(context, "Oops, something gone wrong", Toast.LENGTH_LONG).show()
                             }
 
                         } }
