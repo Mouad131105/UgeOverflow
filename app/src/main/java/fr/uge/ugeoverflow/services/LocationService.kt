@@ -3,52 +3,41 @@ package fr.uge.ugeoverflow.services
 
 import android.Manifest
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.location.Criteria
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.ImagePainter
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
-import coil.transform.CircleCropTransformation
+import coil.request.ImageRequest
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.UserBoxResponse
 import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.session.ApiService
-import fr.uge.ugeoverflow.session.SessionManagerSingleton
-import fr.uge.ugeoverflow.ui.components.ComponentType
-import fr.uge.ugeoverflow.ui.components.ComponentTypes
-import fr.uge.ugeoverflow.ui.components.MyButton
-import fr.uge.ugeoverflow.ui.components.MyCard
 import java.util.*
 
 
@@ -194,8 +183,9 @@ fun UserBoxCardPopUp(
     val imageByteArray = remember { mutableStateOf<ByteArray?>(null) }
 
     LaunchedEffect(user.profilePicture) {
-        val byteArray = ApiService.init().getImage(user.profilePicture)
+        val byteArray = ApiService.init().getImage(user.profilePicture.split("/images/")[1])
         imageByteArray.value = byteArray.body()?.bytes()
+        Log.i("IMAGE", imageByteArray.value.toString())
     }
     // Define the content of the popup
     val dialogContent = @Composable {
@@ -205,34 +195,35 @@ fun UserBoxCardPopUp(
 
         Column {
 
-            RemoteImage(url =user.profilePicture)
-//            Image(
-//                painter = rememberImagePainter(
-//                    data = imageByteArray.value,
-//                    builder = {
-//                        crossfade(true)
-//                        placeholder(R.drawable.user2) // default image
-//                    }
-//                ),
-//                contentDescription = "User Image",
-//                modifier = Modifier
-//                    .size(72.dp)
-//                    .clip(CircleShape)
-//                    .border(1.dp, MaterialTheme.colors.primary, CircleShape)
-//            )
-//            Column(
-//                modifier = Modifier.padding(start = 16.dp)
-//            ) {
-//                Text(
-//                    text = user.username,
-//                    style = MaterialTheme.typography.h6,
-//                    fontWeight = FontWeight.Bold
-//                )
-//                Text(
-//                    text = user.email,
-//                    style = MaterialTheme.typography.body1
-//                )
-//            }
+            RemoteImage(url = user.profilePicture)
+            Image(
+                painter = // default image
+                rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data = imageByteArray.value)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                            placeholder(R.drawable.user2) // default image
+                        }).build()
+                ),
+                contentDescription = "User Image",
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, MaterialTheme.colors.primary, CircleShape)
+            )
+            Column(
+                modifier = Modifier.padding(start = 16.dp)
+            ) {
+                Text(
+                    text = user.username,
+                    style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = user.email,
+                    style = MaterialTheme.typography.body1
+                )
+            }
 
         }
 //            }
@@ -263,27 +254,25 @@ fun UserBoxCardPopUp(
 }
 
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun RemoteImage(url: String, modifier: Modifier = Modifier) {
-    val painter = rememberImagePainter(
-        data = url,
-        builder = {
-            // Customize the image request as needed (e.g. add headers, transformations, etc.)
-            crossfade(true)
-
-        }
-    )
+    val painter = // Customize the image request as needed (e.g. add headers, transformations, etc.)
+        rememberAsyncImagePainter(
+            ImageRequest.Builder(LocalContext.current).data(data = url)
+                .apply(block = fun ImageRequest.Builder.() {
+                    // Customize the image request as needed (e.g. add headers, transformations, etc.)
+                    placeholder(R.drawable.user2)
+                }).build()
+        )
     Image(
         painter = painter,
         contentDescription = "Remote image",
         modifier = modifier,
         contentScale = ContentScale.Crop,
-        alpha = if (painter.state is ImagePainter.State.Loading) 0.5f else 1.0f,
-        colorFilter = if (painter.state is ImagePainter.State.Error) ColorFilter.tint(Color.Red) else null
+        alpha = if (painter.state is AsyncImagePainter.State.Loading) 0.5f else 1.0f,
+        colorFilter = if (painter.state is AsyncImagePainter.State.Error) ColorFilter.tint(Color.Red) else null
     )
 }
-
 
 
 //}

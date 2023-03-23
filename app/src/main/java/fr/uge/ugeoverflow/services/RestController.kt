@@ -57,4 +57,5 @@ interface RestController {
 
     @GET("/api/v1/tags/{tagName}")
     suspend fun getQuestionsByTag(@Path("tagName") tagName: String): Response<List<QuestionResponse>>
+
 }

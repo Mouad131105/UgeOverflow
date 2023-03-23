@@ -55,12 +55,12 @@ fun AskQuestionScreen(navController: NavHostController) {
     ) {
         Column {
             UserBoxCardPopUp()
-            RemoteImage(
-                url = "http://localhost:8080/images/VKpWkIQ.png",
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(200.dp)
-            )
+//            RemoteImage(
+//                url = "http://localhost:8080/images/VKpWkIQ.png",
+//                modifier = Modifier
+//                    .padding(16.dp)
+//                    .size(200.dp)
+//            )
 
 
             Column(modifier = Modifier.padding(16.dp)) {

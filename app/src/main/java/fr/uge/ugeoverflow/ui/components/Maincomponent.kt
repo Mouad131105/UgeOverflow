@@ -3,52 +3,50 @@ package fr.uge.ugeoverflow.ui.components
 import QuestionScreen
 import TagsScreen
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
-import fr.uge.ugeoverflow.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.model.Tag
 import fr.uge.ugeoverflow.services.ImageService
-import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.screens.ForgotPasswordScreen
 import fr.uge.ugeoverflow.ui.screens.LoginScreen
 import fr.uge.ugeoverflow.ui.screens.SignUpScreen
@@ -60,17 +58,11 @@ import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.ui.theme.poppins_bold
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-
-import androidx.compose.foundation.Image
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.runBlocking
+
 import java.util.*
 
 val users = UserDataProvider.generateUsers()
@@ -223,14 +215,45 @@ fun MainComponent() {
 }
 
 
-//@Composable
-//fun BitmapDrawableImage(bitmapDrawable: BitmapDrawable) {
-//    val bitmap: Bitmap = bitmapDrawable.bitmap
+@Composable
+fun BitmapDrawableImage() {
+//    val context = LocalContext.current.applicationContext
+//    val userImage =
+//        SessionManagerSingleton.sessionManager.currentUsername.value?.let {
+//            ImageService.loadUserImageFromLocal(
+//                it,
+//                context
+//            )
+//        }
+//    val bitmap: Bitmap = userImage?.bitmap ?: bitmapDrawable.bitmap
 //    val imageBitmap = bitmap.asImageBitmap()
 //
 //    Image(bitmap = imageBitmap, contentDescription = "Image from BitmapDrawable")
-//}
+//    ImageService.saveImageToLocal("oineze", "http://localhost:8080/images/VKpWkIQ.jpeg", LocalContext.current.applicationContext)
+}
 
+
+//@Preview(showBackground = true)
+@Composable
+fun ImageScreen(context: Context) {
+    val imageUrl = "http://localhost:8080/images/SCR-20230307-wis.png"
+    val imageData = remember { mutableStateOf<ImageBitmap?>(null) }
+
+    LaunchedEffect(imageUrl) {
+        imageData.value = ImageService.getImageFromServer(imageUrl)
+        val imgName=SessionManagerSingleton.sessionManager.getUsername().toString()
+//        imageData.value=ImageService.loadImageFromLocal(imgName, context)
+    }
+
+    imageData.value?.let { image ->
+        Image(
+            image,
+            "Image from server",
+            modifier = Modifier
+                .size(50.dp)
+        )
+    }
+}
 
 @Composable
 fun AppTopBar(
@@ -243,13 +266,9 @@ fun AppTopBar(
     var searchText by remember { mutableStateOf("") }
 
 
-//    val userImage =
-//        sessionManager.currentUsername.value?.let {
-//            ImageService.loadUserImageFromLocal(
-//                it,
-//                context
-//            )
-//        }
+
+
+    BitmapDrawableImage()
 
 
     TopAppBar(
@@ -290,19 +309,11 @@ fun AppTopBar(
 
                         IconButton(onClick = { expanded = true }) {
 
-//                            if (userImage != null)
-//                                BitmapDrawableImage(
-//                                    bitmapDrawable = userImage as BitmapDrawable
-//                                )
-//                            Image(bitmap = userImage, contentDescription = "Profile",
-//                                modifier = Modifier
-//                                    .padding(3.dp)
-//                                    .fillMaxWidth(0.2f)
-//                                    .size(30.dp)
-//                                    .clip(CircleShape),
-//                                contentScale = ContentScale.Crop
-//                            )
-
+                            Image(
+                                painter = rememberAsyncImagePainter("http://localhost:8080/images/SCR-20230307-wis.png"),
+                                contentDescription = null,
+                                modifier = Modifier.size(128.dp).background(Color.Red)
+                            )
                             Image(
                                 //TODO replace by user image url
 
@@ -339,6 +350,8 @@ fun AppTopBar(
                             }) {
                                 Text("Log out")
                             }
+                            ImageScreen(context)
+
                         }
                     }
 //                    Button(

@@ -12,15 +12,15 @@ object ApiService {
         val httpClient = OkHttpClient.Builder().apply {
             addInterceptor { chain ->
                 val originalRequest = chain.request()
-                val token = SessionManagerSingleton.sessionManager.getToken()
-                if (token == null) {
-                    chain.proceed(originalRequest)
-                } else {
+//                val token = SessionManagerSingleton.sessionManager.getToken()
+//                if (token == null) {
+//                    chain.proceed(originalRequest)
+//                } else {
                     val requestWithAuth = originalRequest.newBuilder()
-                        .header("Authorization", "Bearer $token")
+//                        .header("Authorization", "Bearer $token")
                         .build()
                     chain.proceed(requestWithAuth)
-                }
+//                }
             }
         }.build()
         val retrofit = Retrofit.Builder()

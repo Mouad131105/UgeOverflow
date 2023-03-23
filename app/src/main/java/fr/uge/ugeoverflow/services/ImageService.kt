@@ -2,60 +2,67 @@ package fr.uge.ugeoverflow.services
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import coil.ImageLoader
-import coil.request.ImageRequest
+import android.graphics.BitmapFactory
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import fr.uge.ugeoverflow.session.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+
 
 object ImageService {
 
-    suspend fun saveUserImageToLocal(userId: String, imageUrl: String, context: Context) {
 
-        val filename = "user_$userId.jpg"
+    fun saveImageToLocal(filename: String, imageUrl: String, context: Context) = runBlocking {
+//        val filename= "$filename.png"
+        val image = getImageFromServer(imageUrl)
+        val bytes = image?.asAndroidBitmap()?.byteCount?.let { it1 -> ByteArray(it1) }
 
-        // Load the image using Coil image loading library
-        val imageBitmap = CoilImageLoader(context).loadImageAsBitmap(imageUrl)
-        val localFilePath = context.filesDir.absolutePath + filename
+        val file = File(context.filesDir, "$filename.png")
+        val outputStream = withContext(Dispatchers.IO) {
+            FileOutputStream(file)
+        }
+        withContext(Dispatchers.IO) {
+            outputStream.write(bytes)
+        }
+        outputStream.close()
 
-        // Save the image to local storage
-        val file = File(localFilePath)
+    }
+
+
+    fun loadImageFromLocal(filename: String, context: Context): ImageBitmap? = runBlocking {
+        val file = File(context.filesDir, "$filename.png")
         if (!file.exists()) {
-            val outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE)
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            withContext(Dispatchers.IO) {
-                outputStream.close()
+            return@runBlocking null
+        }
+        val inputStream = FileInputStream(file)
+        val bytes = inputStream.readBytes()
+        inputStream.close()
+        val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        return@runBlocking bitmap?.asImageBitmap()
+    }
+
+    fun getImageFromServer(imageUrl: String): ImageBitmap? = runBlocking {
+        var url = imageUrl
+        if (url == "" || url == "null") {
+            return@runBlocking null
+        }
+        if (url.contains("http")) {
+            url = url.split("/images/")[1]
+        }
+        val res = ApiService.init().getImage(url)
+        if (res.isSuccessful) {
+            val image = res.body()?.bytes()
+            if (image != null) {
+                return@runBlocking BitmapFactory.decodeByteArray(image, 0, image.size)
+                    .asImageBitmap()
             }
         }
-    }
-
-    fun loadUserImageFromLocal(userId: String, context: Context): BitmapDrawable?= runBlocking {
-        val filename = "user_$userId.jpg"
-        val file = File(context.filesDir.absolutePath + filename)
-        if (!file.exists()) {
-//            return@runBlocking null
-//            saveUserImageToLocal(userId, , context)
-        }
-        return@runBlocking ImageLoader(context).execute(
-            ImageRequest.Builder(context)
-                .data(file)
-                .build()
-        ).drawable as BitmapDrawable
-    }
-
-    class CoilImageLoader(private val context: Context) {
-        private val imageLoader = ImageLoader.Builder(context)
-            .build()
-
-        suspend fun loadImageAsBitmap(imageUrl: String): Bitmap {
-            val request = ImageRequest.Builder(context)
-                .data(imageUrl)
-                .build()
-            val result = imageLoader.execute(request)
-            return (result.drawable as BitmapDrawable).bitmap
-        }
-
+        return@runBlocking null
     }
 }

@@ -28,11 +28,11 @@ object LoginService {
             )
 
             //Save the user image in local storage
-//            ImageService.saveUserImageToLocal(
-//                response.body()!!.user.id.toString(),
-//                response.body()!!.user.profilePicture,
-//                SessionManagerSingleton.sessionManager.context
-//            )
+            ImageService.saveImageToLocal(
+                response.body()!!.user.username,
+                response.body()!!.user.profilePicture,
+                SessionManagerSingleton.sessionManager.context
+            )
 
         } else {
             errorCallback()
