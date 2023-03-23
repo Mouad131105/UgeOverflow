@@ -3,47 +3,35 @@ import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
-
-
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
-
 import androidx.navigation.NavHostController
-
-import fr.uge.ugeoverflow.R
-import fr.uge.ugeoverflow.session.ApiService
-import fr.uge.ugeoverflow.utils.Utils
-
-import kotlinx.coroutines.runBlocking
-
 import coil.compose.rememberImagePainter
-import fr.uge.ugeoverflow.api.*
+import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.api.AnswerRequest
+import fr.uge.ugeoverflow.api.AnswerResponse
+import fr.uge.ugeoverflow.api.OneQuestionResponse
 import fr.uge.ugeoverflow.services.AnswerService
-import fr.uge.ugeoverflow.services.CommentService
+import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-
-import fr.uge.ugeoverflow.ui.components.*
+import fr.uge.ugeoverflow.ui.components.ComponentSize
+import fr.uge.ugeoverflow.ui.components.ComponentTypes
+import fr.uge.ugeoverflow.ui.components.MyButton
+import fr.uge.ugeoverflow.ui.components.MyCard
 import fr.uge.ugeoverflow.ui.screens.question.CommentsCard
-import kotlinx.coroutines.launch
-
-
-
+import fr.uge.ugeoverflow.utils.Utils
+import kotlinx.coroutines.runBlocking
 
 
 object OneQuestionGlobals {

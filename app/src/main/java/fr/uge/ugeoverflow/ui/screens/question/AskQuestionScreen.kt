@@ -1,7 +1,6 @@
 package fr.uge.ugeoverflow.ui.screens.question
 
 import android.Manifest
-import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -16,8 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
-import coil.imageLoader
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import fr.uge.ugeoverflow.api.QuestionRequest

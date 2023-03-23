@@ -9,8 +9,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Card
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,11 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.UserProfileDTO
-import fr.uge.ugeoverflow.ui.components.ComponentType
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
 
@@ -159,7 +160,7 @@ fun EditProfilePage(
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
                         )
-                        
+
                         MyButton(
                             text = "Save",
                             componentType = ComponentTypes.SuccessOutline,

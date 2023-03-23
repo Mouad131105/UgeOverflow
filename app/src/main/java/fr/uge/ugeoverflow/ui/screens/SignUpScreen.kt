@@ -1,15 +1,20 @@
 package fr.uge.ugeoverflow.ui.screens
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -20,16 +25,17 @@ import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.RegisterRequest
 import fr.uge.ugeoverflow.session.ApiService
-import fr.uge.ugeoverflow.ui.components.CustomTopAppBar
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-
-import fr.uge.ugeoverflow.ui.components.ComponentType
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
+import fr.uge.ugeoverflow.ui.components.CustomTopAppBar
 import fr.uge.ugeoverflow.ui.components.MyButton
-import fr.uge.ugeoverflow.ui.theme.Purple700
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 @Composable
@@ -47,7 +53,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
     Scaffold(
         scaffoldState = rememberScaffoldState(snackbarHostState = scaffoldState.snackbarHostState),
         topBar = {
-            CustomTopAppBar(navController, context.getString(R.string.inscription) , true)
+            CustomTopAppBar(navController, context.getString(R.string.inscription), true)
         },
         content = {
             Column(
@@ -115,7 +121,12 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                 TextField(
                     value = email.value,
                     onValueChange = { email.value = it },
-                    label = { Text(text = context.getString(R.string.email), style = TextStyle(fontFamily = poppins_light)) },
+                    label = {
+                        Text(
+                            text = context.getString(R.string.email),
+                            style = TextStyle(fontFamily = poppins_light)
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
@@ -165,7 +176,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                                 username.value.text,
                                 password.value.text
                             )
-                            onRegisterClick(registerRequest)
+                            onRegisterClick(registerRequest, context, navController)
                         }
                     },
                     modifier = Modifier
@@ -205,7 +216,11 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
     )
 }
 
-private suspend fun onRegisterClick(registerRequest: RegisterRequest) {
+private suspend fun onRegisterClick(
+    registerRequest: RegisterRequest,
+    context: Context,
+    navController: NavHostController
+) {
     val ugeOverflowApiService = ApiService.init()
     val sessionManager = SessionManagerSingleton.sessionManager
     CoroutineScope(Dispatchers.IO).launch {
@@ -213,10 +228,15 @@ private suspend fun onRegisterClick(registerRequest: RegisterRequest) {
         withContext(Dispatchers.Main) {
             if (response.isSuccessful) {
                 Log.d("register Ok", sessionManager.getToken().toString())
-//                Toast.makeText(context, "Successfully registered", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Successfully registered", Toast.LENGTH_SHORT).show();
+                navController.navigate(Routes.Login.route)
             } else {
                 Log.d("register error", sessionManager.getToken().toString())
-//                Toast.makeText(context, "Error "+response.code() +" "+ response.message(), Toast.LENGTH_SHORT).show(); //(must be handle)
+                Toast.makeText(
+                    context,
+                    "Error " + response.code() + " " + response.message(),
+                    Toast.LENGTH_SHORT
+                ).show(); //(must be handle)
             }
         }
     }

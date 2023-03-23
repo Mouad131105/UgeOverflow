@@ -1,13 +1,9 @@
 package fr.uge.ugeoverflow.services
 
-import android.content.Context
-import android.widget.Toast
-import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.LoginRequest
 import fr.uge.ugeoverflow.session.ApiService
-import fr.uge.ugeoverflow.session.SessionManager
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-import kotlinx.coroutines.*
+import kotlinx.coroutines.runBlocking
 
 object LoginService {
 
