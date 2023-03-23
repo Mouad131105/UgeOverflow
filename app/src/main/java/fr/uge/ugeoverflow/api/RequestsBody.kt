@@ -16,7 +16,7 @@ data class QuestionRequest(
     val title: String,
     val body: String,
     val tags: List<String>,
-    val myLocation: MyLocation?
+    val location: MyLocation?
 )
 
 data class AnswerRequest(

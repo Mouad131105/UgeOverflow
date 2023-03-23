@@ -1,6 +1,12 @@
 package fr.uge.ugeoverflow.ui.screens.profile
 
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -10,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -18,6 +25,9 @@ import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.UserProfileDTO
+import fr.uge.ugeoverflow.ui.components.ComponentType
+import fr.uge.ugeoverflow.ui.components.ComponentTypes
+import fr.uge.ugeoverflow.ui.components.MyButton
 
 @Composable
 fun EditProfilePage(
@@ -26,6 +36,21 @@ fun EditProfilePage(
     navController: NavController,
     onClosed: () -> Unit
 ) {
+
+    val context = LocalContext.current
+    val imageBit = remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract =
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            imageBit.value = MediaStore.Images
+                .Media.getBitmap(context.contentResolver, it)
+        }
+    }
 
     val username = remember {
         mutableStateOf(user.value.username)
@@ -86,10 +111,30 @@ fun EditProfilePage(
                                 modifier = Modifier
                                     .size(150.dp)
                                     .clip(CircleShape)
-                                    .align(Alignment.CenterHorizontally),
-                                contentScale = ContentScale.Crop
-                            )
+                                    .align(Alignment.CenterHorizontally)
+                                    .clickable {
+                                        launcher.launch("image/*")
+                                    },
+                                contentScale = ContentScale.Crop,
+
+                                )
                         }
+                        TextField(
+                            value = firstName.value!!,
+                            onValueChange = { firstName.value = it },
+                            label = { Text(text = "First Name") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                        )
+                        TextField(
+                            value = lastName.value!!,
+                            onValueChange = { lastName.value = it },
+                            label = { Text(text = "Last Name") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                        )
                         TextField(
                             value = username.value,
                             onValueChange = { username.value = it },
@@ -114,6 +159,38 @@ fun EditProfilePage(
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
                         )
+                        
+                        MyButton(
+                            text = "Save",
+                            componentType = ComponentTypes.SuccessOutline,
+                            onClick = {
+//                                user.value = UserProfileDTO(
+//                                    username = username.value,
+//                                    bio = bio.value,
+//                                    email = email.value,
+//                                    firstName = firstName.value,
+//                                    lastName = lastName.value,
+//                                    address = address.value,
+////                                    image = image.value
+//                                )
+                                onClosed()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp)
+                        )
+
+                        MyButton(
+                            text = "Cancel",
+                            componentType = ComponentTypes.DangerOutline,
+                            onClick = {
+                                onClosed()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp)
+                        )
+
                     }
                 }
             }
