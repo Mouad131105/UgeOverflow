@@ -279,7 +279,12 @@ fun UserProfilePage(
                                 MyTag(
                                     text = tagList?.get(tag) ?: "",
                                     componentSize = ComponentSize.Small,
-                                    componentType = ComponentTypes.Secondary
+                                    componentType = ComponentTypes.Secondary,
+                                    onClick = {
+//                                        navController.navigate(
+//                                            "${Routes.Tags.route}/${tagList?.get(tag)}"
+//                                        )
+                                    }
                                 )
                             }
                         }

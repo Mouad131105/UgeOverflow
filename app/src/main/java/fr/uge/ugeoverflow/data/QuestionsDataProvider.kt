@@ -1,8 +1,5 @@
 package fr.uge.ugeoverflow.data
 
-import fr.uge.ugeoverflow.model.*
-import java.util.*
-
 object QuestionsDataProvider {
 
 //

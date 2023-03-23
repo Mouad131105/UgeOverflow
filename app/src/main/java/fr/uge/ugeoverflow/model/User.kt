@@ -1,6 +1,6 @@
 package fr.uge.ugeoverflow.model
 
-import java.util.UUID
+import java.util.*
 
 data class User(
      val id: UUID,

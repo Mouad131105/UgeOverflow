@@ -11,6 +11,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -159,45 +160,6 @@ fun MainComponent() {
 }
 
 
-@Composable
-fun BitmapDrawableImage() {
-//    val context = LocalContext.current.applicationContext
-//    val userImage =
-//        SessionManagerSingleton.sessionManager.currentUsername.value?.let {
-//            ImageService.loadUserImageFromLocal(
-//                it,
-//                context
-//            )
-//        }
-//    val bitmap: Bitmap = userImage?.bitmap ?: bitmapDrawable.bitmap
-//    val imageBitmap = bitmap.asImageBitmap()
-//
-//    Image(bitmap = imageBitmap, contentDescription = "Image from BitmapDrawable")
-//    ImageService.saveImageToLocal("oineze", "http://localhost:8080/images/VKpWkIQ.jpeg", LocalContext.current.applicationContext)
-}
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun ImageScreen(context: Context) {
-//    val imageUrl = "http://localhost:8080/images/SCR-20230307-wis.png"
-//    val imageData = remember { mutableStateOf<ImageBitmap?>(null) }
-//
-//    LaunchedEffect(imageUrl) {
-//        imageData.value = ImageService.getImageFromServer(imageUrl)
-//        val imgName = SessionManagerSingleton.sessionManager.getUsername().toString()
-////        imageData.value = ImageService.loadImageFromLocal(imgName, context)
-//    }
-//
-//    imageData.value?.let { image ->
-//        Image(
-//            image,
-//            "Image from server",
-//            modifier = Modifier
-//                .size(50.dp)
-//        )
-//    }
-//}
 
 @Composable
 fun AppTopBar(
@@ -217,9 +179,6 @@ fun AppTopBar(
         )
     }
 
-
-
-    BitmapDrawableImage()
 
 
     TopAppBar(
@@ -268,7 +227,8 @@ fun AppTopBar(
                                         .padding(3.dp)
                                         .fillMaxWidth(0.2f)
                                         .size(30.dp)
-                                        .clip(CircleShape),
+                                        .clip(CircleShape)
+                                        .border(1.dp, Gray, CircleShape),
                                     contentScale = ContentScale.Crop
                                 )
                             }

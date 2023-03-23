@@ -35,6 +35,26 @@ import fr.uge.ugeoverflow.session.ApiService
 import java.util.*
 
 
+fun getMyLocation(context: Context): MyLocation? {
+
+    val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    val criteria = Criteria()
+    val provider = lm.getBestProvider(criteria, false)
+    var location: Location? = null
+    try {
+        location = lm.getLastKnownLocation(provider!!)
+    } catch (e: SecurityException) {
+        Log.e("LocationService", "SecurityException")
+    }
+    return if (location != null) {
+        MyLocation(location.latitude, location.longitude)
+    } else {
+        null
+    }
+}
+
+
+
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview(showBackground = true)
 @Composable
@@ -102,6 +122,7 @@ fun getCurrentLocation(context: Context = LocalContext.current): MyLocation? {
                 val lastKnownLocation = lm.getLastKnownLocation(provider)
                 if (lastKnownLocation != null) {
                     currentMyLocation = lastKnownLocation
+                    Log.d("Location", "Last known location: $lastKnownLocation")
                 }
             }
         } catch (e: SecurityException) {
@@ -246,123 +267,3 @@ fun UserBoxCardPopUp(
         }
     }
 }
-
-
-
-
-
-//}
-
-//object LocationService {
-
-//    private fun getCurrentLocation(activity: Activity, onLocationReceived: (Location) -> Unit) {
-//        val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//        val hasFineLocationPermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-//        val hasCoarseLocationPermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-//
-//        if (!hasFineLocationPermission && !hasCoarseLocationPermission) {
-//            // Ask for location permission
-//            ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 0)
-//            return
-//        }
-//
-//        // Get the last known location
-//        val provider = locationManager.getBestProvider(Criteria(), false)
-//        val lastKnownLocation = provider?.let { locationManager.getLastKnownLocation(it) }
-//
-//        if (lastKnownLocation != null) {
-//            onLocationReceived(lastKnownLocation)
-//        } else {
-//            // Request location updates
-//            val locationListener = object : LocationListener {
-//
-//
-//                override fun onProviderEnabled(provider: String) {}
-//                override fun onProviderDisabled(provider: String) {}
-//                override fun onLocationChanged(location: android.location.Location) {
-//                    locationManager.removeUpdates(this)
-//                    onLocationReceived(location)
-//                }
-//
-//                override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-//            }
-//
-//            locationManager.requestSingleUpdate(Criteria(), locationListener, null)
-//        }
-//    }
-
-
-//
-//    fun getLocation(context: Context): Location? {
-//
-//        val locationHelper = LocationHelper(context)
-//
-//        locationHelper.getCurrentLocation { result ->
-//            when (result) {
-//                is LocationResult.Success -> {
-//                    // Handle successful location retrieval
-//                    val latitude = result.location.latitude
-//                    val longitude = result.location.longitude
-//                }
-//                is LocationResult.Failure -> {
-//                    // Handle location retrieval failure
-//                    val exception = result.exception
-//                }
-//            }
-//        }
-
-//        @OptIn(ExperimentalPermissionsApi::class)
-//        val permissions = rememberMultiplePermissionsState(
-//            permissions = listOf(
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            )
-//        )
-//
-//        println(permissions)
-//
-//        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//
-//        if (ActivityCompat.checkSelfPermission(
-//                context,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED &&
-//            ActivityCompat.checkSelfPermission(
-//                context,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            // Permissions not granted, return null
-//
-//            return null
-//        }
-//
-//        val location =
-//            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) ?: return null
-////        return Location(location.latitude, location.longitude)
-//
-//
-//        val switchChecked = true
-//        var currentLocation: android.location.Location? = null
-//        DisposableEffect(switchChecked) {
-//            val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//            val criteria = Criteria().apply {
-//                accuracy = Criteria.ACCURACY_FINE
-//            }
-//            val provider = lm.getBestProvider(criteria, true)
-//            val listener = LocationListener { l -> currentLocation = l }
-//            if (provider != null) {
-//                lm.requestLocationUpdates(provider, 10000L, 10.0f, listener)
-//            }
-//
-//            onDispose {
-//                currentLocation = null
-//            }
-//        }
-//        currentLocation?.let {
-//            return Location(it.latitude, it.longitude)
-//        }
-//}
-
-
-//}
