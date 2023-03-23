@@ -25,7 +25,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -44,7 +43,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberAsyncImagePainter
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.services.ImageService
@@ -56,7 +54,6 @@ import fr.uge.ugeoverflow.ui.screens.SignUpScreen
 import fr.uge.ugeoverflow.ui.screens.profile.UserProfileScreen
 import fr.uge.ugeoverflow.ui.screens.question.AskQuestionScreen
 import fr.uge.ugeoverflow.ui.screens.question.QuestionsHomeScreen
-import fr.uge.ugeoverflow.ui.screens.question.userImage
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
@@ -149,10 +146,10 @@ fun MainComponent() {
 //                TagScreen(navController, tag)
 //            }
 
-            composable(Routes.OneQuestion.route) {
+            composable(Routes.Question.route) {
                 QuestionScreen(navController)
             }
-            composable("${Routes.OneQuestion.route}/{id}") { backStackEntry ->
+            composable("${Routes.Question.route}/{id}") { backStackEntry ->
                 val id: String = backStackEntry.arguments?.getString("id")
                     ?: throw Exception("Id is null")
                 QuestionScreen(navController, id)

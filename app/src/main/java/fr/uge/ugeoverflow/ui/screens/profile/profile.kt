@@ -322,7 +322,7 @@ fun UserProfilePage(
                                     question = question,
                                     onClick = {
                                         navController.navigate(
-                                            "${Routes.OneQuestion.route}/${question.id}"
+                                            "${Routes.Question.route}/${question.id}"
                                         )
                                     }
 

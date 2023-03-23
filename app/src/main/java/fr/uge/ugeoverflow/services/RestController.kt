@@ -4,6 +4,7 @@ import android.location.Location
 import android.location.LocationRequest
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.model.Question
+import fr.uge.ugeoverflow.model.VOTE_TYPE
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -24,12 +25,14 @@ interface RestController {
         @Body question: QuestionRequest
     ): Response<Question>
 
-    @POST("/auth/api/v1/answers")
-    suspend fun postAnswer(@Header("Authorization") token: String, questionId: String,  @Body answer: AnswerRequest): Response<AnswerResponse>
+    @POST("/auth/api/v1/answers/{questionId}")
+    suspend fun postAnswer(@Header("Authorization") token: String, @Path("questionId") questionId: String,  @Body answer: AnswerRequest): Response<OneQuestionResponse>
 
-    @POST("/auth/api/v1/comments/{overflowId}")
-    suspend fun postComment(@Header("Authorization") token: String,@Path("overflowId") overflowId: String, @Body comment: CommentRequest): Response<CommentResponse>
+    @POST("/auth/api/v1/comments/{questionId}")
+    suspend fun postCommentForQuestion(@Header("Authorization") token: String,@Path("questionId") questionId: String, @Body comment: CommentRequest): Response<OneQuestionResponse>
 
+    @POST("/auth/api/v1/comments/{questionId}/{answerId}")
+    suspend fun postCommentForAnswer(@Header("Authorization") token: String,@Path("questionId") questionId: String, @Path("answerId") answerId: String, @Body comment: CommentRequest): Response<OneQuestionResponse>
     @GET("/api/v1/tags")
     suspend fun getTags(): Response<List<String>>
 
@@ -59,6 +62,10 @@ interface RestController {
 
     @GET("/api/v1/questions/{questionId}")
     suspend fun getQuestion(@Path("questionId") questionId: String): Response<OneQuestionResponse>
+
+    @POST("/auth/api/v1/answers/{answerId}/vote")
+    suspend fun voteAnswer(@Header("Authorization") token: String,@Path("answerId") answerId: String, voteType: VOTE_TYPE): Response<AnswerResponse>
+
 
     @GET("/api/v1/tags/{tagName}")
     suspend fun getQuestionsByTag(@Path("tagName") tagName: String): Response<List<QuestionResponse>>

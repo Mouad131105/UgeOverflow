@@ -21,7 +21,6 @@ object LoginService {
         if (response.isSuccessful) {
             successCallback()
             //save and username token
-
             SessionManagerSingleton.sessionManager.logIn(
                 response.body()!!.token,
                 response.body()!!.user
@@ -33,7 +32,6 @@ object LoginService {
                 response.body()!!.user.profilePicture,
                 SessionManagerSingleton.sessionManager.context
             )
-
         } else {
             errorCallback()
         }

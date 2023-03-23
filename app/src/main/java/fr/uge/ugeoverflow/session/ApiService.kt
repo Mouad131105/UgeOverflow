@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiService {
     private const val BASE_URL =
-        "http://192.168.1.69:8080" //Ici il faut mettre l'address ipv4 local
+        "http://192.168.1.13:8080" //Ici il faut mettre l'address ipv4 local
 
 
     fun init(): RestController {

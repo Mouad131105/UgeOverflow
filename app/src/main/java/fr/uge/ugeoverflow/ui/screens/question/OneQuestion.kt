@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -33,26 +34,31 @@ import kotlinx.coroutines.runBlocking
 
 import coil.compose.rememberImagePainter
 import fr.uge.ugeoverflow.api.*
+import fr.uge.ugeoverflow.services.AnswerService
+import fr.uge.ugeoverflow.services.CommentService
+import fr.uge.ugeoverflow.session.SessionManagerSingleton
 
 import fr.uge.ugeoverflow.ui.components.*
 import fr.uge.ugeoverflow.ui.screens.question.CommentsCard
 import kotlinx.coroutines.launch
 
 
+
+
+
 object OneQuestionGlobals {
-    var questionId: String = ""
+    var questionId:String = ""
 }
 
 @Composable
-fun QuestionScreen(navController: NavHostController, id: String? = null) {
+fun QuestionScreen(navController: NavHostController, id: String?=null) {
     val scaffoldState = rememberScaffoldState()
-    val questionId = id ?: "cd414895-39d9-422c-a160-80fc80a4adda"
-    // temporary, replace by an existing QuestionId in databse
+    val questionId = id?:"8fe6dd0d-60c5-4f5b-a1f9-0c0c2387f7a7" // temporary, replace by an existing QuestionId in databse
     OneQuestionGlobals.questionId = questionId
-    val question = remember { getQuestionById(questionId) } // load only once
-    val sortedAnswers = remember(question.answers) {
-        question.answers.sortedByDescending { it.creationTime }
-    }
+    val question = remember  { mutableStateOf(getQuestionById(questionId)) }
+    val sortedAnswers = remember(question.value.answers) {
+        mutableStateOf(question.value.answers.sortedByDescending { it.creationTime })}
+
     Scaffold(
         scaffoldState = scaffoldState,
         content = {
@@ -64,7 +70,7 @@ fun QuestionScreen(navController: NavHostController, id: String? = null) {
                     contentPadding = PaddingValues(horizontal = 16.dp),
                 ) {
                     item {
-                        QuestionCard(question = question, navController)
+                        QuestionCard(question=question, navController)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
@@ -78,7 +84,7 @@ fun QuestionScreen(navController: NavHostController, id: String? = null) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "${sortedAnswers.size} Answers",
+                                text = "${sortedAnswers.value.size} Answers",
                                 style = MaterialTheme.typography.h5
                             )
 
@@ -112,8 +118,12 @@ fun QuestionScreen(navController: NavHostController, id: String? = null) {
                     }
 
                     // Render the answers in the sorted order
-                    items(sortedAnswers.size) { index ->
-                        AnswerCard(answer = sortedAnswers[index], navController)
+                    items(sortedAnswers.value.size) { index ->
+                        AnswerCard(answer = sortedAnswers.value[index],  question, navController)
+                    }
+                    // Post new answer
+                    item {
+                        PostAnswerCard(question, navController)
                     }
 
                 }
@@ -125,12 +135,73 @@ fun QuestionScreen(navController: NavHostController, id: String? = null) {
 }
 
 @Composable
-fun QuestionCard(question: OneQuestionResponse, navController: NavHostController) {
+fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: NavHostController) {
+    val context = LocalContext.current
+    var answerText by remember { mutableStateOf("") }
+
+    if (SessionManagerSingleton.sessionManager.isUserLoggedIn.value) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+        ){
+                // add field to add answer and post
+                OutlinedTextField(
+                    value = answerText,
+                    onValueChange = { answerText = it },
+                    label = { Text("Add your answer") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ){
+        MyButton(
+            // button on the right
+            modifier= Modifier.align(Alignment.CenterEnd),
+            text = "Post pour answer",
+            onClick = {
+                if (answerText.isNotEmpty()){
+                    val answerRequest = AnswerRequest(answerText, question.value.id)
+                    Log.e("Send", answerRequest.toString())
+                    val response =
+                        AnswerService.addAnswer(answerRequest,
+                            question.value.id,
+                            {
+                                newQuestion -> question.value = newQuestion
+                                Toast.makeText(
+                                    context,
+                                    "Answer posted successfully",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                //navController.navigate("Question/${OneQuestionGlobals.questionId}")
+                            },
+                            {
+                                Toast.makeText(
+                                    context,
+                                    "Failed to post answer",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        )
+                    answerText = ""
+                }
+            },
+            componentType = ComponentTypes.Primary,
+            componentSize = ComponentSize.Small
+        )
+    }
+    }
+}
+
+@Composable
+fun QuestionCard(question: MutableState<OneQuestionResponse>, navController:NavHostController){
     MyCard(
         modifier = Modifier.fillMaxWidth(),
         header = {
             Text(
-                text = question.title,
+                text = question.value.title,
                 style = MaterialTheme.typography.h5
             )
         },
@@ -139,14 +210,14 @@ fun QuestionCard(question: OneQuestionResponse, navController: NavHostController
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = question.body,
+                    text = question.value.body,
                     style = MaterialTheme.typography.body2,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-                if (question.tags.isNotEmpty()) {
+                if (question.value.tags.isNotEmpty()) {
                     Row(modifier = Modifier.padding(bottom = 4.dp)) {
-                        question.tags.forEach { tag ->
+                        question.value.tags.forEach { tag ->
                             MyButton(
                                 text = tag,
                                 onClick = { },
@@ -167,36 +238,35 @@ fun QuestionCard(question: OneQuestionResponse, navController: NavHostController
                     style = MaterialTheme.typography.caption,
                 )
                 Text(
-                    text = "${Utils.formatDateUsingTimeAgo(question.creationTime)} by",
+                    text =  "${Utils.formatDateUsingTimeAgo(question.value.creationTime)} by",
                     style = MaterialTheme.typography.caption,
                 )
                 Spacer(Modifier.width(4.dp))
                 ClickableText(
-                    text = AnnotatedString(question.user.username),
+                    text = AnnotatedString(question.value.user.username),
                     style = MaterialTheme.typography.caption.copy(
                         color = MaterialTheme.colors.secondary
                     ),
-                    onClick = { navController.navigate("user/${question.user.id}") },
+                    onClick = { navController.navigate("user/${question.value.user.id}") },
                 )
-                croppedImageFromDB(question.user.profilePicture)
+                croppedImageFromDB(question.value.user.profilePicture)
 
             }
         },
         cardType = ComponentTypes.Secondary
     )
-    CommentsCard(question.comments, navController, question.id)
+    CommentsCard(question, navController, null)
 
 
 }
-
 @Composable
-fun croppedImageFromDB(imageData: String) {
+fun croppedImageFromDB(imageData:String){
     Image(
         painter = rememberImagePainter(data = imageData, builder = {
             placeholder(R.drawable.user4) // in case image not available
             error(R.drawable.user3) // in case there is an error
         }),
-        contentDescription = "",
+        contentDescription="",
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(24.dp)
@@ -209,24 +279,22 @@ fun croppedImageFromDB(imageData: String) {
 
     )
 }
-
 @Composable
-fun AnswerCard(answer: AnswerResponse, navController: NavHostController) {
+fun AnswerCard(answer: AnswerResponse,question: MutableState<OneQuestionResponse> , navController:NavHostController) {
     var expanded by remember { mutableStateOf(false) }
     val answerLines = answer.body.lines()
     MyCard(
         modifier = Modifier.fillMaxWidth(),
         body = {
             Column {
-                answerLines.take(if (expanded) answerLines.size else 2)
-                    .forEachIndexed { index, line ->
-                        Text(
-                            text = line,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = if (expanded || index < 2) Int.MAX_VALUE else 1,
-                            modifier = Modifier.clickable { if (!expanded) expanded = true },
-                        )
-                    }
+                answerLines.take(if (expanded) answerLines.size else 2).forEachIndexed { index, line ->
+                    Text(
+                        text = line,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = if (expanded || index < 2) Int.MAX_VALUE else 1,
+                        modifier = Modifier.clickable { if (!expanded) expanded = true },
+                    )
+                }
                 if (answerLines.size > 2 && (!expanded || answerLines.size > 3)) {
                     val text = if (expanded) "show less" else "... show more"
                     ClickableText(
@@ -266,15 +334,16 @@ fun AnswerCard(answer: AnswerResponse, navController: NavHostController) {
         },
         cardType = ComponentTypes.SecondaryOutline
     )
-    CommentsCard(answer.comments, navController, answer.id)
+    CommentsCard(question, navController, answer)
 }
+
 
 
 fun getQuestionById(questionId: String): OneQuestionResponse = runBlocking {
     //TODO : Receive ID from getQuestionById  when clicking on it
     val response = ApiService.init().getQuestion(questionId)
     Log.d("response ", response.message())
-    if (response.isSuccessful) {
+    if (response.isSuccessful){
         Log.d("response ", response.message())
     }
     response.body() ?: throw RuntimeException("Failed to fetch question Do")

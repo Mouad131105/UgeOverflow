@@ -30,7 +30,7 @@ fun QuestionsHomeScreen(navController: NavHostController) {
 //    }
 
 
-    AllQuestionsScreen()
+    AllQuestionsScreen(navController)
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopEnd
@@ -43,21 +43,6 @@ fun QuestionsHomeScreen(navController: NavHostController) {
             componentType = ComponentTypes.Primary,
             componentSize = ComponentSize.Small,
         )
-    }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.TopStart
-    ) {
-        MyButton(
-            text = stringResource(id = R.string.OneQuestion) ,
-            onClick = {
-                navController.navigate("OneQuestion")
-            },
-            componentType = ComponentTypes.Dark,
-            componentSize = ComponentSize.Small,
-        )
-
     }
 
 

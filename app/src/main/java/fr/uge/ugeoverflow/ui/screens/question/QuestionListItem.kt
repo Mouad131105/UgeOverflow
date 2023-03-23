@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -38,6 +39,7 @@ import fr.uge.ugeoverflow.ui.components.ComponentType
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.components.MyCard
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.utils.SearchableMultiSelect
 import kotlinx.coroutines.launch
@@ -167,7 +169,7 @@ fun userImage() {
 }
 
 @Composable
-fun AllQuestionsScreen() {
+fun AllQuestionsScreen(navController: NavHostController) {
     val ugeOverflowApiSerivce = ApiService.init()
     val coroutineScope = rememberCoroutineScope()
 
@@ -193,7 +195,7 @@ fun AllQuestionsScreen() {
         content = {
             LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp, vertical = 15.dp)) {
                 items(questions) { question ->
-                    QuestionItem(question)
+                    QuestionItem(question, navController)
                 }
             }
         },
@@ -213,17 +215,19 @@ fun AllQuestionsScreen() {
 
 
 @Composable
-fun QuestionItem(question: QuestionResponse) {
+fun QuestionItem(question: QuestionResponse, navController: NavHostController) {
     MyCard(
         modifier = Modifier
             .fillMaxWidth(),
         cardType = ComponentTypes.LightOutline,
         header = {
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
+
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.user2),
@@ -236,7 +240,10 @@ fun QuestionItem(question: QuestionResponse) {
                 )
                 Text(
                     text = question.title,
-                    modifier = Modifier.padding(start = 5.dp),
+                    modifier = Modifier.padding(start = 5.dp).clickable {
+                        navController.navigate(
+                        "${Routes.Question.route}/${question.id}"
+                    ) },
                     fontWeight = FontWeight.W800,
                     color = Color(0xFF4552B8),
                     fontSize = 15.sp
