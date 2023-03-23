@@ -38,22 +38,20 @@ import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.LoginService
-
 import fr.uge.ugeoverflow.ui.components.ComponentSize
 import fr.uge.ugeoverflow.ui.components.ComponentType
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
-import java.util.*
 
 @Composable
-fun LoginPage(navController: NavHostController) {
-    //val translations = if (currentLanguage.value == Language.ENGLISH) englishTranslations else frenchTranslations
+fun LoginScreen(navController: NavHostController) {
     val context = LocalContext.current
+
     Box(modifier = Modifier.fillMaxSize()) {
         ClickableText(
-            text = AnnotatedString(context.getString(R.string.signup_here)),
+            text = AnnotatedString("Sign up here"),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(20.dp),
@@ -86,7 +84,7 @@ fun LoginPage(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            label = { Text(text = context.getString(R.string.password), fontFamily = poppins_light) },
+            label = { Text(text = "Password", fontFamily = poppins_light) },
             value = password.value,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

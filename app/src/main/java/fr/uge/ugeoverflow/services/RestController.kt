@@ -18,17 +18,48 @@ interface RestController {
     suspend fun getAllQuestions(): Response<List<QuestionResponse>>
 
     @POST("/auth/api/v1/questions")
-    suspend fun postQuestion(@Header("Authorization") token: String, @Body question: QuestionRequest): Response<Question>
+    suspend fun postQuestion(
+        @Header("Authorization") token: String,
+        @Body question: QuestionRequest
+    ): Response<Question>
+
+    @POST("/auth/api/v1/answers")
+    suspend fun postAnswer(@Header("Authorization") token: String, questionId: String,  @Body answer: AnswerRequest): Response<AnswerResponse>
+
+    @POST("/auth/api/v1/comments/{overflowId}")
+    suspend fun postComment(@Header("Authorization") token: String,@Path("overflowId") overflowId: String, @Body comment: CommentRequest): Response<CommentResponse>
 
     @GET("/api/v1/tags")
-    suspend fun getTags():Response<List<String>>
+    suspend fun getTags(): Response<List<String>>
 
     @GET("/api/v1/tag")
     suspend fun getAllTags():Response<List<TagResponse>>
 
+    @GET("/images/{name}")
+    suspend fun getImage(@Path("name") name: String): Response<ResponseBody>
 
-    @GET("/auth/api/v1/questions/{questionId}")
+    @GET("/auth/api/v1/users/profile")
+    suspend fun getProfile(@Header("Authorization") token: String): Response<UserProfileDTO>
+
+    @GET("/auth/api/v1/users/{username}")
+    suspend fun getUserProfile(@Path("username") username: String): Response<UserProfileDTO>
+
+    @PUT("/auth/api/v1/users/profile")
+    suspend fun updateProfile(@Header("Authorization") token: String, userProfile: UserProfileDTO): Response<UserProfileDTO>
+
+    @GET("/auth/api/v1/users/{username}/follow")
+    suspend fun followUser(@Header("Authorization") token: String,@Path("username") username: String): Response<UserProfileDTO>
+
+    @GET("/auth/api/v1/users/{username}/unfollow")
+    suspend fun unfollowUser(@Header("Authorization") token: String, @Path("username") username: String): Response<UserProfileDTO>
+
+    @POST("/auth/api/v1/users/reputation")
+    suspend fun addReputation(@Header("Authorization") token: String,@Body reputationRequest: ReputationRequest): Response<UserProfileDTO>
+
+    @GET("/api/v1/questions/{questionId}")
     suspend fun getQuestion(@Path("questionId") questionId: String): Response<OneQuestionResponse>
 
+    @GET("/api/v1/tags/{tagName}")
+    suspend fun getQuestionsByTag(@Path("tagName") tagName: String): Response<List<QuestionResponse>>
 
 }

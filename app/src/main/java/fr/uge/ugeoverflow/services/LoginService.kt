@@ -21,12 +21,21 @@ object LoginService {
         if (response.isSuccessful) {
             successCallback()
             //save and username token
-            response.body()?.data?.let {
-                SessionManagerSingleton.sessionManager.logIn(it)
-            }
+
+            SessionManagerSingleton.sessionManager.logIn(
+                response.body()!!.token,
+                response.body()!!.user.username
+            )
+
+            //Save the user image in local storage
+            ImageService.saveImageToLocal(
+                response.body()!!.user.username,
+                response.body()!!.user.profilePicture,
+                SessionManagerSingleton.sessionManager.context
+            )
+
         } else {
             errorCallback()
         }
-
     }
 }

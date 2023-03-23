@@ -32,18 +32,15 @@ import fr.uge.ugeoverflow.ui.theme.poppins_medium
 import kotlinx.coroutines.*
 
 
-
 @Composable
-fun SignUp(navController: NavHostController) {
-
+fun SignUpScreen(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
         ScaffoldWithTopBar(navController)
     }
 }
 
 @Composable
-fun ScaffoldWithTopBar(navController: NavHostController ) {
-
+fun ScaffoldWithTopBar(navController: NavHostController) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     val context = LocalContext.current;

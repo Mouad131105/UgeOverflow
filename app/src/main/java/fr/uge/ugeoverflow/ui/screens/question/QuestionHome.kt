@@ -17,7 +17,7 @@ import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
 
 @Composable
-fun QuestionsHome(navController: NavHostController) {
+fun QuestionsHomeScreen(navController: NavHostController) {
 
 //    val questions = remember { QuestionsDataProvider.questionLists}
 //    LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp,vertical = 15.dp ) ){
@@ -29,7 +29,8 @@ fun QuestionsHome(navController: NavHostController) {
 //        )
 //    }
 
-    //AllQuestionsScreen()
+
+    AllQuestionsScreen()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopEnd

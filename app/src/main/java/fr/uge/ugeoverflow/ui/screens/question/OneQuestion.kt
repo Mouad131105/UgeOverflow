@@ -1,34 +1,27 @@
-import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 
+
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-
-import fr.uge.ugeoverflow.api.AnswerResponse
-import fr.uge.ugeoverflow.api.CommentResponse
-import fr.uge.ugeoverflow.api.OneQuestionResponse
+import androidx.compose.ui.window.DialogProperties
 
 import androidx.navigation.NavHostController
 
@@ -39,19 +32,29 @@ import fr.uge.ugeoverflow.utils.Utils
 import kotlinx.coroutines.runBlocking
 
 import coil.compose.rememberImagePainter
-import fr.uge.ugeoverflow.ui.components.*
+import fr.uge.ugeoverflow.api.*
 
+import fr.uge.ugeoverflow.ui.components.*
+import fr.uge.ugeoverflow.ui.screens.question.CommentsCard
+import kotlinx.coroutines.launch
+
+
+
+
+
+object OneQuestionGlobals {
+    var questionId:String = ""
+}
 
 @Composable
 fun QuestionScreen(navController: NavHostController) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
-    val questionId = "bd82f0f5-6fdb-4b85-aeea-a6ee018a0b24" // temporary, replace by an existing QuestionId in databse
-    val question = getQuestionById(questionId)
-
-    val sortedAnswers = question.answers.sortedByDescending { it.creationTime }
-
+    val questionId = "cd414895-39d9-422c-a160-80fc80a4adda" // temporary, replace by an existing QuestionId in databse
+    OneQuestionGlobals.questionId = questionId
+    val question = remember { getQuestionById(questionId) } // load only once
+    val sortedAnswers = remember(question.answers) {
+        question.answers.sortedByDescending { it.creationTime }
+    }
     Scaffold(
         scaffoldState = scaffoldState,
         content = {
@@ -67,16 +70,25 @@ fun QuestionScreen(navController: NavHostController) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.Start
                         ) {
+                            Box(
+                                modifier = Modifier
+                                    .width(2.dp)
+                                    .height(36.dp)
+                                    .background(MaterialTheme.colors.secondary)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "${sortedAnswers.size} Answers",
                                 style = MaterialTheme.typography.h5
                             )
+
                             // Dropdown menu for selecting the sorting criteria
                             var expanded by remember { mutableStateOf(false) }
                             var selectedOption by remember { mutableStateOf(Utils.SortOption.CreationTime) }
 
+                            Spacer(modifier = Modifier.width(64.dp))
                             Box(modifier = Modifier.clickable(onClick = { expanded = true })) {
                                 Text(
                                     text = "Sort by $selectedOption",
@@ -100,17 +112,19 @@ fun QuestionScreen(navController: NavHostController) {
                             }
                         }
                     }
+
                     // Render the answers in the sorted order
                     items(sortedAnswers.size) { index ->
                         AnswerCard(answer = sortedAnswers[index], navController)
-
                     }
+
                 }
+
             }
+
         },
     )
 }
-
 
 @Composable
 fun QuestionCard(question:OneQuestionResponse, navController:NavHostController){
@@ -132,18 +146,18 @@ fun QuestionCard(question:OneQuestionResponse, navController:NavHostController){
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-            if (question.tags.isNotEmpty()) {
-                Row(modifier = Modifier.padding(bottom = 4.dp)) {
-                    question.tags.forEach { tag ->
-                        MyButton(
-                            text = tag,
-                            onClick = { },
-                            componentType = ComponentTypes.LightOutline,
-                            componentSize = ComponentSize.Small
-                        )
+                if (question.tags.isNotEmpty()) {
+                    Row(modifier = Modifier.padding(bottom = 4.dp)) {
+                        question.tags.forEach { tag ->
+                            MyButton(
+                                text = tag,
+                                onClick = { },
+                                componentType = ComponentTypes.LightOutline,
+                                componentSize = ComponentSize.Small
+                            )
+                        }
                     }
                 }
-            }
             }
         },
         footer = {
@@ -172,6 +186,9 @@ fun QuestionCard(question:OneQuestionResponse, navController:NavHostController){
         },
         cardType = ComponentTypes.Secondary
     )
+    CommentsCard(question.comments, navController, question.id)
+
+
 }
 @Composable
 fun croppedImageFromDB(imageData:String){
@@ -244,15 +261,12 @@ fun AnswerCard(answer: AnswerResponse, navController:NavHostController) {
                     onClick = { navController.navigate("user/${answer.user.id}") },
                 )
                 croppedImageFromDB(answer.user.profilePicture)
-
             }
         },
         cardType = ComponentTypes.SecondaryOutline
     )
+    CommentsCard(answer.comments, navController, answer.id)
 }
-
-
-
 
 
 
@@ -265,4 +279,5 @@ fun getQuestionById(questionId: String): OneQuestionResponse = runBlocking {
     }
     response.body() ?: throw RuntimeException("Failed to fetch question Do")
 }
+
 

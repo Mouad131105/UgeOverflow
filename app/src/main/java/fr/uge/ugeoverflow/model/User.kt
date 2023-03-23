@@ -8,7 +8,7 @@ data class User(
      val lastName: String,
      val username: String,
      val email: String,
-     val address: Address,
+     val address: Address
 ){
      var score: Long? = null
      var image: Image? = null
@@ -35,16 +35,16 @@ class UserBuilder {
      }
      fun setScore(score: Long) = apply { this.score = score }
 
-     fun build(): User {
-          return User(
-               id ?: throw IllegalStateException("Id must be set"),
-               firstName ?: "",
-               lastName ?: "",
-               username ?: "",
-               email ?: "",
-               address ?: throw IllegalStateException("Address must be set")
-          ).apply { this.score = this@UserBuilder.score ?: 0 }
-     }
+//     fun build(): User {
+//          return User(
+//               id ?: throw IllegalStateException("Id must be set"),
+//               firstName ?: "",
+//               lastName ?: "",
+//               username ?: "",
+//               email ?: "",
+//               address ?: throw IllegalStateException("Address must be set")
+//          ).apply { this.score = this@UserBuilder.score ?: 0 }
+//     }
      companion object {
           fun builder() = UserBuilder()
      }
