@@ -11,13 +11,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fr.uge.ugeoverflow.model.Tag
+import androidx.navigation.NavController
+import fr.uge.ugeoverflow.api.TagResponse
+import fr.uge.ugeoverflow.session.ApiService
+import kotlinx.coroutines.runBlocking
 
 @Composable
-fun TagScreen(tags: List<Tag>) {
+fun TagScreen(navController: NavController) {
+
+
+   val  tags = getTagsFromDB()
+
     var searchFilter by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxSize()) {
         TextField(
@@ -32,9 +40,9 @@ fun TagScreen(tags: List<Tag>) {
     }
 }
 @Composable
-fun TagList(tags: List<Tag>, filter: String) {
+fun TagList(tags: List<TagResponse>, filter: String) {
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
-        items(tags.filter { it.getTAG_TYPE?.contains(filter, ignoreCase = true) ?: false }) { tag ->
+        items(tags.filter { it.tagType?.contains(filter, ignoreCase = true) ?: false }) { tag ->
             Tag(tag = tag)
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -42,7 +50,7 @@ fun TagList(tags: List<Tag>, filter: String) {
 }
 
 @Composable
-fun Tag(tag: Tag) {
+fun Tag(tag: TagResponse) {
     var showTooltip by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -61,12 +69,14 @@ fun Tag(tag: Tag) {
             ) {
                 // Add a tagtype text with a background color
                 Text(
-                    text = tag.getTAG_TYPE ?: "",
+                    text = tag.tagType ?: "",
                     style = TextStyle(
                         color = Color(android.graphics.Color.parseColor("#89CDF9")),
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.sp,
-                    ),
+                        textAlign = TextAlign.Center
+
+                        ),
                     modifier = Modifier
                         .background(Color(android.graphics.Color.parseColor("#DAEFFC")), shape = RoundedCornerShape(4.dp))
                         .padding(7.dp)
@@ -80,13 +90,25 @@ fun Tag(tag: Tag) {
 
             }
 
+            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+
             // Add a text with the tag description
             Text(
-                text = tag.getDescription ?: "",
+                text = tag.description?: "",
                 color = Color.Black,
                 fontSize = 13.sp,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
+            )
+
+            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+
+            Text(
+                text = " ${tag.questionCount} questions",
+                color = Color.Black,
+                fontSize = 13.sp,
+                textAlign = TextAlign.Center,
+
             )
         }
 
@@ -98,12 +120,14 @@ fun Tag(tag: Tag) {
                     showTooltip = false
                 },
                 title = {
-                    Text(text = tag.getTAG_TYPE ?: "" ,  color = Color(android.graphics.Color.parseColor("#89CDF9") )
+                    Text(text = tag.tagType ?: "" ,  color = Color(android.graphics.Color.parseColor("#89CDF9") )
                         ,fontWeight = FontWeight.Bold
                         , fontSize = 16.sp )
                 },
                 text = {
-                    Text(text = tag.getDescription ?: "")
+                    Column {
+                        Text(text = tag.description ?: "")
+                    }
                 },
                 confirmButton = {
                     Button(
@@ -125,6 +149,10 @@ fun Tag(tag: Tag) {
 
 
 
-
+  fun getTagsFromDB(): List<TagResponse> = runBlocking {
+    val response = ApiService.init().getAllTags()
+    val tags = response.body() ?: throw RuntimeException("Failed to fetch question Do")
+    tags.sortedByDescending { it.questionCount }
+}
 
 

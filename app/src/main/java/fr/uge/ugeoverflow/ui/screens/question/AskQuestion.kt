@@ -14,8 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.QuestionRequest
 import fr.uge.ugeoverflow.model.Location
 import fr.uge.ugeoverflow.routes.Routes
@@ -45,7 +47,7 @@ fun AskQuestion(navController: NavHostController) {
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("Ask a Question") },
+                title = { Text(stringResource(id = R.string.ask_a_question)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
@@ -80,7 +82,7 @@ fun AskQuestion(navController: NavHostController) {
                 )
                 // Post button
                 MyButton(
-                    text = "Post",
+                    text = stringResource(id = R.string.post),
                     onClick = {
                         val location: Location? = LocationService.getLocation(context)
                         val question = location?.let { it1 ->
@@ -108,15 +110,15 @@ fun AskQuestion(navController: NavHostController) {
                                             navController.popBackStack()
                                             scaffoldState.snackbarHostState.showSnackbar("Success")
                                         } else {
-                                            scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
+                                            scaffoldState.snackbarHostState.showSnackbar(context.getString(R.string.Failed_post_question))
                                         }
                                     }
                                 } catch (e: Exception) {
-                                    scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
+                                    scaffoldState.snackbarHostState.showSnackbar(context.getString(R.string.Failed_post_question))
                                 }
                             }
                         } else {
-                            Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT)
+                            Toast.makeText(context, context.getString(R.string.user_not_authenticated), Toast.LENGTH_SHORT)
                                 .show()
                             //scaffoldState.snackbarHostState.showSnackbar("User not authenticated")
                             navController.navigate(Routes.Login.route)

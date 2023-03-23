@@ -12,9 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.marlonlom.utilities.timeago.TimeAgo
 import com.github.marlonlom.utilities.timeago.TimeAgoMessages
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.ui.components.ComponentSize
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyTag
@@ -129,7 +131,7 @@ fun SearchableMultiSelect(
                     .fillMaxWidth()
                     .weight(1f)
                     .padding(vertical = 8.dp),
-                label = { Text("Search Tags") }
+                label = { Text(stringResource(id = R.string.tags)) }
             )
 
             IconButton(onClick = { expanded = !expanded }) {

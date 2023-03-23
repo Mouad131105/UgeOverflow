@@ -38,20 +38,22 @@ import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.LoginService
+
 import fr.uge.ugeoverflow.ui.components.ComponentSize
 import fr.uge.ugeoverflow.ui.components.ComponentType
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
+import java.util.*
 
 @Composable
 fun LoginPage(navController: NavHostController) {
+    //val translations = if (currentLanguage.value == Language.ENGLISH) englishTranslations else frenchTranslations
     val context = LocalContext.current
-
     Box(modifier = Modifier.fillMaxSize()) {
         ClickableText(
-            text = AnnotatedString("Sign up here"),
+            text = AnnotatedString(context.getString(R.string.signup_here)),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(20.dp),
@@ -73,18 +75,18 @@ fun LoginPage(navController: NavHostController) {
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
 
-        Text(text = "Login", style = TextStyle(fontSize = 40.sp, fontFamily = poppins_medium))
+        Text(text = context.getString(R.string.login), style = TextStyle(fontSize = 40.sp, fontFamily = poppins_medium))
 
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            label = { Text(text = "Username", fontFamily = poppins_light) },
+            label = { Text(text = context.getString(R.string.username), fontFamily = poppins_light) },
             value = username.value,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             onValueChange = { username.value = it })
 
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            label = { Text(text = "Password", fontFamily = poppins_light) },
+            label = { Text(text = context.getString(R.string.password), fontFamily = poppins_light) },
             value = password.value,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -93,7 +95,7 @@ fun LoginPage(navController: NavHostController) {
         Spacer(modifier = Modifier.height(20.dp))
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
             MyButton(
-                text = "Login",
+                text =  context.getString(R.string.login),
                 onClick = {
                     Log.i("user", username.value.text + " " + password.value.text)
                     LoginService.login(
@@ -101,7 +103,7 @@ fun LoginPage(navController: NavHostController) {
                         {
                             Toast.makeText(
                                 context,
-                                "Login successful",
+                                context.getString(R.string.login_successful),
                                 Toast.LENGTH_SHORT
                             ).show()
                             navController.navigate("Questions")
@@ -109,7 +111,7 @@ fun LoginPage(navController: NavHostController) {
                         {
                             Toast.makeText(
                                 context,
-                                "Invalid login credentials",
+                                context.getString(R.string.invalid_credentials),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -151,7 +153,7 @@ fun LoginPage(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(20.dp))
         ClickableText(
-            text = AnnotatedString("Forgot password?"),
+            text = AnnotatedString(context.getString(R.string.forgot_password)),
             onClick = { navController.navigate(Routes.ForgotPassword.route) },
             style = TextStyle(
                 fontSize = 14.sp,
@@ -166,3 +168,32 @@ fun LoginPage(navController: NavHostController) {
 fun tesd(email: String = "infzoe", password: String = "infzoe") {
     Log.i("user", email + " " + password)
 }
+/*
+* val currentLocale = resources.configuration.locale
+val locales = listOf(Locale("en"), Locale("fr"), Locale("es"))
+
+val localeNames = locales.map { locale ->
+    val displayName = locale.getDisplayName(currentLocale)
+    if (displayName.contains("(")) {
+        displayName.substringBefore("(").trim()
+    } else {
+        displayName
+    }
+}.toTypedArray()
+
+val builder = LocalePickerCompat.Builder()
+    .setLocale(currentLocale)
+    .setLanguageSearchFilter(locales)
+    .setCountriesShown(false)
+    .setLocaleSelectedListener { locale ->
+        LocalePickerCompat.setLocale(locale)
+        recreate()
+    }
+    .setTranslatedView(true)
+    .setLocaleNames(localeNames)
+
+val localeButton = findViewById<Button>(R.id.locale_button)
+localeButton.setOnClickListener {
+    builder.build().show(supportFragmentManager, null)
+}*/
+

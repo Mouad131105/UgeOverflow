@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <string name="lastname">Nom</string>
+        <string name="firstname">Prénom</string>
+        <string name="username">Nom d\'utilisateur</string>
+        <string name="password">Mot de passe</string>
+        <string name="confirm_password">Confirmer le mot de passe</string>
+        <string name="email">Email</string>
+        <string name="signup">S\'inscrire</string>
+        <string name="login">Connexion</string>
+        <string name="forgot_password">Mot de passe oublié</string>
+        <string name="signup_here">Inscrivez-vous ici</string>
+        <string name="login_successful">Connexion réussie</string>
+        <string name="invalid_credentials">Identifiants de connexion invalides</string>
+        <string name="users">Utulisateurs</string>
+        <string name="logout"> Se déconnecter</string>
+        <string name="home">Accueil</string>
+        <string name="inscription">Inscription</string>
+        <string name="search">Recherche</string>
+        <string name="tags">Recherche de tags</string>
+        <string name="ask_a_question">Poser une question</string>
+        <string name="post">Poster</string>
+        <string name="Failed_post_question">La question n\'a pas été envoyée</string>
+        <string name="user_not_authenticated">Utilisateur non authentifié</string>
+        <string name="OneQuestion">Aller à une question</string>
+
+
+
+
+
+</resources>

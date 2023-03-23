@@ -2,6 +2,9 @@ package fr.uge.ugeoverflow.ui.components
 
 import QuestionScreen
 import TagScreen
+import android.app.Activity
+import android.content.Context
+import android.content.res.Configuration
 
 import android.util.Log
 import android.widget.Toast
@@ -14,6 +17,7 @@ import androidx.compose.foundation.text.ClickableText
 import fr.uge.ugeoverflow.R
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
@@ -23,6 +27,7 @@ import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -31,9 +36,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.data.UserDataProvider
-import fr.uge.ugeoverflow.model.Tag
+//import fr.uge.ugeoverflow.model.Tag
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.screens.ForgotPassword
@@ -41,10 +47,7 @@ import fr.uge.ugeoverflow.ui.screens.LoginPage
 import fr.uge.ugeoverflow.ui.screens.SignUp
 import fr.uge.ugeoverflow.ui.screens.question.AskQuestion
 import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
-import fr.uge.ugeoverflow.ui.theme.Blue200
-import fr.uge.ugeoverflow.ui.theme.Gray200
-import fr.uge.ugeoverflow.ui.theme.White200
-import fr.uge.ugeoverflow.ui.theme.poppins_bold
+import fr.uge.ugeoverflow.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -76,7 +79,7 @@ fun MainComponent() {
             }
         },
         drawerContent = {
-            drawerContent(items = listOf("Questions", "Tags", "Users"), onItemClick = { item ->
+            drawerContent(items = listOf("Questions", "Tags", stringResource(id = R.string.users)), onItemClick = { item ->
                 navController.navigate(item)
                 scope.launch {
                     scaffoldState.drawerState.close()
@@ -117,71 +120,7 @@ fun MainComponent() {
             }
             composable(Routes.Tags.route) {
 
-                val tags = listOf(
-                    Tag(
-                        1,
-                        "Programming",
-                        "Questions related to programming and software development hfdjshfkldshkfjsdmfjsmfjdsmljfmldsjfsdlmqjfmdsqjfmdlsjflsdmjfqlsdmjfsdlfefEZFEZFezfZEFDzefgergtrefezfrgtrgtrtrtrgsDNFJKDSHFJKSDHFJSDHFJKSDHFJKHSDJKFHDSJKHFkjdshfjkHDFJKHsqdjkdfhsjkqfhsdjkfhkjsdhfjsdkhfkjsdhfjk"
-                    ),
-                    Tag(
-                        2,
-                        "Java",
-                        "Questions related to the Java programming language sdvqhdskvjdskmvjsdkljvmsdlqjvmlsqdjvlmsdqjflmsdjflmjsdlmqfjlmsdqjflmsdjqflmsdjqmlfjqsdmlfjmsdlqfjrgretrtgtretrgthet'rgtht'rgerthetrgtrethre DSFSDJKhfjksdHFJKSDHFJKHSDKJFHDSJKHFKJdshfjkSDHFKJsdhfjksdhfjkSDHF"
-                    ),
-                    Tag(
-                        3,
-                        "Kotlin",
-                        "Questions related to the Kotlin programming languagesdqvsdnflksdjklsdfkjsdmklfjlsdmjflmsdjflmsj kldfshqvklsfhvkhsfdklhsdlkhfqskldfhlksdqhflksdqhfregrergretggretgtnhgthgndfthhnhhtrhtrhnhrth dsfhdjfkhdsjkfhjkdshfkjHFJKHDfkjdhsjkfhKJSDHFJKSDHFKJSDHF"
-                    ),
-                    Tag(
-                        4,
-                        "Android",
-                        "Questions related to the Android mobile operating system dskvbqsdjkbvkjsdbvjkdsbhvjsdqhfklsdhqfklsdhqlfkhsdqklfhsdqkfhsdqlfhsdklqfhlksdqhfsdklqftthgtrgtreghtehtrndthehtrhendrtheztrtherhtregh jsdfhqjdskhfjdkhfjkdqshfjkshqfjkhdskjqfhdjskhfjkdsqhfjksdhfkjqsdhfkjsdhqfjksdhqkf"
-                    ),
-                    Tag(
-                        5,
-                        "iOS",
-                        "Questions related to the iOS mobile operating system jsdfbvklsdnhklvsdhqfklhsdqklfhsdklqhfklsdqhflksdqhflksdncklsdncklsdqncklsdqhvlkdsnfdsnkcnsdklqncvgret'reghghtnthrngfnghg,nthrnh,thrnrthynthrthrrthtrhrrdsjkfhqsdjkfhdjkshfqkjdshfkjqsdhjkfhqsdkjfhdskjfhqsjkf"
-                    ),
-                    Tag(
-                        6,
-                        "Web Development",
-                        "Questions related to web development technologies and frameworks ksjdbhvfjksdhfjkhsdjkfhsdjkhfjksdqfbkjsqdfhjksqdfjksdqhfvjksdqhvbkjsdqvhsdjkqhfhtreth(erythrhthy(rthr(ythrhythhrjrh(ythry(thrthretds,f;sd,f,;sdf;:n,qsdnf,dsnf,;nd,;fnsd,;fn,qs;nfse;,d:fds"
-                    ),
-                    Tag(
-                        7,
-                        "JavaScript",
-                        "Questions related to the JavaScript programming language nbsdkjvsdjkhfjksdhfjksdhqfjksdhqfjksdhqfjkhsdqjkfgsdqjkfgsdqjkfgsdjkqfdsjkqfhsdjklhflksdhfdfjkdhjfhsjdhfksdjhfjskdhfjksdhfjsdhfjkhsdjkfhjsdkfhjsdkhfjksdhfjksdhfjksdhfjksdhfkjsdhfkjsdhfksdjfhsdjkfhsdjkf"
-                    ),
-                    Tag(
-                        8,
-                        "Python",
-                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
-                    ),
-                    Tag(
-                        9,
-                        "hamid",
-                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
-                    ),
-                    Tag(
-                        10,
-                        "JEE",
-                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
-                    ),
-                    Tag(
-                        11,
-                        "Spring",
-                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
-                    ),
-                    Tag(
-                        12,
-                        "Hibernate",
-                        "Questions related to the Python programming language sdhjkvfgsdjkqgfjksdgfkjsdgfjksdgqfjksdgjfkgsdkjfgsdjkfgjklsdgfjlksdgflksdhflksdqhfklsdqhjfklsdqfhlksdqfhfskdljfklsdjfkljsdklfjsdkljfklsdjflksdjflksjdflksdjflksdjklfjsdlkfjlksdjfklsdjflksdjflksdjf"
-                    )
-
-
-                )
-                TagScreen(tags = tags)
+                TagScreen(navController)
             }
             composable(Routes.OneQuestion.route) {
                 QuestionScreen(navController)
@@ -214,17 +153,20 @@ fun AppTopBar(
                 )
             }
         },
+
         actions = {
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)) {
                 // search icon
                 IconButton(onClick = {
-                    Toast.makeText(context, "Search", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(R.string.search), Toast.LENGTH_LONG).show()
                 }, modifier = Modifier.fillMaxWidth(0.2f)) {
                     Icon(
                         imageVector = Icons.Outlined.Search,
-                        contentDescription = "Search", tint = Gray
+                        contentDescription =context.getString(R.string.search), tint = Gray
                     )
                 }
+
+
                 if (sessionManager.isUserLoggedIn.value) {
                     Log.d("hey", sessionManager.getToken().toString())
 
@@ -237,13 +179,13 @@ fun AppTopBar(
 //                    )
 
                     Button(
-                        onClick = { sessionManager.logOut() },
+                        onClick = { sessionManager.logOut()},
                         colors = ButtonDefaults.buttonColors(backgroundColor = White200),
                         contentPadding = PaddingValues(0.dp),
                         modifier = Modifier.fillMaxWidth(0.48f)
                     ) {
                         Text(
-                            text = "Log out",
+                            text = stringResource(id = R.string.logout),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.button.copy(
                                 fontSize = 10.sp,
@@ -259,7 +201,7 @@ fun AppTopBar(
                         modifier = Modifier.fillMaxWidth(0.48f)
                     ) {
                         Text(
-                            text = "Log in",
+                            text =  stringResource(id = R.string.login),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.button.copy(
                                 fontSize = 10.sp,
@@ -276,7 +218,7 @@ fun AppTopBar(
                         modifier = Modifier.fillMaxWidth(0.75f)
                     ) {
                         Text(
-                            text = "Sign up",
+                            text =  stringResource(id = R.string.signup),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
                         )
@@ -290,13 +232,15 @@ fun AppTopBar(
                 onClick = { onNavItemClick() },
                 modifier = Modifier.background(Transparent)
             ) {
-                Icon(Icons.Default.Menu, "Home", tint = Gray)
+                Icon(Icons.Default.Menu, context.getString(R.string.home), tint = Gray)
             }
         },
         backgroundColor = Gray200,
         contentColor = White,
         elevation = 10.dp
     )
+
+
     if (isSearchVisible) {
         TextField(
             value = searchText,
@@ -318,9 +262,12 @@ fun drawerContent(
     scaffoldState: ScaffoldState,
     scope: CoroutineScope
 ) {
+    LanguageSelector()
+
     ClickableText(
-        text = AnnotatedString("Home"),
+        text = AnnotatedString(stringResource(id = R.string.home)),
         onClick = {
+
             navController.navigate(Routes.Login.route)
             scope.launch {
                 scaffoldState.drawerState.close()
@@ -331,6 +278,8 @@ fun drawerContent(
             fontFamily = poppins_bold
         ), modifier = Modifier.padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
     )
+
+
     Text(text = "Public", fontFamily = poppins_bold, fontSize = 20.sp)
     LazyColumn(modifier) {
         items(items) { item ->
@@ -350,5 +299,51 @@ fun drawerContent(
         }
     }
 }
+
+
+@Composable
+fun LanguageSelector() {
+    val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+    var selectedLanguage by remember { mutableStateOf(Locale.getDefault()) }
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    Box(modifier = Modifier.wrapContentSize()) {
+        TextButton(onClick = { expanded = true }) {
+            Icon(
+                tint = Gray, painter = painterResource(id = R.drawable.translate),
+                contentDescription = null,
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(onClick = {
+                selectedLanguage = Locale.FRENCH
+                updateConfiguration(context, selectedLanguage)
+                expanded = false
+            }) {
+                Text(text = "FR")
+            }
+            DropdownMenuItem(onClick = {
+                selectedLanguage = Locale.ENGLISH
+                updateConfiguration(context, selectedLanguage)
+                expanded = false
+            }) {
+                Text(text = "EN")
+            }
+        }
+    }
+}
+
+fun updateConfiguration(context: Context, locale: Locale) {
+    val configuration = Configuration(context.resources.configuration)
+    configuration.setLocale(locale)
+    context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
+    (context as Activity).recreate()
+}
+
 
 

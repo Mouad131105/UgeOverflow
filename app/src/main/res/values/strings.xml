@@ -3,4 +3,43 @@
     <string name="vote">vote</string>
     <string name="votes">votes</string>
     <string name="answers">answers</string>
+    <string name="lastname">Lastname</string>
+    <string name="firstname">Firstname</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="email">Email</string>
+    <string name="signup">Sign up</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="signup_here">Sign up here</string>
+    <string name="login_successful">Login successful</string>
+    <string name="invalid_credentials">Invalid login credentials</string>
+    <string name="users">Users</string>
+    <string name="logout">Log out</string>
+    <string name="home">Home</string>
+    <string name="inscription">Sign up</string>
+    <string name="search">Search</string>
+    <string name="tags">Search Tags</string>
+    <string name="ask_a_question">Ask a Question</string>
+    <string name="post">Post</string>
+    <string name="Failed_post_question">Failed to post question</string>
+    <string name="user_not_authenticated">User not authenticated</string>
+    <string name="OneQuestion">Go to One Question</string>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </resources>
+
+

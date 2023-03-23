@@ -14,6 +14,8 @@ data class QuestionResponse(
     val location: Location
 )
 
+
+
 data class LoginResponse(
     val message: String,
     val data: String
@@ -22,6 +24,13 @@ data class LoginResponse(
 data class TagsResponse(
     val tags: List<String>
 )
+
+data class TagResponse(
+    val tagType : String,
+    val description :String,
+    val questionCount : Int
+)
+
 
 data class UserBoxResponse(
     val id: UUID,

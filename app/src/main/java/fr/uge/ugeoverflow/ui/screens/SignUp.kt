@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -16,10 +17,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.RegisterRequest
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.ui.components.CustomTopAppBar
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
+
 import fr.uge.ugeoverflow.ui.components.ComponentType
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
@@ -29,22 +32,25 @@ import fr.uge.ugeoverflow.ui.theme.poppins_medium
 import kotlinx.coroutines.*
 
 
+
 @Composable
 fun SignUp(navController: NavHostController) {
+
     Box(modifier = Modifier.fillMaxSize()) {
         ScaffoldWithTopBar(navController)
     }
 }
 
 @Composable
-fun ScaffoldWithTopBar(navController: NavHostController) {
+fun ScaffoldWithTopBar(navController: NavHostController ) {
+
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     val context = LocalContext.current;
     Scaffold(
         scaffoldState = rememberScaffoldState(snackbarHostState = scaffoldState.snackbarHostState),
         topBar = {
-            CustomTopAppBar(navController, "Signup", true)
+            CustomTopAppBar(navController, context.getString(R.string.inscription) , true)
         },
         content = {
             Column(
@@ -60,7 +66,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                 val passwordConfirm = remember { mutableStateOf(TextFieldValue()) }
 
                 Text(
-                    text = "Sign up",
+                    text = context.getString(R.string.inscription),
                     style = TextStyle(fontSize = 40.sp, fontFamily = poppins_medium)
                 )
 
@@ -69,7 +75,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                     onValueChange = { lastname.value = it },
                     label = {
                         Text(
-                            text = "lastname",
+                            text = context.getString(R.string.lastname),
                             style = TextStyle(fontFamily = poppins_light)
                         )
                     },
@@ -84,7 +90,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                     onValueChange = { firstname.value = it },
                     label = {
                         Text(
-                            text = "firstname",
+                            text = context.getString(R.string.firstname),
                             style = TextStyle(fontFamily = poppins_light)
                         )
                     },
@@ -99,7 +105,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                     onValueChange = { username.value = it },
                     label = {
                         Text(
-                            text = "Username",
+                            text = context.getString(R.string.username),
                             style = TextStyle(fontFamily = poppins_light)
                         )
                     },
@@ -112,7 +118,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                 TextField(
                     value = email.value,
                     onValueChange = { email.value = it },
-                    label = { Text(text = "Email", style = TextStyle(fontFamily = poppins_light)) },
+                    label = { Text(text = context.getString(R.string.email), style = TextStyle(fontFamily = poppins_light)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
@@ -124,7 +130,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                     onValueChange = { password.value = it },
                     label = {
                         Text(
-                            text = "Password",
+                            text = context.getString(R.string.password),
                             style = TextStyle(fontFamily = poppins_light)
                         )
                     },
@@ -140,7 +146,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                     onValueChange = { passwordConfirm.value = it },
                     label = {
                         Text(
-                            text = "Confirm password",
+                            text = context.getString(R.string.confirm_password),
                             style = TextStyle(fontFamily = poppins_light)
                         )
                     },
@@ -152,7 +158,7 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                 )
 
                 MyButton(
-                    text = "Sign up",
+                    text = context.getString(R.string.signup),
                     onClick = {
                         scope.launch {
                             val registerRequest = RegisterRequest(
