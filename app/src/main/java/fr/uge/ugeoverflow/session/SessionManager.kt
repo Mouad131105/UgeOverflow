@@ -1,8 +1,5 @@
 package fr.uge.ugeoverflow.session
 
-/**
- * implémenté par Achraf et Fares
- */
 import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

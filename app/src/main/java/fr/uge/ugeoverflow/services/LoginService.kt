@@ -15,7 +15,6 @@ object LoginService {
     ) = runBlocking {
         val response = ApiService.init().loginUser(loginRequest)
         if (response.isSuccessful) {
-            successCallback()
             //save and username token
             SessionManagerSingleton.sessionManager.logIn(
                 response.body()!!.token,
@@ -28,6 +27,7 @@ object LoginService {
                 response.body()!!.user.profilePicture,
                 SessionManagerSingleton.sessionManager.context
             )
+            successCallback()
         } else {
             errorCallback()
         }

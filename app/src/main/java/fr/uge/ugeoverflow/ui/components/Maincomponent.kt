@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -178,6 +179,10 @@ fun AppTopBar(
         )
     }
 
+    LaunchedEffect(sessionManager.currentUsername) {
+        imageData.value = ImageService.getImageFromServer(sessionManager.getImage().toString())
+    }
+
 
 
     TopAppBar(
@@ -218,19 +223,24 @@ fun AppTopBar(
                     {
 
                         IconButton(onClick = { expanded = true }) {
-                            imageData.value?.let {
-                                Image(
-                                    bitmap = it,
-                                    contentDescription = "Profile",
-                                    modifier = Modifier
-                                        .padding(3.dp)
-                                        .fillMaxWidth(0.2f)
-                                        .size(30.dp)
-                                        .clip(CircleShape)
-                                        .border(1.dp, Gray, CircleShape),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
+//                            imageData.value?.let {
+//                                Image(
+//                                    bitmap = it,
+//                                    contentDescription = "Profile",
+//                                    modifier = Modifier
+//                                        .padding(3.dp)
+//                                        .fillMaxWidth(0.2f)
+//                                        .size(30.dp)
+//                                        .clip(CircleShape)
+//                                        .border(1.dp, Gray, CircleShape),
+////                                    contentScale = ContentScale.Crop
+//                                )
+//                            }
+                            Icon(
+                                imageVector = Icons.Outlined.Person,
+                                contentDescription = "Profile",
+                                tint = Gray
+                            )
                         }
                         DropdownMenu(
                             expanded = expanded,

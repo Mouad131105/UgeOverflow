@@ -2,6 +2,7 @@ package fr.uge.ugeoverflow.ui.screens.profile
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,10 +12,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -22,6 +27,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.UserBoxDTO
+import fr.uge.ugeoverflow.services.ImageService
 import fr.uge.ugeoverflow.ui.routes.Routes
 import java.util.*
 
@@ -29,56 +35,7 @@ import java.util.*
 @Composable
 fun FollowsModal(
     name: String,
-    follow: List<UserBoxDTO> = listOf(
-        UserBoxDTO(
-            UUID.randomUUID(),
-            "user1",
-            "email",
-            "url"
-        ),
-        UserBoxDTO(
-            UUID.randomUUID(),
-            "user2",
-            "email",
-            "url"
-        ),
-        UserBoxDTO(
-            UUID.randomUUID(),
-            "user3",
-            "email",
-            "url"
-        ),
-        UserBoxDTO(
-            UUID.randomUUID(),
-            "user4",
-            "email",
-            "url"
-        ),
-        UserBoxDTO(
-            UUID.randomUUID(),
-            "user1",
-            "email",
-            "url"
-        ),
-        UserBoxDTO(
-            UUID.randomUUID(),
-            "user2",
-            "email",
-            "url"
-        ),
-        UserBoxDTO(
-            UUID.randomUUID(),
-            "user3",
-            "email",
-            "url"
-        ),
-        UserBoxDTO(
-            UUID.randomUUID(),
-            "user4",
-            "email",
-            "url"
-        )
-    ),
+    follow: List<UserBoxDTO> = listOf(),
     onClose: () -> Unit = {},
     navController: NavController
 ) {
@@ -159,6 +116,13 @@ fun FollowCard(
     follower: UserBoxDTO,
     navController: NavController
 ) {
+    val imageData = remember {
+        mutableStateOf<ImageBitmap?>(
+            ImageService.getImageFromServer(
+                follower.profilePicture
+            )
+        )
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -176,14 +140,16 @@ fun FollowCard(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(16.dp)
         ) {
-            Image(
-//                painter = painterResource(follower.profilePicture.),
-                painter = painterResource(R.drawable.user1),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(52.dp)
-                    .clip(CircleShape)
-            )
+            imageData.value?.let {
+                Image(
+                    bitmap = it,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(52.dp)
+                        .clip(CircleShape)
+                        .border(1.dp, Color(0xFFDDDDDD), CircleShape)
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
             Column(
                 modifier = Modifier.weight(1f)
