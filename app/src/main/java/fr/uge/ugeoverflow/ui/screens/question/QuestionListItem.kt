@@ -1,12 +1,11 @@
 package fr.uge.ugeoverflow.ui.screens.question
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
@@ -14,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -23,32 +21,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
-import fr.uge.ugeoverflow.filters.QuestionFilterStrategy
 import fr.uge.ugeoverflow.filters.QuestionFilterType
 import fr.uge.ugeoverflow.filters.QuestionsFilterManager
+import fr.uge.ugeoverflow.services.MailService
 
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.*
 import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.White200
-import fr.uge.ugeoverflow.utils.SearchableMultiSelect
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 @Composable
@@ -175,15 +168,18 @@ fun AllQuestionsScreen( navController :NavController,filterOption: String) {
     var questions by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
     var questionsToFilter by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
 
+
     val questionsFilterManager = QuestionsFilterManager()
     questionsFilterManager.init()
 
     LaunchedEffect(filterOption) {
         Log.i("",filterOption)
+
         try {
             // get questions with the selected filter option from backend
             val selectedFilter = QuestionFilterType.valueOf(filterOption)
             if (selectedFilter == QuestionFilterType.ALL) {
+                //MailService.sendEmail()
                 val response = ugeOverflowApiSerivce.getAllQuestionsDto()
                 if (response.isSuccessful) {
                     questions = response.body() ?: emptyList()
@@ -245,6 +241,24 @@ fun QuestionItem(navController: NavController ,question: OneQuestionResponse) {
                     onClick = { navController.navigate("${Routes.OneQuestion.route}/${question.id}") },
 
                 )
+                Icon(
+                    Icons.Filled.Warning,
+                    contentDescription = "Signal",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable { MainScope().launch {
+                            try {
+                                MailService.sendEmailToNotifyAdmin(question = question)
+
+                            } catch (e: Exception) {
+
+                            }
+
+                        } }
+                )
+
+
+
 
             }
         },

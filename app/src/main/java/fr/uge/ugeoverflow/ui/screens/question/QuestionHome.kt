@@ -14,7 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.QuestionResponse
 import fr.uge.ugeoverflow.filters.QuestionFilterType
+import fr.uge.ugeoverflow.services.MailService
 import fr.uge.ugeoverflow.ui.components.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.util.logging.Level.ALL
 
 @Composable
@@ -35,22 +38,10 @@ fun QuestionsHome(navController: NavHostController) {
             componentSize = ComponentSize.Small,
         )
 
+
     }
     Column {
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.TopStart
-        ) {
-            MyButton(
-                text = "Go to One Question",
-                onClick = {
-                    navController.navigate("OneQuestion")
-                },
-                componentType = ComponentTypes.Dark,
-                componentSize = ComponentSize.Small,
-            )
 
-        }
         Column(modifier = Modifier.fillMaxSize()) {
             DropdownMenuFilter(onOptionSelected = { option ->
                 filterOption = option
@@ -63,4 +54,5 @@ fun QuestionsHome(navController: NavHostController) {
 
 
 }
+
 
