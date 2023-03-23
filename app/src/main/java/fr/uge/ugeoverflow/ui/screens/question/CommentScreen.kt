@@ -84,24 +84,24 @@ fun CommentOnFadeModal(
                                 CommentRequest(body = commentText, question.value.id, answer?.id)
                             Log.e("Send", commentRequest.toString())
                             CommentService.addComment(commentRequest,
-                                    question.value.id, answer?.id,
-                                    {
-                                        q -> question.value = q
-                                        Toast.makeText(
-                                            context,
-                                            "Comment posted successfully",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        //navController.navigate("Question/${OneQuestionGlobals.questionId}")
-                                    },
-                                    {
-                                        Toast.makeText(
-                                            context,
-                                            "Failed to post comment",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                )
+                                question.value.id, answer?.id,
+                                { q ->
+                                    question.value = q
+                                    Toast.makeText(
+                                        context,
+                                        "Comment posted successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    //navController.navigate("Question/${OneQuestionGlobals.questionId}")
+                                },
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Failed to post comment",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            )
                             commentText = ""
                         } else {
                             Toast.makeText(context, "Comment cannot be empty", Toast.LENGTH_SHORT)
@@ -182,7 +182,7 @@ fun CommentsCard(
     question: MutableState<OneQuestionResponse>,
     navController: NavHostController,
     answer: AnswerResponse?,
-    context : Context
+    context: Context
 ) {
     var comments = remember {
         mutableStateOf(question.value.comments)
@@ -193,81 +193,81 @@ fun CommentsCard(
             mutableStateOf(answer.comments)
         }
     }
-            fun openCommentDialog() {
-                commentDialogOpen.value = true
-            }
+    fun openCommentDialog() {
+        commentDialogOpen.value = true
+    }
 
-            // function to close the comment dialog
-            fun closeCommentDialog() {
-                commentDialogOpen.value = false
-            }
-            Column {
+    // function to close the comment dialog
+    fun closeCommentDialog() {
+        commentDialogOpen.value = false
+    }
+    Column {
 
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Icon(
-                            imageVector = if (commentDialogOpen.value) Icons.Outlined.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                            contentDescription = "Toggle comment expansion",
-                            tint = if (commentDialogOpen.value) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface,
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Icon(
+                imageVector = if (commentDialogOpen.value) Icons.Outlined.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                contentDescription = "Toggle comment expansion",
+                tint = if (commentDialogOpen.value) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface,
+            )
+
+            Text(
+                //TERNARY OPERATOR on comment size or add comment
+                text = if (comments.value.isNotEmpty()) "${comments.value.size} comments" else "Add comment",
+                modifier = Modifier.clickable {
+                    if (SessionManagerSingleton.sessionManager.isUserLoggedIn.value) {
+                        openCommentDialog()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "You must be logged in to comment",
+                            Toast.LENGTH_SHORT
                         )
-
-                        Text(
-                            //TERNARY OPERATOR on comment size or add comment
-                            text = if (comments.value.isNotEmpty()) "${comments.value.size} comments" else "Add comment",
-                            modifier = Modifier.clickable {
-                                if (SessionManagerSingleton.sessionManager.isUserLoggedIn.value) {
-                                    openCommentDialog()
-                                } else {
-                                    Toast.makeText(
-                                        context,
-                                        "You must be logged in to comment",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
-                                    navController.navigate("Login")
-                                }
-
-                                openCommentDialog()
-                            },
-                            style = MaterialTheme.typography.caption
-                        )
-                        Spacer(Modifier.width(4.dp))
-                        Box(
-                            modifier = Modifier
-                                .width(2.dp)
-                                .height(24.dp)
-                                .background(MaterialTheme.colors.secondary)
-                        )
-                    }
-                    Divider(
-                        color = MaterialTheme.colors.secondary,
-                        thickness = 2.dp,
-                        modifier = Modifier
-                            .width(100.dp)
-                            .align(Alignment.End)
-                    )
-
-                    if (commentDialogOpen.value) {
-                        CommentOnFadeModal(
-                            question = question,
-                            onDismissRequest = { closeCommentDialog() },
-                            answer = answer, // replace with the correct overflowId
-                            comments = comments.value,
-                            navController = navController
-                        )
+                            .show()
+                        navController.navigate("Login")
                     }
 
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            Divider(
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
-                thickness = 2.dp,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                    openCommentDialog()
+                },
+                style = MaterialTheme.typography.caption
+            )
+            Spacer(Modifier.width(4.dp))
+            Box(
+                modifier = Modifier
+                    .width(2.dp)
+                    .height(24.dp)
+                    .background(MaterialTheme.colors.secondary)
             )
         }
+        Divider(
+            color = MaterialTheme.colors.secondary,
+            thickness = 2.dp,
+            modifier = Modifier
+                .width(100.dp)
+                .align(Alignment.End)
+        )
+
+        if (commentDialogOpen.value) {
+            CommentOnFadeModal(
+                question = question,
+                onDismissRequest = { closeCommentDialog() },
+                answer = answer, // replace with the correct overflowId
+                comments = comments.value,
+                navController = navController
+            )
+        }
+
+    }
+    Spacer(modifier = Modifier.height(12.dp))
+    Divider(
+        color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
+        thickness = 2.dp,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+}
 
 
 

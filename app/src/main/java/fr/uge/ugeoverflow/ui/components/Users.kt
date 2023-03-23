@@ -18,15 +18,23 @@ import java.util.*
 
 @Composable
 fun UserView(user: User, navController: NavController, onItemClick: (UUID) -> Unit) {
-    Column (modifier = Modifier.fillMaxHeight(1f).clickable { onItemClick(user.id)}){
-        Card (modifier = Modifier.fillMaxWidth().height(LocalConfiguration.current.screenHeightDp.dp / 6.5f)){
-            Column{
-                Row (modifier = Modifier.padding(top = 10.dp, start = 10.dp)){
-                    Box (modifier = Modifier.fillMaxHeight(0.8f).fillMaxWidth(0.2f)){userImage()}
-                    Column (modifier = Modifier.padding(top = 10.dp, start = 20.dp)){
+    Column(modifier = Modifier
+        .fillMaxHeight(1f)
+        .clickable { onItemClick(user.id) }) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(LocalConfiguration.current.screenHeightDp.dp / 6.5f)
+        ) {
+            Column {
+                Row(modifier = Modifier.padding(top = 10.dp, start = 10.dp)) {
+                    Box(modifier = Modifier
+                        .fillMaxHeight(0.8f)
+                        .fillMaxWidth(0.2f)) { userImage() }
+                    Column(modifier = Modifier.padding(top = 10.dp, start = 20.dp)) {
                         Text(text = user.username)
-                        Text(text = user.address.getCity.toString()+", "+user.address.getCountry.toString())
-                        user.score?.let { Text(text = it.toString())}
+                        Text(text = user.address.getCity.toString() + ", " + user.address.getCountry.toString())
+                        user.score?.let { Text(text = it.toString()) }
                     }
                 }
                 Spacer(modifier = Modifier.fillMaxWidth())
@@ -34,6 +42,7 @@ fun UserView(user: User, navController: NavController, onItemClick: (UUID) -> Un
         }
     }
 }
+
 @Composable
 fun UserListScreen(users: List<User>, navController: NavController) {
     LazyColumn(
@@ -41,7 +50,7 @@ fun UserListScreen(users: List<User>, navController: NavController) {
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
         items(users) { user ->
-            UserView(user = user, navController,onItemClick = {
+            UserView(user = user, navController, onItemClick = {
                 navController.navigate("${Routes.UserDetails.route}/${user.id}")
             })
         }

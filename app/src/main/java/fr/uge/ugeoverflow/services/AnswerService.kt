@@ -13,7 +13,8 @@ object AnswerService {
         errorCallback: () -> Unit
     ) = kotlinx.coroutines.runBlocking {
         val token = fr.uge.ugeoverflow.session.SessionManagerSingleton.sessionManager.getToken()
-        val response = fr.uge.ugeoverflow.session.ApiService.init().postAnswer("Bearer $token",overflowId, answerRequest)
+        val response = fr.uge.ugeoverflow.session.ApiService.init()
+            .postAnswer("Bearer $token", overflowId, answerRequest)
         if (response.isSuccessful) {
             onSuccess(response.body()!!)
         } else {
@@ -24,7 +25,7 @@ object AnswerService {
     fun deleteAnswer(
         onSuccess: (OneQuestionResponse) -> Unit,
         errorCallback: () -> Unit,
-    ) = runBlocking{
+    ) = runBlocking {
         val token = fr.uge.ugeoverflow.session.SessionManagerSingleton.sessionManager.getToken()
         val response = ApiService.init().deleteAnswer("Bearer $token")
         if (response.isSuccessful) {

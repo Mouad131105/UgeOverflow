@@ -232,10 +232,13 @@ fun QuestionItem(question: QuestionResponse, navController: NavHostController) {
                 )
                 Text(
                     text = question.title,
-                    modifier = Modifier.padding(start = 5.dp).clickable {
-                        navController.navigate(
-                        "${Routes.Question.route}/${question.id}"
-                    ) },
+                    modifier = Modifier
+                        .padding(start = 5.dp)
+                        .clickable {
+                            navController.navigate(
+                                "${Routes.Question.route}/${question.id}"
+                            )
+                        },
                     fontWeight = FontWeight.W800,
                     color = Color(0xFF4552B8),
                     fontSize = 15.sp

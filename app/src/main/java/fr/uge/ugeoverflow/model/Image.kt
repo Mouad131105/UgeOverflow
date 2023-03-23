@@ -3,7 +3,7 @@ package fr.uge.ugeoverflow.model
 import java.util.*
 
 data class Image(
-    private val id : UUID,
+    private val id: UUID,
     private val image: ByteArray? = null
 ) {
     override fun equals(other: Any?): Boolean {
@@ -20,6 +20,7 @@ data class Image(
 
         return true
     }
+
     override fun hashCode(): Int {
         var result = id.hashCode()
         result = 31 * result + (image?.contentHashCode() ?: 0)

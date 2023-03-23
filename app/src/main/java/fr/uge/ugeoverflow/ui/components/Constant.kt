@@ -38,7 +38,7 @@ fun MyButtonComponent(
     componentType: ComponentType,
     componentSize: ComponentSize = ComponentSize.Medium,
     active: Boolean = true,
-    border:Boolean = true
+    border: Boolean = true
 ) {
     val paddingValues = when (componentSize) {
         ComponentSize.Small -> PaddingValues(
@@ -60,7 +60,7 @@ fun MyButtonComponent(
             )
         }
     }
-    val borderSize=if(border)BorderStroke(1.dp, componentType.contentColor)else null
+    val borderSize = if (border) BorderStroke(1.dp, componentType.contentColor) else null
 
     Button(
         onClick = onClick,
@@ -85,7 +85,6 @@ fun MyButtonComponent(
         }
     }
 }
-
 
 
 object ComponentTypes {

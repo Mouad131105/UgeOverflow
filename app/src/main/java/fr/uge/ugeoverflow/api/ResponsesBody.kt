@@ -17,7 +17,6 @@ data class QuestionResponse(
 )
 
 
-
 data class LoginResponse(
     val user: UserBoxDTO,
     val token: String
@@ -28,9 +27,9 @@ data class TagsResponse(
 )
 
 data class TagResponse(
-    val tagType : String,
-    val description :String,
-    val questionCount : Int
+    val tagType: String,
+    val description: String,
+    val questionCount: Int
 )
 
 
@@ -104,6 +103,7 @@ data class CommentResponse(
     val user: UserBoxDTO,
     val creationTime: String
 )
+
 data class OneQuestionResponse(
     val id: String,
     val title: String,
@@ -116,6 +116,7 @@ data class OneQuestionResponse(
     val answers: List<AnswerResponse>,
     val location: Location
 )
+
 data class AnswerResponse(
     val id: String,
     val body: String,
@@ -124,13 +125,13 @@ data class AnswerResponse(
     val score: Int,
     val votes: List<VoteResponse>,
     val comments: List<CommentResponse>,
-    val upVotedByUser:Boolean,
-    val downVotedByUser:Boolean
+    val upVotedByUser: Boolean,
+    val downVotedByUser: Boolean
 )
 
 data class VoteResponse(
     val vote: String,
-    val user : UserBoxDTO,
-    val downvote : Boolean,
-    val upvote : Boolean
+    val user: UserBoxDTO,
+    val downvote: Boolean,
+    val upvote: Boolean
 )

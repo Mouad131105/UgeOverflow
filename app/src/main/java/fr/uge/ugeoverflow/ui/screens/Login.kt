@@ -60,11 +60,19 @@ fun LoginScreen(navController: NavHostController) {
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
 
-        Text(text = context.getString(R.string.login), style = TextStyle(fontSize = 40.sp, fontFamily = poppins_medium))
+        Text(
+            text = context.getString(R.string.login),
+            style = TextStyle(fontSize = 40.sp, fontFamily = poppins_medium)
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            label = { Text(text = context.getString(R.string.username), fontFamily = poppins_light) },
+            label = {
+                Text(
+                    text = context.getString(R.string.username),
+                    fontFamily = poppins_light
+                )
+            },
             value = username.value,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             onValueChange = { username.value = it })
@@ -80,7 +88,7 @@ fun LoginScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(20.dp))
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
             MyButton(
-                text =  context.getString(R.string.login),
+                text = context.getString(R.string.login),
                 onClick = {
                     Log.i("user", username.value.text + " " + password.value.text)
                     LoginService.login(
@@ -100,7 +108,8 @@ fun LoginScreen(navController: NavHostController) {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    ) },
+                    )
+                },
                 componentType = ComponentTypes.Primary,
                 modifier = Modifier.fillMaxWidth(),
             )

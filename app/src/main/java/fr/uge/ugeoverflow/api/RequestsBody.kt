@@ -23,13 +23,13 @@ data class AnswerRequest(
     val body: String,
     //val location: Location
     val questionId: String
-    )
+)
 
 data class CommentRequest(
     val body: String,
     val questionId: String?,
     val answerId: String?
-    )
+)
 
 
 data class ReputationRequest(

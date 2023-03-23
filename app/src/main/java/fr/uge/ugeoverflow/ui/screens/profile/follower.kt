@@ -28,7 +28,7 @@ import java.util.*
 
 @Composable
 fun FollowsModal(
-    name:String,
+    name: String,
     follow: List<UserBoxDTO> = listOf(
         UserBoxDTO(
             UUID.randomUUID(),
@@ -165,8 +165,8 @@ fun FollowCard(
             .height(100.dp)
             .padding(8.dp)
             .clickable {
-                val r="${Routes.Profile.route}/${follower.username}"
-                Log.d("FollowCard",r)
+                val r = "${Routes.Profile.route}/${follower.username}"
+                Log.d("FollowCard", r)
                 navController.navigate(r)
             },
         elevation = 4.dp

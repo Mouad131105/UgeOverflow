@@ -39,7 +39,8 @@ class SessionManager(val context: Context) {
     fun logIn(token: String, user: UserBoxDTO) {
         _isAuthenticated.value = true
         _username.value = user.username
-        val image = if (user.profilePicture.contains("http")) user.profilePicture.split("/images/")[1] else user.profilePicture
+        val image =
+            if (user.profilePicture.contains("http")) user.profilePicture.split("/images/")[1] else user.profilePicture
         _image.value = image
         sharedPreferences.edit()
             .putString("token", token)

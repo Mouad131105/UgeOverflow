@@ -160,7 +160,6 @@ fun MainComponent() {
 }
 
 
-
 @Composable
 fun AppTopBar(
     onNavItemClick: () -> Unit,

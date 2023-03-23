@@ -18,14 +18,20 @@ object CommentService {
 
         val token = SessionManagerSingleton.sessionManager.getToken()
         if (!answerId.isNullOrBlank()) {
-            val response = ApiService.init().postCommentForAnswer("Bearer $token", questionId, answerId.toString(), commentRequest)
+            val response = ApiService.init().postCommentForAnswer(
+                "Bearer $token",
+                questionId,
+                answerId.toString(),
+                commentRequest
+            )
             if (response.isSuccessful) {
                 onSuccess(response.body()!!)
             } else {
                 errorCallback()
             }
-        }else{
-            val response = ApiService.init().postCommentForQuestion("Bearer $token",questionId, commentRequest)
+        } else {
+            val response = ApiService.init()
+                .postCommentForQuestion("Bearer $token", questionId, commentRequest)
             if (response.isSuccessful) {
                 onSuccess(response.body()!!)
             } else {

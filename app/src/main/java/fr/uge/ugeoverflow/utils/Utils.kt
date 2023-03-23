@@ -84,11 +84,13 @@ fun SearchableMultiSelect(
 
 
             Row(
-                modifier = Modifier.border(
-                    width = 1.dp,
-                    color = Color.LightGray,
-                    shape = RoundedCornerShape(4.dp)
-                ).fillMaxWidth(),
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = Color.LightGray,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                    .fillMaxWidth(),
 //                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
 //                contentPadding = PaddingValues(horizontal = 8.dp),
 //                verticalArrangement = Arrangement.SpaceBetween,
@@ -106,7 +108,8 @@ fun SearchableMultiSelect(
 //                    }
 
                 selectedOptions.forEach { option ->
-                    MyTag(text = option,
+                    MyTag(
+                        text = option,
                         componentSize = ComponentSize.Small,
                         componentType = ComponentTypes.PrimaryOutline,
                         onDismiss = {

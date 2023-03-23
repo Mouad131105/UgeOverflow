@@ -42,8 +42,6 @@ fun QuestionsHomeScreen(navController: NavHostController) {
     }
 
 
-
-
     //from db
     // AllQuestionsScreen()
 //    QuestionForm(navController)

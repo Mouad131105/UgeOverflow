@@ -42,7 +42,7 @@ object QuestionService {
         onSuccess: () -> Unit,
         onError: () -> Unit,
 
-    ) = runBlocking {
+        ) = runBlocking {
         val token = SessionManagerSingleton.sessionManager.getToken()
         val response = ApiService.init().deleteQuestion("Bearer $token")
         if (response.isSuccessful) {
@@ -59,7 +59,8 @@ object QuestionService {
         onError: () -> Unit,
     ) = runBlocking {
         val token = SessionManagerSingleton.sessionManager.getToken()
-        val response = ApiService.init().updateQuestion("Bearer $token",questionId,  questionRequest)
+        val response =
+            ApiService.init().updateQuestion("Bearer $token", questionId, questionRequest)
         if (response.isSuccessful) {
             onSuccess(response.body()!!)
         } else {

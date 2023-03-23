@@ -54,7 +54,6 @@ fun getMyLocation(context: Context): MyLocation? {
 }
 
 
-
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview(showBackground = true)
 @Composable

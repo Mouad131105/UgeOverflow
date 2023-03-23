@@ -11,7 +11,6 @@ object ApiService {
         "http://192.168.1.69:8080" //Ici il faut mettre l'address ipv4 local
 
 
-
     fun init(): RestController {
         val httpClient = OkHttpClient.Builder().apply {
             addInterceptor { chain ->

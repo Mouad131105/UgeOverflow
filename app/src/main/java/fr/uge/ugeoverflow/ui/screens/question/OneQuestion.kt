@@ -1,52 +1,40 @@
-import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
-
-
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-
 import androidx.navigation.NavHostController
-
-import fr.uge.ugeoverflow.R
-import fr.uge.ugeoverflow.session.ApiService
-import fr.uge.ugeoverflow.utils.Utils
-
-import kotlinx.coroutines.runBlocking
-
 import coil.compose.rememberImagePainter
-import fr.uge.ugeoverflow.api.*
+import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.api.AnswerRequest
+import fr.uge.ugeoverflow.api.AnswerResponse
+import fr.uge.ugeoverflow.api.OneQuestionResponse
 import fr.uge.ugeoverflow.services.AnswerService
-import fr.uge.ugeoverflow.services.CommentService
 import fr.uge.ugeoverflow.services.QuestionService
+import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-
-import fr.uge.ugeoverflow.ui.components.*
+import fr.uge.ugeoverflow.ui.components.ComponentSize
+import fr.uge.ugeoverflow.ui.components.ComponentTypes
+import fr.uge.ugeoverflow.ui.components.MyButton
+import fr.uge.ugeoverflow.ui.components.MyCard
 import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.screens.question.CommentsCard
-import kotlinx.coroutines.launch
+import fr.uge.ugeoverflow.utils.Utils
+import kotlinx.coroutines.runBlocking
 
 
 object OneQuestionGlobals {
@@ -125,7 +113,12 @@ fun QuestionScreen(navController: NavHostController, id: String? = null) {
 
                     // Render the answers in the sorted order
                     items(sortedAnswers.value.size) { index ->
-                        AnswerCard(context, answer = sortedAnswers.value[index],  question, navController)
+                        AnswerCard(
+                            context,
+                            answer = sortedAnswers.value[index],
+                            question,
+                            navController
+                        )
                     }
                     // Post new answer
                     item {
@@ -202,7 +195,11 @@ fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: N
 }
 
 @Composable
-fun QuestionCard(question: MutableState<OneQuestionResponse>, navController: NavHostController, context: Context) {
+fun QuestionCard(
+    question: MutableState<OneQuestionResponse>,
+    navController: NavHostController,
+    context: Context
+) {
     MyCard(
         modifier = Modifier.fillMaxWidth(),
         header = {
@@ -302,6 +299,7 @@ fun AnswerCard(
     fun showAnswerDialog() {
         answerDialog.value = true
     }
+
     fun hideAnswerDialog() {
         answerDialog.value = false
     }
@@ -386,7 +384,7 @@ fun DisplayDialog(
             .fillMaxWidth()
             .fillMaxHeight()
             .clickable { onDismiss() }
-    ){
+    ) {
         AlertDialog(
             onDismissRequest = { onDismiss() },
             title = {
@@ -437,8 +435,7 @@ fun DisplayDialog(
                     }) {
                         if (SessionManagerSingleton.sessionManager.currentUsername.value == answer?.user?.username) {
                             Text(text = "Delete Answer")
-                        }
-                        else{
+                        } else {
                             Text(text = "Vote Up")
                         }
                     }
@@ -480,7 +477,7 @@ fun DisplayDialog(
                     }) {
                         if (SessionManagerSingleton.sessionManager.currentUsername.value == answer?.user?.username) {
                             Text(text = "Edit Answer")
-                        }else{
+                        } else {
                             Text(text = "Vote Down")
                         }
                     }
@@ -536,7 +533,7 @@ fun DisplayDialog(
 
                      */
 
-                    }
+                }
 
             },
             buttons = {
@@ -554,6 +551,7 @@ fun DisplayDialog(
     // close dialog
 
 }
+
 fun getQuestionById(questionId: String): OneQuestionResponse = runBlocking {
     //TODO : Receive ID from getQuestionById  when clicking on it
     val response = ApiService.init().getQuestion(questionId)

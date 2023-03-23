@@ -24,7 +24,7 @@ import kotlinx.coroutines.runBlocking
 fun TagScreen(navController: NavController) {
 
 
-   val  tags = getTagsFromDB()
+    val tags = getTagsFromDB()
 
     var searchFilter by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxSize()) {
@@ -39,6 +39,7 @@ fun TagScreen(navController: NavController) {
         TagList(tags = tags, filter = searchFilter)
     }
 }
+
 @Composable
 fun TagList(tags: List<TagResponse>, filter: String) {
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
@@ -56,7 +57,11 @@ fun Tag(tag: TagResponse) {
         modifier = Modifier
             .background(Color.White)
             .padding(15.dp)
-            .border(1.dp, Color(android.graphics.Color.parseColor("#DBDDDE")), RoundedCornerShape(4.dp))
+            .border(
+                1.dp,
+                Color(android.graphics.Color.parseColor("#DBDDDE")),
+                RoundedCornerShape(4.dp)
+            )
             .clickable(onClick = {
                 // Toggle the tooltip visibility on click
                 showTooltip = true
@@ -76,9 +81,12 @@ fun Tag(tag: TagResponse) {
                         fontSize = 13.sp,
                         textAlign = TextAlign.Center
 
-                        ),
+                    ),
                     modifier = Modifier
-                        .background(Color(android.graphics.Color.parseColor("#DAEFFC")), shape = RoundedCornerShape(4.dp))
+                        .background(
+                            Color(android.graphics.Color.parseColor("#DAEFFC")),
+                            shape = RoundedCornerShape(4.dp)
+                        )
                         .padding(7.dp)
                         .width(IntrinsicSize.Min)
                         .height(IntrinsicSize.Min)
@@ -90,18 +98,26 @@ fun Tag(tag: TagResponse) {
 
             }
 
-            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+            Divider(
+                color = Color.Gray,
+                thickness = 1.dp,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
 
             // Add a text with the tag description
             Text(
-                text = tag.description?: "",
+                text = tag.description ?: "",
                 color = Color.Black,
                 fontSize = 13.sp,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
 
-            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+            Divider(
+                color = Color.Gray,
+                thickness = 1.dp,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
 
             Text(
                 text = " ${tag.questionCount} questions",
@@ -109,7 +125,7 @@ fun Tag(tag: TagResponse) {
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center,
 
-            )
+                )
         }
 
         // Show the tooltip as an AlertDialog
@@ -120,9 +136,12 @@ fun Tag(tag: TagResponse) {
                     showTooltip = false
                 },
                 title = {
-                    Text(text = tag.tagType ?: "" ,  color = Color(android.graphics.Color.parseColor("#89CDF9") )
-                        ,fontWeight = FontWeight.Bold
-                        , fontSize = 16.sp )
+                    Text(
+                        text = tag.tagType ?: "",
+                        color = Color(android.graphics.Color.parseColor("#89CDF9")),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
                 },
                 text = {
                     Column {
@@ -131,14 +150,20 @@ fun Tag(tag: TagResponse) {
                 },
                 confirmButton = {
                     Button(
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(android.graphics.Color.parseColor("#89CDF9") )),
-                                onClick = {
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(
+                                android.graphics.Color.parseColor(
+                                    "#89CDF9"
+                                )
+                            )
+                        ),
+                        onClick = {
                             // Dismiss the tooltip
                             showTooltip = false
 
                         }
                     ) {
-                        Text(text = "OK"  ,color = Color.White )
+                        Text(text = "OK", color = Color.White)
 
                     }
                 }
@@ -148,8 +173,7 @@ fun Tag(tag: TagResponse) {
 }
 
 
-
-  fun getTagsFromDB(): List<TagResponse> = runBlocking {
+fun getTagsFromDB(): List<TagResponse> = runBlocking {
     val response = ApiService.init().getAllTags()
     val tags = response.body() ?: throw RuntimeException("Failed to fetch question Do")
     tags.sortedByDescending { it.questionCount }

@@ -3,13 +3,13 @@ package fr.uge.ugeoverflow.model
 import java.util.*
 
 data class Address(
-    private val id : UUID?,
-    private val  street : String?="",
-    private val  city : String?="",
-    private val  country : String?="",
-    private val zipCode : String?=""
+    private val id: UUID?,
+    private val street: String? = "",
+    private val city: String? = "",
+    private val country: String? = "",
+    private val zipCode: String? = ""
 
-){
+) {
 
     val getStreet: String? get() = street
     val getCity: String? get() = city
@@ -17,12 +17,12 @@ data class Address(
     val getZipCode: String? get() = zipCode
 }
 
-class AddressBuilder{
+class AddressBuilder {
     private var id: UUID? = null
-    private var street : String ?= ""
-    private var city : String ?= ""
-    private var country : String ?= ""
-    private var zipCode : String ?= ""
+    private var street: String? = ""
+    private var city: String? = ""
+    private var country: String? = ""
+    private var zipCode: String? = ""
 
     fun id(id: UUID) = apply { this.id = id }
     fun street(street: String) = apply { this.street = street }
