@@ -1,11 +1,17 @@
 package fr.uge.ugeoverflow.services
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.session.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -19,7 +25,6 @@ object ImageService {
 
 
     fun saveImageToLocal(filename: String, imageUrl: String, context: Context) = runBlocking {
-//        val filename= "$filename.png"
         val image = getImageFromServer(imageUrl)
         val bytes = image?.asAndroidBitmap()?.byteCount?.let { it1 -> ByteArray(it1) }
 
@@ -64,5 +69,25 @@ object ImageService {
             }
         }
         return@runBlocking null
+    }
+
+    @Composable
+    fun RemoteImage(url: String, modifier: Modifier = Modifier) {
+        val painter = // Customize the image request as needed (e.g. add headers, transformations, etc.)
+            rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current).data(data = url)
+                    .apply(block = fun ImageRequest.Builder.() {
+                        // Customize the image request as needed (e.g. add headers, transformations, etc.)
+                        placeholder(R.drawable.user2)
+                    }).build()
+            )
+        Image(
+            painter = painter,
+            contentDescription = "Remote image",
+            modifier = modifier,
+            contentScale = ContentScale.Crop,
+            alpha = if (painter.state is AsyncImagePainter.State.Loading) 0.5f else 1.0f,
+            colorFilter = if (painter.state is AsyncImagePainter.State.Error) ColorFilter.tint(Color.Red) else null
+        )
     }
 }

@@ -39,17 +39,15 @@ import fr.uge.ugeoverflow.ui.screens.question.CommentsCard
 import kotlinx.coroutines.launch
 
 
-
-
-
 object OneQuestionGlobals {
-    var questionId:String = ""
+    var questionId: String = ""
 }
 
 @Composable
-fun QuestionScreen(navController: NavHostController) {
+fun QuestionScreen(navController: NavHostController, id: String? = null) {
     val scaffoldState = rememberScaffoldState()
-    val questionId = "cd414895-39d9-422c-a160-80fc80a4adda" // temporary, replace by an existing QuestionId in databse
+    val questionId = id ?: "cd414895-39d9-422c-a160-80fc80a4adda"
+    // temporary, replace by an existing QuestionId in databse
     OneQuestionGlobals.questionId = questionId
     val question = remember { getQuestionById(questionId) } // load only once
     val sortedAnswers = remember(question.answers) {
@@ -66,7 +64,7 @@ fun QuestionScreen(navController: NavHostController) {
                     contentPadding = PaddingValues(horizontal = 16.dp),
                 ) {
                     item {
-                        QuestionCard(question=question, navController)
+                        QuestionCard(question = question, navController)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
@@ -127,7 +125,7 @@ fun QuestionScreen(navController: NavHostController) {
 }
 
 @Composable
-fun QuestionCard(question:OneQuestionResponse, navController:NavHostController){
+fun QuestionCard(question: OneQuestionResponse, navController: NavHostController) {
     MyCard(
         modifier = Modifier.fillMaxWidth(),
         header = {
@@ -169,7 +167,7 @@ fun QuestionCard(question:OneQuestionResponse, navController:NavHostController){
                     style = MaterialTheme.typography.caption,
                 )
                 Text(
-                    text =  "${Utils.formatDateUsingTimeAgo(question.creationTime)} by",
+                    text = "${Utils.formatDateUsingTimeAgo(question.creationTime)} by",
                     style = MaterialTheme.typography.caption,
                 )
                 Spacer(Modifier.width(4.dp))
@@ -190,14 +188,15 @@ fun QuestionCard(question:OneQuestionResponse, navController:NavHostController){
 
 
 }
+
 @Composable
-fun croppedImageFromDB(imageData:String){
+fun croppedImageFromDB(imageData: String) {
     Image(
         painter = rememberImagePainter(data = imageData, builder = {
             placeholder(R.drawable.user4) // in case image not available
             error(R.drawable.user3) // in case there is an error
         }),
-        contentDescription="",
+        contentDescription = "",
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(24.dp)
@@ -210,22 +209,24 @@ fun croppedImageFromDB(imageData:String){
 
     )
 }
+
 @Composable
-fun AnswerCard(answer: AnswerResponse, navController:NavHostController) {
+fun AnswerCard(answer: AnswerResponse, navController: NavHostController) {
     var expanded by remember { mutableStateOf(false) }
     val answerLines = answer.body.lines()
     MyCard(
         modifier = Modifier.fillMaxWidth(),
         body = {
             Column {
-                answerLines.take(if (expanded) answerLines.size else 2).forEachIndexed { index, line ->
-                    Text(
-                        text = line,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = if (expanded || index < 2) Int.MAX_VALUE else 1,
-                        modifier = Modifier.clickable { if (!expanded) expanded = true },
-                    )
-                }
+                answerLines.take(if (expanded) answerLines.size else 2)
+                    .forEachIndexed { index, line ->
+                        Text(
+                            text = line,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = if (expanded || index < 2) Int.MAX_VALUE else 1,
+                            modifier = Modifier.clickable { if (!expanded) expanded = true },
+                        )
+                    }
                 if (answerLines.size > 2 && (!expanded || answerLines.size > 3)) {
                     val text = if (expanded) "show less" else "... show more"
                     ClickableText(
@@ -269,12 +270,11 @@ fun AnswerCard(answer: AnswerResponse, navController:NavHostController) {
 }
 
 
-
 fun getQuestionById(questionId: String): OneQuestionResponse = runBlocking {
     //TODO : Receive ID from getQuestionById  when clicking on it
     val response = ApiService.init().getQuestion(questionId)
     Log.d("response ", response.message())
-    if (response.isSuccessful){
+    if (response.isSuccessful) {
         Log.d("response ", response.message())
     }
     response.body() ?: throw RuntimeException("Failed to fetch question Do")

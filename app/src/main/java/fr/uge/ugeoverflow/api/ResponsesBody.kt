@@ -1,11 +1,9 @@
 package fr.uge.ugeoverflow.api
 
 
-import fr.uge.ugeoverflow.model.User
 import android.location.Location
 import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.model.VOTE_TYPE
-import java.time.LocalDateTime
 import java.util.*
 
 data class QuestionResponse(
@@ -13,7 +11,7 @@ data class QuestionResponse(
     val title: String,
     val body: String,
     val tags: List<String>,
-    val user: UserBoxResponse,
+    val user: UserBoxDTO,
     val creationTime: String,
     val myLocation: MyLocation
 )
@@ -21,7 +19,7 @@ data class QuestionResponse(
 
 
 data class LoginResponse(
-    val user: UserBoxResponse,
+    val user: UserBoxDTO,
     val token: String
 )
 
@@ -36,7 +34,7 @@ data class TagResponse(
 )
 
 
-data class UserBoxResponse(
+data class UserBoxDTO(
     val id: UUID,
     val username: String,
     val email: String,
@@ -69,8 +67,8 @@ class UserProfileDTO(
     val profilePicture: String?,
     val reputation: Int = 0,
     var creationTime: String?,
-    val followers: List<UserBoxResponse>?,
-    val followed: List<UserBoxResponse>?,
+    val followers: List<UserBoxDTO>?,
+    val followed: List<UserBoxDTO>?,
     val questions: List<QuestionResponse>?,
     val answers: List<AnswerDTO>?,
     val tags: Map<String, Int>?
@@ -79,7 +77,7 @@ class UserProfileDTO(
 class AnswerDTO(
     val id: UUID,
     val body: String,
-    val user: UserBoxResponse,
+    val user: UserBoxDTO,
     val creationTime: String,
     val score: Int = 0,
     val votes: List<VoteDTO>?,
@@ -89,21 +87,21 @@ class AnswerDTO(
 
 class VoteDTO(
     val vote: VOTE_TYPE,
-    val user: UserBoxResponse
+    val user: UserBoxDTO
 )
 
 
 class CommentDTO(
     val id: UUID,
     val body: String,
-    val user: UserBoxResponse,
+    val user: UserBoxDTO,
     val creationTime: String,
 )
 
 data class CommentResponse(
     val id: String,
     val body: String,
-    val user: UserBoxResponse,
+    val user: UserBoxDTO,
     val creationTime: String
 )
 data class OneQuestionResponse(
@@ -111,7 +109,7 @@ data class OneQuestionResponse(
     val title: String,
     val body: String,
     val tags: List<String>,
-    val user: UserBoxResponse,
+    val user: UserBoxDTO,
     val creationTime: String,
     val answersCounter: Int,
     val comments: List<CommentResponse>,
@@ -121,7 +119,7 @@ data class OneQuestionResponse(
 data class AnswerResponse(
     val id: String,
     val body: String,
-    val user: UserBoxResponse,
+    val user: UserBoxDTO,
     val creationTime: String,
     val score: Int,
     val votes: List<VoteResponse>,
@@ -132,7 +130,7 @@ data class AnswerResponse(
 
 data class VoteResponse(
     val vote: String,
-    val user : UserBoxResponse,
+    val user : UserBoxDTO,
     val downvote : Boolean,
     val upvote : Boolean
 )

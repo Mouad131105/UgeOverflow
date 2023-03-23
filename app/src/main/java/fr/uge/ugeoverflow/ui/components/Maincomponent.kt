@@ -56,6 +56,7 @@ import fr.uge.ugeoverflow.ui.screens.SignUpScreen
 import fr.uge.ugeoverflow.ui.screens.profile.UserProfileScreen
 import fr.uge.ugeoverflow.ui.screens.question.AskQuestionScreen
 import fr.uge.ugeoverflow.ui.screens.question.QuestionsHomeScreen
+import fr.uge.ugeoverflow.ui.screens.question.userImage
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
@@ -93,12 +94,18 @@ fun MainComponent() {
             }
         },
         drawerContent = {
-            DrawerContent(items = listOf("Questions", "Tags", stringResource(id = R.string.users)), onItemClick = { item ->
-                navController.navigate(item)
-                scope.launch {
-                    scaffoldState.drawerState.close()
-                }
-            }, navController = navController, scaffoldState = scaffoldState, scope = scope)
+            DrawerContent(
+                items = listOf("Questions", "Tags", stringResource(id = R.string.users)),
+                onItemClick = { item ->
+                    navController.navigate(item)
+                    scope.launch {
+                        scaffoldState.drawerState.close()
+                    }
+                },
+                navController = navController,
+                scaffoldState = scaffoldState,
+                scope = scope
+            )
         }) {
         NavHost(navController = navController, startDestination = Routes.Questions.route) {
 
@@ -133,11 +140,22 @@ fun MainComponent() {
                 UserProfileScreen(navController, username)
             }
             composable(Routes.Tags.route) {
-
                 TagScreen(navController)
             }
+//            // => Tags/Android
+//            composable("${Routes.Tags.route}/{tag}") { backStackEntry ->
+//                val tag: String = backStackEntry.arguments?.getString("tag")
+//                    ?: throw Exception("Tag is null")
+//                TagScreen(navController, tag)
+//            }
+
             composable(Routes.OneQuestion.route) {
                 QuestionScreen(navController)
+            }
+            composable("${Routes.OneQuestion.route}/{id}") { backStackEntry ->
+                val id: String = backStackEntry.arguments?.getString("id")
+                    ?: throw Exception("Id is null")
+                QuestionScreen(navController, id)
             }
         }
     }
@@ -163,26 +181,26 @@ fun BitmapDrawableImage() {
 
 
 //@Preview(showBackground = true)
-@Composable
-fun ImageScreen(context: Context) {
-    val imageUrl = "http://localhost:8080/images/SCR-20230307-wis.png"
-    val imageData = remember { mutableStateOf<ImageBitmap?>(null) }
-
-    LaunchedEffect(imageUrl) {
-        imageData.value = ImageService.getImageFromServer(imageUrl)
-        val imgName=SessionManagerSingleton.sessionManager.getUsername().toString()
-//        imageData.value=ImageService.loadImageFromLocal(imgName, context)
-    }
-
-    imageData.value?.let { image ->
-        Image(
-            image,
-            "Image from server",
-            modifier = Modifier
-                .size(50.dp)
-        )
-    }
-}
+//@Composable
+//fun ImageScreen(context: Context) {
+//    val imageUrl = "http://localhost:8080/images/SCR-20230307-wis.png"
+//    val imageData = remember { mutableStateOf<ImageBitmap?>(null) }
+//
+//    LaunchedEffect(imageUrl) {
+//        imageData.value = ImageService.getImageFromServer(imageUrl)
+//        val imgName = SessionManagerSingleton.sessionManager.getUsername().toString()
+////        imageData.value = ImageService.loadImageFromLocal(imgName, context)
+//    }
+//
+//    imageData.value?.let { image ->
+//        Image(
+//            image,
+//            "Image from server",
+//            modifier = Modifier
+//                .size(50.dp)
+//        )
+//    }
+//}
 
 @Composable
 fun AppTopBar(
@@ -194,6 +212,13 @@ fun AppTopBar(
     val isSearchVisible by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
 
+    val imageData = remember {
+        mutableStateOf<ImageBitmap?>(
+            ImageService.getImageFromServer(
+                sessionManager.getImage().toString()
+            )
+        )
+    }
 
 
 
@@ -218,11 +243,12 @@ fun AppTopBar(
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)) {
                 // search icon
                 IconButton(onClick = {
-                    Toast.makeText(context, context.getString(R.string.search), Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(R.string.search), Toast.LENGTH_LONG)
+                        .show()
                 }, modifier = Modifier.fillMaxWidth(0.2f)) {
                     Icon(
                         imageVector = Icons.Outlined.Search,
-                        contentDescription =context.getString(R.string.search), tint = Gray
+                        contentDescription = context.getString(R.string.search), tint = Gray
                     )
                 }
                 if (sessionManager.isUserLoggedIn.value) {
@@ -237,25 +263,18 @@ fun AppTopBar(
                     {
 
                         IconButton(onClick = { expanded = true }) {
-
-                            Image(
-                                painter = rememberAsyncImagePainter("http://localhost:8080/images/SCR-20230307-wis.png"),
-                                contentDescription = null,
-                                modifier = Modifier.size(128.dp).background(Color.Red)
-                            )
-                            Image(
-                                //TODO replace by user image url
-
-//                                painter = userImage,
-                                painter = painterResource(id = R.drawable.user3),
-                                contentDescription = "Profile",
-                                modifier = Modifier
-                                    .padding(3.dp)
-                                    .fillMaxWidth(0.2f)
-                                    .size(30.dp)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
+                            imageData.value?.let {
+                                Image(
+                                    bitmap = it,
+                                    contentDescription = "Profile",
+                                    modifier = Modifier
+                                        .padding(3.dp)
+                                        .fillMaxWidth(0.2f)
+                                        .size(30.dp)
+                                        .clip(CircleShape),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
                         }
                         DropdownMenu(
                             expanded = expanded,
@@ -279,7 +298,7 @@ fun AppTopBar(
                             }) {
                                 Text(stringResource(id = R.string.logout))
                             }
-                            ImageScreen(context)
+//                            ImageScreen(context)
 
                         }
                     }
@@ -291,7 +310,7 @@ fun AppTopBar(
                         modifier = Modifier.fillMaxWidth(0.48f)
                     ) {
                         Text(
-                            text =  stringResource(id = R.string.login),
+                            text = stringResource(id = R.string.login),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.button.copy(
                                 fontSize = 10.sp,
@@ -308,7 +327,7 @@ fun AppTopBar(
                         modifier = Modifier.fillMaxWidth(0.75f)
                     ) {
                         Text(
-                            text =  stringResource(id = R.string.signup),
+                            text = stringResource(id = R.string.signup),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.button.copy(fontSize = 10.sp)
                         )

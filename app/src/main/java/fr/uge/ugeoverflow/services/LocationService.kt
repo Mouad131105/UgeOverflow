@@ -20,20 +20,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import fr.uge.ugeoverflow.R
-import fr.uge.ugeoverflow.api.UserBoxResponse
+import fr.uge.ugeoverflow.api.UserBoxDTO
 import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.session.ApiService
 import java.util.*
@@ -164,7 +160,7 @@ fun MyPopup() {
 @Preview(showBackground = true)
 @Composable
 fun UserBoxCardPopUp(
-    user: UserBoxResponse = UserBoxResponse(
+    user: UserBoxDTO = UserBoxDTO(
         UUID.randomUUID(),
         "ezig",
         "zeg",
@@ -193,7 +189,7 @@ fun UserBoxCardPopUp(
 
         Column {
 
-            RemoteImage(url = user.profilePicture)
+            //RemoteImage(url = user.profilePicture)
             Image(
                 painter = // default image
                 rememberAsyncImagePainter(
@@ -252,25 +248,7 @@ fun UserBoxCardPopUp(
 }
 
 
-@Composable
-fun RemoteImage(url: String, modifier: Modifier = Modifier) {
-    val painter = // Customize the image request as needed (e.g. add headers, transformations, etc.)
-        rememberAsyncImagePainter(
-            ImageRequest.Builder(LocalContext.current).data(data = url)
-                .apply(block = fun ImageRequest.Builder.() {
-                    // Customize the image request as needed (e.g. add headers, transformations, etc.)
-                    placeholder(R.drawable.user2)
-                }).build()
-        )
-    Image(
-        painter = painter,
-        contentDescription = "Remote image",
-        modifier = modifier,
-        contentScale = ContentScale.Crop,
-        alpha = if (painter.state is AsyncImagePainter.State.Loading) 0.5f else 1.0f,
-        colorFilter = if (painter.state is AsyncImagePainter.State.Error) ColorFilter.tint(Color.Red) else null
-    )
-}
+
 
 
 //}

@@ -2,8 +2,6 @@ package fr.uge.ugeoverflow.ui.screens.profile
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,20 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
-import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
+import fr.uge.ugeoverflow.services.ImageService
 import fr.uge.ugeoverflow.services.ProfileService
 import fr.uge.ugeoverflow.ui.components.ComponentSize
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.Loading.LoadingScreen
-import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.components.MyError.ErrorScreen
 import fr.uge.ugeoverflow.ui.components.MyTag
+import fr.uge.ugeoverflow.ui.routes.Routes
 import java.util.*
 
 
@@ -83,90 +81,9 @@ fun UserProfileScreen(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-//@Preview(showBackground = true)
 @Composable
 fun UserProfilePage(
     userProfile: MutableState<UserProfileDTO>,
-//    = UserProfileDTO(
-//        "firstname",
-//        "lastname",
-//        "username",
-//        "email",
-//        "bio ozeigmzoeing moinzegzneg mozieng mozeing moinoùezng ",
-//        "street, city, country, zipCode",
-//        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.fr%2Fpin%2F687201000000000000%",
-//        6,
-//        "98234034",
-//        null,
-//        null,
-//        listOf(
-//            QuestionResponse(
-//                UUID.randomUUID(),
-//                "title",
-//                "content",
-//                listOf("JAVA", "KOTLIN"),
-//                UserBoxResponse(
-//                    UUID.randomUUID(),
-//                    "user",
-//                    "email",
-//                    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.fr%2Fpin%2F687201000000000000%",
-//                ),
-//                "2021-05-05T00:00:00.000+00:00",
-//                MyLocation(1.0, 1.0)
-//            ),
-//            QuestionResponse(
-//                UUID.randomUUID(),
-//                "title",
-//                "content",
-//                listOf("JAVA", "KOTLIN"),
-//                UserBoxResponse(
-//                    UUID.randomUUID(),
-//                    "user",
-//                    "email",
-//                    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.fr%2Fpin%2F687201000000000000%",
-//                ),
-//                "2021-05-05T00:00:00.000+00:00",
-//                MyLocation(1.0, 1.0)
-//            ), QuestionResponse(
-//                UUID.randomUUID(),
-//                "title",
-//                "content",
-//                listOf("JAVA", "KOTLIN"),
-//                UserBoxResponse(
-//                    UUID.randomUUID(),
-//                    "user",
-//                    "email",
-//                    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.fr%2Fpin%2F687201000000000000%",
-//                ),
-//                "2021-05-05T00:00:00.000+00:00",
-//                MyLocation(1.0, 1.0)
-//            ),
-//            QuestionResponse(
-//                UUID.randomUUID(),
-//                "title",
-//                "content",
-//                listOf("JAVA", "KOTLIN"),
-//                UserBoxResponse(
-//                    UUID.randomUUID(),
-//                    "user",
-//                    "email",
-//                    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.fr%2Fpin%2F687201000000000000%",
-//                ),
-//                "2021-05-05T00:00:00.000+00:00",
-//                MyLocation(1.0, 1.0)
-//            )
-//        ),
-//        null,
-//        mapOf(
-//            Pair("JAVA", 1),
-//            Pair("KOTLIN", 2),
-//            Pair("C#", 3),
-//            Pair("C++", 4),
-//            Pair("C", 5),
-//            Pair("PYTHON", 6),
-//        )
-//    ),
-//    isMe: Boolean = false,
     navController: NavController
 ) {
     val user = userProfile.value ?: return
@@ -181,13 +98,37 @@ fun UserProfilePage(
         )
     }
 
+
+    val imageData = remember {
+        mutableStateOf<ImageBitmap?>(
+            ImageService.getImageFromServer(
+                user.profilePicture.toString()
+            )
+        )
+    }
+
     val tagList: List<String>? = user.tags?.map { tag -> tag.key }
+
+    val showEditProfile = remember {
+        mutableStateOf(false)
+    }
+    if (showEditProfile.value) {
+        EditProfilePage(
+            user = userProfile,
+            image = imageData,
+            onClosed = {
+                showEditProfile.value = false
+            },
+            navController = navController
+        )
+    }
+
     Scaffold(
         floatingActionButton = {
             if (isMe) {
                 FloatingActionButton(
                     onClick = {
-
+                        showEditProfile.value = true
                     },
                     backgroundColor = ComponentTypes.Secondary.color,
                     contentColor = ComponentTypes.Secondary.contentColor,
@@ -283,15 +224,17 @@ fun UserProfilePage(
                                     .fillMaxWidth(0.5f)
                             ) {
 
-                                Image(
-//                            painter = rememberImagePainter(user.profilePicture),
-                                    painter = rememberImagePainter(R.drawable.user2),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(80.dp)
-                                        .clip(CircleShape)
-                                        .align(Alignment.Start)
-                                )
+                                imageData.value?.let {
+                                    Image(
+                                        bitmap = it,
+                                        contentDescription = "Profile",
+                                        modifier = Modifier
+                                            .size(80.dp)
+                                            .clip(CircleShape)
+                                            .align(Alignment.Start),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
                                 Text(
                                     text = user.username,
                                     fontWeight = FontWeight.Bold,
@@ -323,16 +266,16 @@ fun UserProfilePage(
                 }
 
 
-                item{
+                item {
                     Text(
                         text = "Tags",
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    LazyRow{
+                    LazyRow {
                         items(tagList?.size ?: 0) { tag ->
-                            Column{
+                            Column {
                                 MyTag(
                                     text = tagList?.get(tag) ?: "",
                                     componentSize = ComponentSize.Small,
@@ -375,11 +318,26 @@ fun UserProfilePage(
 
                         if (selectedTabIndex == 0) {
                             user.questions?.forEach { question ->
-                                QuestionItem(question = question)
+                                QuestionItem(
+                                    question = question,
+                                    onClick = {
+                                        navController.navigate(
+                                            "${Routes.OneQuestion.route}/${question.id}"
+                                        )
+                                    }
+
+                                )
                             }
                         } else {
                             user.answers?.forEach { answer ->
-                                AnswerItem(answer = answer)
+                                AnswerItem(
+                                    answer = answer,
+//                                    onClick = {
+//                                        navController.navigate(
+//                                            "question/${answer.id}"
+//                                        )
+//                                    }
+                                )
                             }
                         }
                     }
@@ -393,16 +351,22 @@ fun UserProfilePage(
 }
 
 @Composable
-fun QuestionItem(question: QuestionResponse) {
+fun QuestionItem(question: QuestionResponse, onClick: (() -> Unit)? = null) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp, bottom = 8.dp)
-            .height(100.dp),
+            .height(100.dp)
+            .clickable(
+                onClick = { onClick?.invoke() },
+                enabled = onClick != null
+            ),
         elevation = 4.dp
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+
         ) {
             Text(
                 text = question.title,
@@ -423,15 +387,21 @@ fun QuestionItem(question: QuestionResponse) {
 }
 
 @Composable
-fun AnswerItem(answer: AnswerDTO) {
+fun AnswerItem(answer: AnswerDTO, onClick: (() -> Unit)? = null) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp),
+            .padding(top = 8.dp, bottom = 8.dp)
+            .height(100.dp)
+            .clickable(
+                onClick = { onClick?.invoke() },
+                enabled = onClick != null
+            ),
         elevation = 4.dp
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
         ) {
             Text(
                 text = answer.body,

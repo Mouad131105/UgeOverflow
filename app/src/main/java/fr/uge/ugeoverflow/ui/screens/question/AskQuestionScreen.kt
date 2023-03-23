@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.api.QuestionRequest
 import fr.uge.ugeoverflow.services.QuestionService
-import fr.uge.ugeoverflow.services.RemoteImage
 import fr.uge.ugeoverflow.services.TagService
 import fr.uge.ugeoverflow.services.UserBoxCardPopUp
 import fr.uge.ugeoverflow.session.ApiService

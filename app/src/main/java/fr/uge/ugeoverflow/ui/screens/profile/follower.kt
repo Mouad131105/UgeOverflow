@@ -27,50 +27,50 @@ import java.util.*
 @Composable
 fun FollowsModal(
     name:String,
-    follow: List<UserBoxResponse> = listOf(
-        UserBoxResponse(
+    follow: List<UserBoxDTO> = listOf(
+        UserBoxDTO(
             UUID.randomUUID(),
             "user1",
             "email",
             "url"
         ),
-        UserBoxResponse(
+        UserBoxDTO(
             UUID.randomUUID(),
             "user2",
             "email",
             "url"
         ),
-        UserBoxResponse(
+        UserBoxDTO(
             UUID.randomUUID(),
             "user3",
             "email",
             "url"
         ),
-        UserBoxResponse(
+        UserBoxDTO(
             UUID.randomUUID(),
             "user4",
             "email",
             "url"
         ),
-        UserBoxResponse(
+        UserBoxDTO(
             UUID.randomUUID(),
             "user1",
             "email",
             "url"
         ),
-        UserBoxResponse(
+        UserBoxDTO(
             UUID.randomUUID(),
             "user2",
             "email",
             "url"
         ),
-        UserBoxResponse(
+        UserBoxDTO(
             UUID.randomUUID(),
             "user3",
             "email",
             "url"
         ),
-        UserBoxResponse(
+        UserBoxDTO(
             UUID.randomUUID(),
             "user4",
             "email",
@@ -154,7 +154,7 @@ fun FollowsModal(
 
 @Composable
 fun FollowCard(
-    follower: UserBoxResponse,
+    follower: UserBoxDTO,
     navController: NavController
 ) {
     Card(

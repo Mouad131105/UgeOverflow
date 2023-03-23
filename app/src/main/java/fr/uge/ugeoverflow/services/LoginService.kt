@@ -24,7 +24,7 @@ object LoginService {
 
             SessionManagerSingleton.sessionManager.logIn(
                 response.body()!!.token,
-                response.body()!!.user.username
+                response.body()!!.user
             )
 
             //Save the user image in local storage
