@@ -1,51 +1,58 @@
 package fr.uge.ugeoverflow.ui.screens.question
 
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
+import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import fr.uge.ugeoverflow.R
-import fr.uge.ugeoverflow.ui.components.ComponentSize
-import fr.uge.ugeoverflow.ui.components.ComponentTypes
-import fr.uge.ugeoverflow.ui.components.MyButton
+import fr.uge.ugeoverflow.api.QuestionResponse
+import fr.uge.ugeoverflow.filters.QuestionFilterType
+import fr.uge.ugeoverflow.services.MailService
+import fr.uge.ugeoverflow.ui.components.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import java.util.logging.Level.ALL
 
 @Composable
-fun QuestionsHomeScreen(navController: NavHostController) {
+fun QuestionsHome(navController: NavHostController) {
 
-//    val questions = remember { QuestionsDataProvider.questionLists}
-//    LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp,vertical = 15.dp ) ){
-//        items(
-//            items = questions,
-//            itemContent = {
-//                QuestionListItem(question=it)
-//            }
-//        )
-//    }
+    var filterOption by remember { mutableStateOf(QuestionFilterType.ALL.getFilterName()) }
 
-    AllQuestionsScreen(navController)
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopEnd
     ) {
         MyButton(
-            text = stringResource(id = R.string.ask_a_question),
+            text = "Ask Question",
             onClick = {
                 navController.navigate("AskQuestion")
             },
             componentType = ComponentTypes.Primary,
             componentSize = ComponentSize.Small,
         )
+
+
+    }
+    Column {
+
+        Column(modifier = Modifier.fillMaxSize()) {
+            DropdownMenuFilter(onOptionSelected = { option ->
+                filterOption = option
+            })
+
+            AllQuestionsScreen(navController,filterOption)
+        }
+
     }
 
 
-    //from db
-    // AllQuestionsScreen()
-//    QuestionForm(navController)
-//    Log.e("USER CONNECTED ?",SessionManagerSingleton.sessionManager.getToken().toString() )
 }
 
 

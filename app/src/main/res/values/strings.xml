@@ -3,6 +3,7 @@
     <string name="vote">vote</string>
     <string name="votes">votes</string>
     <string name="answers">answers</string>
+    <string name="noFilterOptionsGiven">options</string>
     <string name="lastname">Lastname</string>
     <string name="firstname">Firstname</string>
     <string name="username">Username</string>
@@ -41,5 +42,3 @@
 
 
 </resources>
-
-

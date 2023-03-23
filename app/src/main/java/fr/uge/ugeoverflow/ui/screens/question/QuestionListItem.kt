@@ -1,17 +1,19 @@
 package fr.uge.ugeoverflow.ui.screens.question
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -20,26 +22,32 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import fr.uge.ugeoverflow.R
-import fr.uge.ugeoverflow.api.QuestionResponse
-import fr.uge.ugeoverflow.model.Question
+import fr.uge.ugeoverflow.api.*
+import fr.uge.ugeoverflow.filters.QuestionFilterType
+import fr.uge.ugeoverflow.filters.QuestionsFilterManager
+import fr.uge.ugeoverflow.services.MailService
+
 import fr.uge.ugeoverflow.session.ApiService
-import fr.uge.ugeoverflow.ui.components.ComponentTypes
-import fr.uge.ugeoverflow.ui.components.MyCard
+import fr.uge.ugeoverflow.session.SessionManagerSingleton
+import fr.uge.ugeoverflow.ui.components.*
 import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.White200
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun QuestionListItem(question: Question) {
+fun QuestionListItem(question: QuestionResponse) {
 
     Card(
         modifier = Modifier
@@ -73,7 +81,7 @@ fun QuestionListItem(question: Question) {
                     .fillMaxWidth()
                     .weight(0.65F)
             ) {
-                question.getTitle?.let {
+                question.title?.let {
                     Text(
                         text = it,
                         modifier = Modifier.padding(start = 5.dp),
@@ -82,7 +90,7 @@ fun QuestionListItem(question: Question) {
                         fontSize = 15.sp
                     )
                 }
-                question.getBody?.let {
+                question.body?.let {
                     Text(
                         modifier = Modifier.padding(start = 5.dp),
                         text = "${it.take(128)}...", fontSize = 12.sp
@@ -101,9 +109,8 @@ fun QuestionListItem(question: Question) {
                         .padding(bottom = 6.dp)
                         .align(CenterVertically)
                 ) {
-                    question.getTags?.let {
+                    question.tags?.let {
                         for (tag in it) {
-                            Log.d("tag05", tag.toString())
                             Row(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(5.dp))
@@ -122,23 +129,19 @@ fun QuestionListItem(question: Question) {
                         }
                     }
                 }
-                Row(
+                /*Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(CenterVertically)
                 ) {
                     Text(
-                        "${question.getVotes.size} ${
-                            if (question.getVotes.isEmpty()) stringResource(
-                                R.string.vote
-                            ) else stringResource(R.string.votes)
-                        }" +
-                                "     ${question.getAnswers?.size} ${stringResource(R.string.answers)}",
+
+                                "     ${question.ans?.size} ${stringResource(R.string.answers)}",
                         fontSize = 12.sp,
                         modifier = Modifier.padding(start = 30.dp),
                         color = Color.Gray
                     )
-                }
+                }*/
             }
         }
     }
@@ -161,65 +164,68 @@ fun userImage() {
 }
 
 @Composable
-fun AllQuestionsScreen(navController: NavHostController) {
+fun AllQuestionsScreen( navController :NavController,filterOption: String) {
     val ugeOverflowApiSerivce = ApiService.init()
-    val coroutineScope = rememberCoroutineScope()
+    val sessionManager = SessionManagerSingleton.sessionManager
+    var questions by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
+    var questionsToFilter by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
 
-    var questions by remember { mutableStateOf(emptyList<QuestionResponse>()) }
-    Log.i("ugeOverflowApiSerivce", ugeOverflowApiSerivce.toString())
-    // Use the LaunchedEffect to execute the API call once and update the UI
-    LaunchedEffect(Unit) {
+
+    val questionsFilterManager = QuestionsFilterManager()
+    questionsFilterManager.init()
+
+    LaunchedEffect(filterOption) {
+        Log.i("",filterOption)
+
         try {
-            val response = ugeOverflowApiSerivce.getAllQuestions()
-            if (response.isSuccessful) {
-                questions = response.body() ?: emptyList()
-                Log.d(response.code().toString(), response.body().toString())
+            // get questions with the selected filter option from backend
+            val selectedFilter = QuestionFilterType.valueOf(filterOption)
+            if (selectedFilter == QuestionFilterType.ALL) {
+
+                val response = ugeOverflowApiSerivce.getAllQuestionsDto()
+                if (response.isSuccessful) {
+                    questions = response.body() ?: emptyList()
+                    questionsToFilter = questions
+                    Log.d(response.code().toString(), response.body().toString())
+                } else {
+                    Log.d(response.code().toString(), response.message())
+                }
             } else {
-                Log.d(response.code().toString(), response.message())
+                Log.i("i",selectedFilter.name)
+                questions = questionsFilterManager.getQuestionsByFilter(selectedFilter.name, questionsToFilter)
+
             }
         } catch (e: Exception) {
-//            throw e.message?.let { ApiException(e.hashCode(), it) }!!
+            throw e.message?.let { ApiException(e.hashCode(), it) }!!
         }
     }
 
-    Scaffold(
-        topBar = { TopAppBar(title = { Text("All Questions") }) },
-        content = {
-            LazyColumn(contentPadding = PaddingValues(horizontal = 6.dp, vertical = 15.dp)) {
-                items(questions) { question ->
-                    QuestionItem(question, navController)
-                }
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                coroutineScope.launch {
-                    val result = mutableStateOf(false)
-                    result.value = true
-                }
-            }) {
-                Icon(Icons.Default.Add, "Ask Question")
+    Column(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 6.dp, vertical = 15.dp),
+            modifier = Modifier.weight(1f)
+        ) {
+            items(questions) { question ->
+                QuestionItem(navController,question)
             }
         }
-
-    )
+    }
 }
 
-
 @Composable
-fun QuestionItem(question: QuestionResponse, navController: NavHostController) {
+fun QuestionItem(navController: NavController ,question: OneQuestionResponse) {
+    val context = LocalContext.current.applicationContext
+    val sessionManager = SessionManagerSingleton.sessionManager
     MyCard(
         modifier = Modifier
             .fillMaxWidth(),
         cardType = ComponentTypes.LightOutline,
         header = {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
-
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.user2),
@@ -230,19 +236,40 @@ fun QuestionItem(question: QuestionResponse, navController: NavHostController) {
                         .size(28.dp)
                         .clip(RoundedCornerShape(corner = CornerSize(10.dp)))
                 )
-                Text(
-                    text = question.title,
-                    modifier = Modifier
-                        .padding(start = 5.dp)
-                        .clickable {
-                            navController.navigate(
-                                "${Routes.Question.route}/${question.id}"
-                            )
-                        },
-                    fontWeight = FontWeight.W800,
-                    color = Color(0xFF4552B8),
-                    fontSize = 15.sp
+                ClickableText(
+                    text = AnnotatedString(question.title),
+                    modifier = Modifier.padding(start = 5.dp),
+                    style = MaterialTheme.typography.caption.copy(
+                        color = MaterialTheme.colors.secondary
+                    ),
+                    onClick = { navController.navigate("${Routes.OneQuestion.route}/${question.id}") },
+
                 )
+                Icon(
+                    Icons.Filled.Warning,
+                    contentDescription = "Signal",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable { MainScope().launch {
+                            try {
+                                if(sessionManager.isUserLoggedIn.value){
+                                    MailService.sendEmailToNotifyAdmin(question = question)
+                                    Toast.makeText(context, "Signaled to admin!", Toast.LENGTH_LONG).show()
+                                }else{
+                                    Toast.makeText(context, "You should be logged in to signal a question!", Toast.LENGTH_LONG).show()
+                                    navController.navigate(Routes.Login.route)
+                                }
+
+                            } catch (e: Exception) {
+                                Toast.makeText(context, "Oops, something gone wrong", Toast.LENGTH_LONG).show()
+                            }
+
+                        } }
+                )
+
+
+
+
             }
         },
         body = {
@@ -264,26 +291,22 @@ fun QuestionItem(question: QuestionResponse, navController: NavHostController) {
                     .padding(horizontal = 16.dp)
             ) {
                 Row(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .padding(bottom = 6.dp)
                         .align(CenterVertically)
                 ) {
                     question.tags.let {
                         for (tag in it) {
-                            Log.d("tag05", tag.toString())
                             Row(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(5.dp))
-                                    .background(
-                                        White200
-                                    )
+                                    .background(White200)
                             ) {
                                 Text(
                                     text = tag,
                                     fontSize = 12.sp,
-                                    modifier = Modifier
-                                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
                                 )
                             }
                             Spacer(modifier = Modifier.width(5.dp))
@@ -292,20 +315,63 @@ fun QuestionItem(question: QuestionResponse, navController: NavHostController) {
                 }
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .align(CenterVertically)
                 ) {
-                    Text(
-                        text = question.creationTime.toString(),
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(start = 30.dp),
-                        color = Color.Gray
-                    )
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                if (question.answersCounter > 0) Color.Green else Color.Transparent,
+                                RoundedCornerShape(4.dp)
+                            )
+                    ) {
+                        Text(
+                            text = "${question.answersCounter} ${stringResource(R.string.answers)}",
+                            fontSize = 12.sp,
+                            color = if (question.answersCounter > 0) Color.White else Color.Black,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(start = 30.dp),
+                    ){
+                        Text(
+                            text = "asked " + question.getTimePassedSinceQuestionCreation(question.creationTime),
+                            fontSize = 12.sp,
+
+                            color = Color.Gray
+                        )
+                    }
+
 
                 }
-            }
+
+
+                }
+
         }
     )
+}
+
+@Composable
+fun FilterButtons(
+    filters: List<String>,
+    selectedFilter: String?,
+    onFilterSelected: (String) -> Unit,
+) {
+    Row(modifier = Modifier.padding(vertical = 8.dp)) {
+        for (filter in filters) {
+            Button(
+                onClick = { onFilterSelected(filter) },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = if (filter == selectedFilter) MaterialTheme.colors.primary else MaterialTheme.colors.secondary
+                ),
+                modifier = Modifier.padding(end = 8.dp),
+            ) {
+                Text(text = filter)
+            }
+        }
+    }
 }
 
 
