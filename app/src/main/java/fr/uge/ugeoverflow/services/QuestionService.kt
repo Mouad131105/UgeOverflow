@@ -1,5 +1,6 @@
 package fr.uge.ugeoverflow.services
 
+import fr.uge.ugeoverflow.api.OneQuestionResponse
 import fr.uge.ugeoverflow.api.QuestionRequest
 import fr.uge.ugeoverflow.api.QuestionResponse
 import fr.uge.ugeoverflow.session.ApiService
@@ -35,5 +36,36 @@ object QuestionService {
             onError()
         }
     }
+
+    //delete question
+    fun deleteQuestion(
+        onSuccess: () -> Unit,
+        onError: () -> Unit,
+
+    ) = runBlocking {
+        val token = SessionManagerSingleton.sessionManager.getToken()
+        val response = ApiService.init().deleteQuestion("Bearer $token")
+        if (response.isSuccessful) {
+            onSuccess()
+        } else {
+            onError()
+        }
+    }
+
+    fun editQuestion(
+        questionRequest: QuestionRequest,
+        questionId: String,
+        onSuccess: (OneQuestionResponse) -> Unit,
+        onError: () -> Unit,
+    ) = runBlocking {
+        val token = SessionManagerSingleton.sessionManager.getToken()
+        val response = ApiService.init().updateQuestion("Bearer $token",questionId,  questionRequest)
+        if (response.isSuccessful) {
+            onSuccess(response.body()!!)
+        } else {
+            onError()
+        }
+    }
+
 
 }

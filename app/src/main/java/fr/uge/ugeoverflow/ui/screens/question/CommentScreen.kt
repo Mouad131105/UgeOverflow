@@ -1,5 +1,6 @@
 package fr.uge.ugeoverflow.ui.screens.question
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -29,6 +30,7 @@ import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.components.MyCard
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.utils.Utils
 
 
@@ -57,7 +59,7 @@ fun CommentOnFadeModal(
                         .fillMaxWidth(),
                 ) {
                     items(comments) { comment ->
-                        CommentCard(comment)
+                        CommentCard(comment, navController)
                     }
                     item {
                         if (SessionManagerSingleton.sessionManager.isUserLoggedIn.value) {
@@ -135,7 +137,7 @@ fun CommentOnFadeModal(
 
 
 @Composable
-fun CommentCard(comment: CommentResponse) {
+fun CommentCard(comment: CommentResponse, navController: NavHostController) {
     MyCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,7 +166,9 @@ fun CommentCard(comment: CommentResponse) {
                     style = MaterialTheme.typography.caption.copy(
                         color = MaterialTheme.colors.secondary
                     ),
-                    onClick = { },
+                    onClick = {
+                        navController.navigate("${Routes.Profile.route}/${comment.user.username}")
+                    },
                 )
                 croppedImageFromDB(comment.user.profilePicture)
             }
@@ -177,7 +181,8 @@ fun CommentCard(comment: CommentResponse) {
 fun CommentsCard(
     question: MutableState<OneQuestionResponse>,
     navController: NavHostController,
-    answer: AnswerResponse?
+    answer: AnswerResponse?,
+    context : Context
 ) {
     var comments = remember {
         mutableStateOf(question.value.comments)
@@ -197,7 +202,7 @@ fun CommentsCard(
                 commentDialogOpen.value = false
             }
             Column {
-                if (comments.value.isNotEmpty()) {
+
                     Row(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier
@@ -208,9 +213,23 @@ fun CommentsCard(
                             contentDescription = "Toggle comment expansion",
                             tint = if (commentDialogOpen.value) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface,
                         )
+
                         Text(
-                            text = "${comments.value.size} Comments",
+                            //TERNARY OPERATOR on comment size or add comment
+                            text = if (comments.value.isNotEmpty()) "${comments.value.size} comments" else "Add comment",
                             modifier = Modifier.clickable {
+                                if (SessionManagerSingleton.sessionManager.isUserLoggedIn.value) {
+                                    openCommentDialog()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "You must be logged in to comment",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                    navController.navigate("Login")
+                                }
+
                                 openCommentDialog()
                             },
                             style = MaterialTheme.typography.caption
@@ -240,7 +259,7 @@ fun CommentsCard(
                             navController = navController
                         )
                     }
-                }
+
             }
             Spacer(modifier = Modifier.height(12.dp))
             Divider(

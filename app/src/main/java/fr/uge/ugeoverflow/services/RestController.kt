@@ -70,4 +70,23 @@ interface RestController {
     @GET("/api/v1/tags/{tagName}")
     suspend fun getQuestionsByTag(@Path("tagName") tagName: String): Response<List<QuestionResponse>>
 
+    @DELETE("/auth/api/v1/questions/{questionId}")
+    suspend fun deleteQuestion(@Header("Authorization") token: String): Response<Unit>
+
+    @PUT("/auth/api/v1/questions/{questionId}")
+    suspend fun updateQuestion(@Header("Authorization") token: String, @Path("questionId") questionId: String, @Body question: QuestionRequest): Response<OneQuestionResponse>
+
+    @DELETE("/auth/api/v1/answers/{answerId}")
+    suspend fun deleteAnswer(@Header("Authorization") token: String): Response<OneQuestionResponse>
+
+    @PUT("/auth/api/v1/answers/{answerId}")
+    suspend fun updateAnswer(@Header("Authorization") token: String, @Path("answerId") answerId: String, @Body answer: AnswerRequest): Response<AnswerResponse>
+
+    @DELETE("/auth/api/v1/comments/{commentId}")
+    suspend fun deleteComment(@Header("Authorization") token: String, @Path("commentId") commentId: String): Response<Unit>
+
+    @PUT("/auth/api/v1/comments/{commentId}")
+    suspend fun updateComment(@Header("Authorization") token: String, @Path("commentId") commentId: String, @Body comment: CommentRequest): Response<CommentResponse>
+
+
 }

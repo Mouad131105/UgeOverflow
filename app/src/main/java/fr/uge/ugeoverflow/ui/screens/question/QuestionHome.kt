@@ -29,7 +29,6 @@ fun QuestionsHomeScreen(navController: NavHostController) {
 //        )
 //    }
 
-
     AllQuestionsScreen(navController)
     Box(
         modifier = Modifier.fillMaxSize(),

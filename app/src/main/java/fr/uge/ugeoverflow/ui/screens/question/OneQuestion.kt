@@ -1,3 +1,6 @@
+import android.app.Dialog
+import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -22,6 +25,7 @@ import androidx.compose.ui.text.SpanStyle
 
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
 import androidx.navigation.NavHostController
@@ -36,28 +40,30 @@ import coil.compose.rememberImagePainter
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.services.AnswerService
 import fr.uge.ugeoverflow.services.CommentService
+import fr.uge.ugeoverflow.services.QuestionService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 
 import fr.uge.ugeoverflow.ui.components.*
+import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.screens.question.CommentsCard
 import kotlinx.coroutines.launch
 
 
-
-
-
 object OneQuestionGlobals {
-    var questionId:String = ""
+    var questionId: String = ""
 }
 
 @Composable
-fun QuestionScreen(navController: NavHostController, id: String?=null) {
+fun QuestionScreen(navController: NavHostController, id: String? = null) {
+    val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
-    val questionId = id?:"8fe6dd0d-60c5-4f5b-a1f9-0c0c2387f7a7" // temporary, replace by an existing QuestionId in databse
+    val questionId = id
+        ?: "8fe6dd0d-60c5-4f5b-a1f9-0c0c2387f7a7" // temporary, replace by an existing QuestionId in databse
     OneQuestionGlobals.questionId = questionId
-    val question = remember  { mutableStateOf(getQuestionById(questionId)) }
+    val question = remember { mutableStateOf(getQuestionById(questionId)) }
     val sortedAnswers = remember(question.value.answers) {
-        mutableStateOf(question.value.answers.sortedByDescending { it.creationTime })}
+        mutableStateOf(question.value.answers.sortedByDescending { it.creationTime })
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -70,7 +76,7 @@ fun QuestionScreen(navController: NavHostController, id: String?=null) {
                     contentPadding = PaddingValues(horizontal = 16.dp),
                 ) {
                     item {
-                        QuestionCard(question=question, navController)
+                        QuestionCard(question = question, navController, context)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
@@ -119,7 +125,7 @@ fun QuestionScreen(navController: NavHostController, id: String?=null) {
 
                     // Render the answers in the sorted order
                     items(sortedAnswers.value.size) { index ->
-                        AnswerCard(answer = sortedAnswers.value[index],  question, navController)
+                        AnswerCard(context, answer = sortedAnswers.value[index],  question, navController)
                     }
                     // Post new answer
                     item {
@@ -144,59 +150,59 @@ fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: N
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-        ){
-                // add field to add answer and post
-                OutlinedTextField(
-                    value = answerText,
-                    onValueChange = { answerText = it },
-                    label = { Text("Add your answer") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-    ){
-        MyButton(
-            // button on the right
-            modifier= Modifier.align(Alignment.CenterEnd),
-            text = "Post pour answer",
-            onClick = {
-                if (answerText.isNotEmpty()){
-                    val answerRequest = AnswerRequest(answerText, question.value.id)
-                    Log.e("Send", answerRequest.toString())
-                    val response =
-                        AnswerService.addAnswer(answerRequest,
-                            question.value.id,
-                            {
-                                newQuestion -> question.value = newQuestion
-                                Toast.makeText(
-                                    context,
-                                    "Answer posted successfully",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                //navController.navigate("Question/${OneQuestionGlobals.questionId}")
-                            },
-                            {
-                                Toast.makeText(
-                                    context,
-                                    "Failed to post answer",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        )
-                    answerText = ""
-                }
-            },
-            componentType = ComponentTypes.Primary,
-            componentSize = ComponentSize.Small
-        )
-    }
+        ) {
+            // add field to add answer and post
+            OutlinedTextField(
+                value = answerText,
+                onValueChange = { answerText = it },
+                label = { Text("Add your answer") },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            MyButton(
+                // button on the right
+                modifier = Modifier.align(Alignment.CenterEnd),
+                text = "Post pour answer",
+                onClick = {
+                    if (answerText.isNotEmpty()) {
+                        val answerRequest = AnswerRequest(answerText, question.value.id)
+                        Log.e("Send", answerRequest.toString())
+                        val response =
+                            AnswerService.addAnswer(answerRequest,
+                                question.value.id,
+                                { newQuestion ->
+                                    question.value = newQuestion
+                                    Toast.makeText(
+                                        context,
+                                        "Answer posted successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    //navController.navigate("Question/${OneQuestionGlobals.questionId}")
+                                },
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Failed to post answer",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            )
+                        answerText = ""
+                    }
+                },
+                componentType = ComponentTypes.Primary,
+                componentSize = ComponentSize.Small
+            )
+        }
     }
 }
 
 @Composable
-fun QuestionCard(question: MutableState<OneQuestionResponse>, navController:NavHostController){
+fun QuestionCard(question: MutableState<OneQuestionResponse>, navController: NavHostController, context: Context) {
     MyCard(
         modifier = Modifier.fillMaxWidth(),
         header = {
@@ -238,7 +244,7 @@ fun QuestionCard(question: MutableState<OneQuestionResponse>, navController:NavH
                     style = MaterialTheme.typography.caption,
                 )
                 Text(
-                    text =  "${Utils.formatDateUsingTimeAgo(question.value.creationTime)} by",
+                    text = "${Utils.formatDateUsingTimeAgo(question.value.creationTime)} by",
                     style = MaterialTheme.typography.caption,
                 )
                 Spacer(Modifier.width(4.dp))
@@ -247,7 +253,9 @@ fun QuestionCard(question: MutableState<OneQuestionResponse>, navController:NavH
                     style = MaterialTheme.typography.caption.copy(
                         color = MaterialTheme.colors.secondary
                     ),
-                    onClick = { navController.navigate("user/${question.value.user.id}") },
+                    onClick = {
+                        navController.navigate("${Routes.Profile.route}/${question.value.user.username}")
+                    },
                 )
                 croppedImageFromDB(question.value.user.profilePicture)
 
@@ -255,18 +263,19 @@ fun QuestionCard(question: MutableState<OneQuestionResponse>, navController:NavH
         },
         cardType = ComponentTypes.Secondary
     )
-    CommentsCard(question, navController, null)
+    CommentsCard(question, navController, null, context)
 
 
 }
+
 @Composable
-fun croppedImageFromDB(imageData:String){
+fun croppedImageFromDB(imageData: String) {
     Image(
         painter = rememberImagePainter(data = imageData, builder = {
             placeholder(R.drawable.user4) // in case image not available
             error(R.drawable.user3) // in case there is an error
         }),
-        contentDescription="",
+        contentDescription = "",
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(24.dp)
@@ -279,22 +288,37 @@ fun croppedImageFromDB(imageData:String){
 
     )
 }
+
 @Composable
-fun AnswerCard(answer: AnswerResponse,question: MutableState<OneQuestionResponse> , navController:NavHostController) {
+fun AnswerCard(
+    context: Context,
+    answer: AnswerResponse,
+    question: MutableState<OneQuestionResponse>,
+    navController: NavHostController
+) {
+    val answerDialog = remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     val answerLines = answer.body.lines()
+    fun showAnswerDialog() {
+        answerDialog.value = true
+    }
+    fun hideAnswerDialog() {
+        answerDialog.value = false
+    }
     MyCard(
         modifier = Modifier.fillMaxWidth(),
         body = {
             Column {
-                answerLines.take(if (expanded) answerLines.size else 2).forEachIndexed { index, line ->
-                    Text(
-                        text = line,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = if (expanded || index < 2) Int.MAX_VALUE else 1,
-                        modifier = Modifier.clickable { if (!expanded) expanded = true },
-                    )
-                }
+
+                answerLines.take(if (expanded) answerLines.size else 2)
+                    .forEachIndexed { index, line ->
+                        Text(
+                            text = line,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = if (expanded || index < 2) Int.MAX_VALUE else 1,
+                            modifier = Modifier.clickable { if (!expanded) expanded = true },
+                        )
+                    }
                 if (answerLines.size > 2 && (!expanded || answerLines.size > 3)) {
                     val text = if (expanded) "show less" else "... show more"
                     ClickableText(
@@ -327,23 +351,214 @@ fun AnswerCard(answer: AnswerResponse,question: MutableState<OneQuestionResponse
                     style = MaterialTheme.typography.caption.copy(
                         color = MaterialTheme.colors.secondary
                     ),
-                    onClick = { navController.navigate("user/${answer.user.id}") },
+                    onClick = {
+                        navController.navigate("${Routes.Profile.route}/${answer.user.username}")
+                    },
                 )
                 croppedImageFromDB(answer.user.profilePicture)
             }
         },
-        cardType = ComponentTypes.SecondaryOutline
+        cardType = ComponentTypes.SecondaryOutline,
+        onClick = {
+            showAnswerDialog()
+        }
     )
-    CommentsCard(question, navController, answer)
+    if (answerDialog.value) {
+        DisplayDialog(context = context, answer = answer, question = question, onDismiss = {
+            hideAnswerDialog()
+        })
+    }
+    CommentsCard(question, navController, answer, context)
 }
 
 
+@Composable
+fun DisplayDialog(
+    context: Context,
+    question: MutableState<OneQuestionResponse>,
+    answer: AnswerResponse? = null,
+    onDismiss: () -> Unit
+) {
 
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .clickable { onDismiss() }
+    ){
+        AlertDialog(
+            onDismissRequest = { onDismiss() },
+            title = {
+                Text(text = "Options")
+            },
+            text = {
+                Column {
+                    TextButton(onClick = {
+                        if (answer == null) {
+                            // delete question
+                            QuestionService.deleteQuestion(
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Question deleted successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Failed to delete question",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+                            )
+                        } else {
+                            // delete answer
+                            AnswerService.deleteAnswer(
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Answer deleted successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Failed to delete answer",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+                            )
+                        }
+                    }) {
+                        if (SessionManagerSingleton.sessionManager.currentUsername.value == answer?.user?.username) {
+                            Text(text = "Delete Answer")
+                        }
+                        else{
+                            Text(text = "Vote Up")
+                        }
+                    }
+                    TextButton(onClick = {
+                        if (answer == null) {
+                            // edit question
+                            /*
+                            QuestionService.editQuestion(question.value.id,
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Question edited successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                {
+                                    Toast.makeText(context, "Failed to edit question", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            )
+                        } else {
+                            // edit answer
+                            AnswerService.editAnswer(answer,
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Answer edited successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                {
+                                    Toast.makeText(context, "Failed to edit answer", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            )
+
+                             */
+                        }
+                    }) {
+                        if (SessionManagerSingleton.sessionManager.currentUsername.value == answer?.user?.username) {
+                            Text(text = "Edit Answer")
+                        }else{
+                            Text(text = "Vote Down")
+                        }
+                    }
+                    /*
+                    TextButton(onClick = {
+                        if (answer != null) {
+                            AnswerService.voteUp(
+                                answer.id,
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Voted up successfully",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                },
+                                {
+                                    Toast.makeText(context, "Failed to vote up", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            )
+                            //remove vote up
+
+                        }
+                    }) {
+                        if (SessionManagerSingleton.sessionManager.currentUsername.value != answer?.user?.username) {
+                            Text(text = "Vote Up")
+                        }
+                    }
+                    TextButton(onClick = {
+                        if (answer != null) {
+                            AnswerService.voteDown(
+                                answer.id,
+                                {
+                                    Toast.makeText(
+                                        context,
+                                        "Voted down successfully",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                },
+                                {
+                                    Toast.makeText(context, "Failed to vote", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            )
+                        }
+                    }) {
+                        if (SessionManagerSingleton.sessionManager.currentUsername.value != answer?.user?.username) {
+                            Text(text = "Vote Down")
+                        }
+                    }
+
+                     */
+
+                    }
+
+            },
+            buttons = {
+                MyButton(
+                    text = "Dismiss",
+                    onClick = { onDismiss() },
+                    modifier = Modifier.padding(8.dp),
+                    componentType = ComponentTypes.DangerOutline,
+                    componentSize = ComponentSize.Small
+                )
+
+            }
+        )
+    }
+    // close dialog
+
+}
 fun getQuestionById(questionId: String): OneQuestionResponse = runBlocking {
     //TODO : Receive ID from getQuestionById  when clicking on it
     val response = ApiService.init().getQuestion(questionId)
     Log.d("response ", response.message())
-    if (response.isSuccessful){
+    if (response.isSuccessful) {
         Log.d("response ", response.message())
     }
     response.body() ?: throw RuntimeException("Failed to fetch question Do")

@@ -26,6 +26,7 @@ import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.utils.SearchableMultiSelect
 import kotlinx.coroutines.launch
+import org.xml.sax.Parser
 
 
 @Composable
@@ -53,14 +54,6 @@ fun AskQuestionScreen(navController: NavHostController) {
         }
     ) {
         Column {
-            UserBoxCardPopUp()
-//            RemoteImage(
-//                url = "http://localhost:8080/images/VKpWkIQ.png",
-//                modifier = Modifier
-//                    .padding(16.dp)
-//                    .size(200.dp)
-//            )
-
 
             Column(modifier = Modifier.padding(16.dp)) {
                 // Title field
@@ -110,10 +103,8 @@ fun AskQuestionScreen(navController: NavHostController) {
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                                 navController.popBackStack()
-//                                                scaffoldState.snackbarHostState.showSnackbar("Success")
                                             },
                                             {
-//                                                scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
                                                 Toast.makeText(
                                                     context,
                                                     "Failed to post question",
@@ -122,12 +113,8 @@ fun AskQuestionScreen(navController: NavHostController) {
                                             }
                                         )
                                     }
-//                                    if (response.isSuccessful) {
-//                                        navController.popBackStack()
-//                                        scaffoldState.snackbarHostState.showSnackbar("Success")
-//                                    } else {
-//                                        scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
-//                                    }
+
+
                                 } catch (e: Exception) {
                                     scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
                                 }
@@ -165,6 +152,7 @@ fun AskQuestionScreen(navController: NavHostController) {
 
     }
 }
+
 
 
 
