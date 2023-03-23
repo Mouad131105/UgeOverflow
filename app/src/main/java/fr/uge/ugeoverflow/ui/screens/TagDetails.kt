@@ -23,7 +23,7 @@ import fr.uge.ugeoverflow.ui.theme.Blue300
 
 @Composable
 fun TagDetails(tag: Tag) {
-    val questions: List<QuestionResponse>
+    /*val questions: List<QuestionResponse>
     Column( Modifier.padding(15.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Questions tagged [${tag.getTAG_TYPE}]", fontSize = 24.sp, modifier = Modifier.weight(.7F))
@@ -56,5 +56,5 @@ fun TagDetails(tag: Tag) {
                 QuestionListItem(question = question)
             }
         }
-    }
+    }*/
 }
