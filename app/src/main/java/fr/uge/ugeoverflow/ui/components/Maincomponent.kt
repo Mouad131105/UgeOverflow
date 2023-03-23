@@ -1,13 +1,15 @@
 package fr.uge.ugeoverflow.ui.components
 
+//import fr.uge.ugeoverflow.model.Tag
+
 import QuestionScreen
 import TagScreen
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
-
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
@@ -29,7 +30,6 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -47,10 +47,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.data.UserDataProvider
-import fr.uge.ugeoverflow.model.Tag
 import fr.uge.ugeoverflow.services.ImageService
-//import fr.uge.ugeoverflow.model.Tag
-import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.screens.ForgotPasswordScreen
@@ -63,18 +60,8 @@ import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
 import fr.uge.ugeoverflow.ui.theme.poppins_bold
-import fr.uge.ugeoverflow.ui.screens.ForgotPassword
-import fr.uge.ugeoverflow.ui.screens.LoginPage
-import fr.uge.ugeoverflow.ui.screens.SignUp
-import fr.uge.ugeoverflow.ui.screens.question.AskQuestion
-import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
-import fr.uge.ugeoverflow.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.tooling.preview.Preview
-
 import java.util.*
 
 val users = UserDataProvider.generateUsers()
@@ -106,7 +93,7 @@ fun MainComponent() {
             }
         },
         drawerContent = {
-            drawerContent(items = listOf("Questions", "Tags", stringResource(id = R.string.users)), onItemClick = { item ->
+            DrawerContent(items = listOf("Questions", "Tags", stringResource(id = R.string.users)), onItemClick = { item ->
                 navController.navigate(item)
                 scope.launch {
                     scaffoldState.drawerState.close()
@@ -156,6 +143,47 @@ fun MainComponent() {
     }
 }
 
+
+@Composable
+fun BitmapDrawableImage() {
+//    val context = LocalContext.current.applicationContext
+//    val userImage =
+//        SessionManagerSingleton.sessionManager.currentUsername.value?.let {
+//            ImageService.loadUserImageFromLocal(
+//                it,
+//                context
+//            )
+//        }
+//    val bitmap: Bitmap = userImage?.bitmap ?: bitmapDrawable.bitmap
+//    val imageBitmap = bitmap.asImageBitmap()
+//
+//    Image(bitmap = imageBitmap, contentDescription = "Image from BitmapDrawable")
+//    ImageService.saveImageToLocal("oineze", "http://localhost:8080/images/VKpWkIQ.jpeg", LocalContext.current.applicationContext)
+}
+
+
+//@Preview(showBackground = true)
+@Composable
+fun ImageScreen(context: Context) {
+    val imageUrl = "http://localhost:8080/images/SCR-20230307-wis.png"
+    val imageData = remember { mutableStateOf<ImageBitmap?>(null) }
+
+    LaunchedEffect(imageUrl) {
+        imageData.value = ImageService.getImageFromServer(imageUrl)
+        val imgName=SessionManagerSingleton.sessionManager.getUsername().toString()
+//        imageData.value=ImageService.loadImageFromLocal(imgName, context)
+    }
+
+    imageData.value?.let { image ->
+        Image(
+            image,
+            "Image from server",
+            modifier = Modifier
+                .size(50.dp)
+        )
+    }
+}
+
 @Composable
 fun AppTopBar(
     onNavItemClick: () -> Unit,
@@ -165,6 +193,12 @@ fun AppTopBar(
     val sessionManager = SessionManagerSingleton.sessionManager
     val isSearchVisible by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
+
+
+
+
+    BitmapDrawableImage()
+
 
     TopAppBar(
         title = {
@@ -243,33 +277,11 @@ fun AppTopBar(
                                 expanded = false
                                 sessionManager.logOut()
                             }) {
-                                Text("Log out")
+                                Text(stringResource(id = R.string.logout))
                             }
                             ImageScreen(context)
 
                         }
-                    }
-//                    Button(
-//                        onClick = { sessionManager.logOut() },
-//                        modifier = Modifier.fillMaxWidth(0.8f),
-//                        componentType = ComponentTypes.DangerOutline,
-//                        componentSize = ComponentSize.Small
-//                    )
-
-                    Button(
-                        onClick = { sessionManager.logOut() },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = White200),
-                        contentPadding = PaddingValues(0.dp),
-                        modifier = Modifier.fillMaxWidth(0.48f)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.logout),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.button.copy(
-                                fontSize = 10.sp,
-                                color = Blue200
-                            )
-                        )
                     }
                 } else {
                     Button(

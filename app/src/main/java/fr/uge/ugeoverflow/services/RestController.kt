@@ -4,6 +4,7 @@ import android.location.Location
 import android.location.LocationRequest
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.model.Question
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
