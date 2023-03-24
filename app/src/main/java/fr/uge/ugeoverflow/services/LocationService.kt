@@ -29,6 +29,7 @@ import coil.request.ImageRequest
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.api.AddressDTO
 import fr.uge.ugeoverflow.api.UserBoxDTO
 import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.session.ApiService
@@ -184,7 +185,13 @@ fun UserBoxCardPopUp(
         UUID.randomUUID(),
         "ezig",
         "zeg",
-        "http://localhost:8080/images/SCR-20230307-wis.png"
+        "http://localhost:8080/images/SCR-20230307-wis.png",
+        address = AddressDTO(
+            street = "123 Main St",
+            city = "New York",
+            country = "USA",
+            zipCode = "10001"
+        )
     ),
     content: @Composable () -> Unit = {
 //        MyButton(onClick = { /*TODO*/ }, componentType = ComponentTypes.SecondaryOutline) {

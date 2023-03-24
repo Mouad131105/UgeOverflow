@@ -39,12 +39,21 @@ data class TagResponse(
 )
 
 
+data class AddressDTO(
+    val street: String?,
+    val city: String?,
+    val country: String?,
+    val zipCode: String?
+)
+
 data class UserBoxDTO(
     val id: UUID,
     val username: String,
     val email: String,
     val profilePicture: String,
+    val address: AddressDTO
 )
+
 
 data class UserProfileResponse(
     val id: String,

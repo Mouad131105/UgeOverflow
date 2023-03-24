@@ -127,7 +127,7 @@ fun MainComponent() {
                 Text(text = "Tags")
             }
             composable(Routes.Users.route) {
-                UserListScreen(users, navController)
+                UserListScreen(navController)
             }
 
             composable(Routes.Profile.route) {
@@ -158,7 +158,6 @@ fun MainComponent() {
                     QuestionScreen(navController,question.id)
                 }
             }
-
             composable("${Routes.Question.route}/{id}") { backStackEntry ->
                 val id: String = backStackEntry.arguments?.getString("id")
                     ?: throw Exception("Id is null")
