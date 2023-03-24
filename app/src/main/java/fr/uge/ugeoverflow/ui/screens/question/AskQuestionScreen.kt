@@ -19,6 +19,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import fr.uge.ugeoverflow.api.QuestionRequest
 import fr.uge.ugeoverflow.model.MyLocation
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.*
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
@@ -26,7 +27,6 @@ import fr.uge.ugeoverflow.ui.components.ComponentSize
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.components.MyCard
-import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.utils.SearchableMultiSelect
 import kotlinx.coroutines.launch
 
@@ -196,10 +196,8 @@ fun AskQuestionScreen(navController: NavHostController) {
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                                 navController.popBackStack()
-//                                                scaffoldState.snackbarHostState.showSnackbar("Success")
                                             },
                                             {
-//                                                scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
                                                 Toast.makeText(
                                                     context,
                                                     "Failed to post question",
@@ -208,11 +206,7 @@ fun AskQuestionScreen(navController: NavHostController) {
                                             }
                                         )
                                     }
-//                                    if (response.isSuccessful) {
-//                                        navController.popBackStack()
-//                                        scaffoldState.snackbarHostState.showSnackbar("Success")
-//                                    } else {
-//                                        scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
+
 //                                    }
                                 } catch (e: Exception) {
                                     scaffoldState.snackbarHostState.showSnackbar("Failed to post question")

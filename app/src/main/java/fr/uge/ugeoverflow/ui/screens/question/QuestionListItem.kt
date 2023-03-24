@@ -35,12 +35,12 @@ import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.filters.QuestionFilterType
 import fr.uge.ugeoverflow.filters.QuestionsFilterManager
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.MailService
 
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.*
-import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.White200
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

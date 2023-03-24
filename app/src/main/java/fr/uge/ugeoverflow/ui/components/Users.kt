@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import fr.uge.ugeoverflow.model.User
-import fr.uge.ugeoverflow.ui.routes.Routes
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.ui.screens.question.userImage
 import java.util.*
 

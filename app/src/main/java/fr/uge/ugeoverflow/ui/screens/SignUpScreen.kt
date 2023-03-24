@@ -24,12 +24,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.RegisterRequest
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.CustomTopAppBar
 import fr.uge.ugeoverflow.ui.components.MyButton
-import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.theme.poppins_light
 import fr.uge.ugeoverflow.ui.theme.poppins_medium
 import kotlinx.coroutines.CoroutineScope

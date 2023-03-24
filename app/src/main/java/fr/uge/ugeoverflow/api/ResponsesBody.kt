@@ -4,7 +4,7 @@ package fr.uge.ugeoverflow.api
 import android.location.Location
 import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.model.VOTE_TYPE
-import fr.uge.ugeoverflow.model.Location
+
 import fr.uge.ugeoverflow.model.User
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime

@@ -45,16 +45,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.data.QuestionManager
 import fr.uge.ugeoverflow.data.UserDataProvider
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.ImageService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.ui.screens.ForgotPasswordScreen
 import fr.uge.ugeoverflow.ui.screens.LoginScreen
 import fr.uge.ugeoverflow.ui.screens.SignUpScreen
 import fr.uge.ugeoverflow.ui.screens.profile.UserProfileScreen
 import fr.uge.ugeoverflow.ui.screens.question.AskQuestionScreen
-import fr.uge.ugeoverflow.ui.screens.question.QuestionsHomeScreen
+import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
+
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
 import fr.uge.ugeoverflow.ui.theme.White200
@@ -64,6 +66,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 val users = UserDataProvider.generateUsers()
+val questionManager = QuestionManager
 
 @Composable
 fun MainComponent() {
@@ -113,9 +116,7 @@ fun MainComponent() {
             composable(Routes.SignUp.route) {
                 SignUpScreen(navController = navController)
             }
-            composable(Routes.Questions.route) {
-                QuestionsHomeScreen(navController = navController)
-            }
+
             composable(Routes.ForgotPassword.route) {
                 ForgotPasswordScreen(navController)
             }
@@ -146,10 +147,18 @@ fun MainComponent() {
 //                    ?: throw Exception("Tag is null")
 //                TagScreen(navController, tag)
 //            }
-
-            composable(Routes.Question.route) {
-                QuestionScreen(navController)
+            composable(Routes.Questions.route) {
+                QuestionsHome(navController = navController)
             }
+            composable("${Routes.OneQuestion.route}/{questionId}") { backStackEntry ->
+                val questionId: String? = backStackEntry.arguments?.getString("questionId")
+                val question = questionId?.let { it1 -> questionManager.getQuestionById(it1) }
+
+                if (question != null) {
+                    QuestionScreen(navController,question.id)
+                }
+            }
+
             composable("${Routes.Question.route}/{id}") { backStackEntry ->
                 val id: String = backStackEntry.arguments?.getString("id")
                     ?: throw Exception("Id is null")

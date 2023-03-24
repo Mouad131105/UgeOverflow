@@ -23,6 +23,7 @@ import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.AnswerRequest
 import fr.uge.ugeoverflow.api.AnswerResponse
 import fr.uge.ugeoverflow.api.OneQuestionResponse
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.AnswerService
 import fr.uge.ugeoverflow.services.QuestionService
 import fr.uge.ugeoverflow.session.ApiService
@@ -31,7 +32,7 @@ import fr.uge.ugeoverflow.ui.components.ComponentSize
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.components.MyCard
-import fr.uge.ugeoverflow.ui.routes.Routes
+
 import fr.uge.ugeoverflow.ui.screens.question.CommentsCard
 import fr.uge.ugeoverflow.utils.Utils
 import kotlinx.coroutines.runBlocking
@@ -42,13 +43,12 @@ object OneQuestionGlobals {
 }
 
 @Composable
-fun QuestionScreen(navController: NavHostController, id: String? = null) {
+fun QuestionScreen(navController: NavHostController, id: String) {
     val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
-    val questionId = id
-        ?: "8fe6dd0d-60c5-4f5b-a1f9-0c0c2387f7a7" // temporary, replace by an existing QuestionId in databse
-    OneQuestionGlobals.questionId = questionId
-    val question = remember { mutableStateOf(getQuestionById(questionId)) }
+
+
+    val question = remember { mutableStateOf(getQuestionById(id)) }
     val sortedAnswers = remember(question.value.answers) {
         mutableStateOf(question.value.answers.sortedByDescending { it.creationTime })
     }

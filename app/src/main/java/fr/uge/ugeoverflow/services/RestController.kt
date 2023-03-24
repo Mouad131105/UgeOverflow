@@ -93,14 +93,14 @@ interface RestController {
     @GET("/api/v1/questions/{questionId}")
     suspend fun getQuestion(@Path("questionId") questionId: String): Response<OneQuestionResponse>
 
-    @GET("/auth/api/v1/users/followers/{username}")
-    suspend fun getFollowedUsers(@Path("username") username: String): Response<List<UserBoxResponse>>
+    //@GET("/auth/api/v1/users/followers/{username}")
+   // suspend fun getFollowedUsers(@Path("username") username: String): Response<List<UserBoxResponse>>
 
     @GET("api/v1/questions/users/{userId}")
     suspend fun getQuestionsByUserId(@Path("userId") userId: UUID): Response<List<OneQuestionResponse>>
 
-    @GET("auth/api/v1/users/{username}")
-    suspend fun getUserInfo(@Path("username") username: String): Response<UserBoxResponse>
+    //@GET("auth/api/v1/users/{username}")
+   // suspend fun getUserInfo(@Path("username") username: String): Response<UserBoxResponse>
 
 
 

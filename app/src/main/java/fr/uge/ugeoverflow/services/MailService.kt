@@ -14,7 +14,7 @@ object MailService  {
 
     suspend fun sendEmailToNotifyAdmin(question : OneQuestionResponse) = withContext(Dispatchers.IO) {
         val sessionManager = SessionManagerSingleton.sessionManager
-        val currentUser = sessionManager.getLoggedInUsername()
+        val currentUser = sessionManager.currentUsername
         //properties corresponding to microsoft office smtp mailing service
         val properties = Properties()
         properties["mail.smtp.auth"] = "true"

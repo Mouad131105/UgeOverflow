@@ -25,12 +25,12 @@ import fr.uge.ugeoverflow.api.AnswerResponse
 import fr.uge.ugeoverflow.api.CommentRequest
 import fr.uge.ugeoverflow.api.CommentResponse
 import fr.uge.ugeoverflow.api.OneQuestionResponse
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.CommentService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
 import fr.uge.ugeoverflow.ui.components.MyCard
-import fr.uge.ugeoverflow.ui.routes.Routes
 import fr.uge.ugeoverflow.utils.Utils
 
 

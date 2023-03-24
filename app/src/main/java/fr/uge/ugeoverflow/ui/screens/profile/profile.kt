@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import fr.uge.ugeoverflow.api.*
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.ImageService
 import fr.uge.ugeoverflow.services.ProfileService
 import fr.uge.ugeoverflow.ui.components.ComponentSize
@@ -27,7 +28,6 @@ import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.Loading.LoadingScreen
 import fr.uge.ugeoverflow.ui.components.MyError.ErrorScreen
 import fr.uge.ugeoverflow.ui.components.MyTag
-import fr.uge.ugeoverflow.ui.routes.Routes
 import java.util.*
 
 

@@ -22,7 +22,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.UserBoxDTO
-import fr.uge.ugeoverflow.ui.routes.Routes
+import fr.uge.ugeoverflow.routes.Routes
 import java.util.*
 
 

@@ -1,3 +1,4 @@
+/*
 package fr.uge.ugeoverflow.ui.screens.question
 
 import fr.uge.ugeoverflow.api.OneQuestionResponse
@@ -75,10 +76,12 @@ object QuestionsManager {
     }
         return questions.stream().collect(Collectors.toList())
 }
-       /* questions.addAll(questionService.findAllQuestionDTO())
+       */
+/* questions.addAll(questionService.findAllQuestionDTO())
         val currentUserQuestions: Any = questions.stream().filter( { question: OneQuestionResponse ->
             question.getUser().getId().equals(currentUser.getId())
         }).collect(Collectors.toList<Any>())
         questions.removeAll(currentUserQuestions)
-        questions.addAll(currentUserQuestions)*/
-}
+        questions.addAll(currentUserQuestions)*//*
+
+}*/
