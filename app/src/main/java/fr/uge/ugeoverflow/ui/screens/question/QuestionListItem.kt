@@ -166,7 +166,6 @@ fun userImage() {
 @Composable
 fun AllQuestionsScreen( navController :NavController,filterOption: String) {
     val ugeOverflowApiSerivce = ApiService.init()
-    val sessionManager = SessionManagerSingleton.sessionManager
     var questions by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
     var questionsToFilter by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
 

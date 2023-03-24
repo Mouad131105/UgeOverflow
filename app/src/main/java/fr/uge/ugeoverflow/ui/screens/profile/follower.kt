@@ -21,6 +21,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.api.AddressDTO
 import fr.uge.ugeoverflow.api.UserBoxDTO
 import fr.uge.ugeoverflow.routes.Routes
 import java.util.*
@@ -34,49 +35,97 @@ fun FollowsModal(
             UUID.randomUUID(),
             "user1",
             "email",
-            "url"
+            "url",
+            address = AddressDTO(
+                street = "123 Main St",
+                city = "New York",
+                country = "USA",
+                zipCode = "10001"
+            )
         ),
         UserBoxDTO(
             UUID.randomUUID(),
             "user2",
             "email",
-            "url"
+            "url",
+            address = AddressDTO(
+                street = "123 Main St",
+                city = "New York",
+                country = "USA",
+                zipCode = "10001"
+            )
         ),
         UserBoxDTO(
             UUID.randomUUID(),
             "user3",
             "email",
-            "url"
+            "url",
+            address = AddressDTO(
+                street = "123 Main St",
+                city = "New York",
+                country = "USA",
+                zipCode = "10001"
+            )
         ),
         UserBoxDTO(
             UUID.randomUUID(),
             "user4",
             "email",
-            "url"
+            "url",
+            address = AddressDTO(
+                street = "123 Main St",
+                city = "New York",
+                country = "USA",
+                zipCode = "10001"
+            )
         ),
         UserBoxDTO(
             UUID.randomUUID(),
             "user1",
             "email",
-            "url"
+            "url",
+            address = AddressDTO(
+                street = "123 Main St",
+                city = "New York",
+                country = "USA",
+                zipCode = "10001"
+            )
         ),
         UserBoxDTO(
             UUID.randomUUID(),
             "user2",
             "email",
-            "url"
+            "url",
+            address = AddressDTO(
+                street = "123 Main St",
+                city = "New York",
+                country = "USA",
+                zipCode = "10001"
+            )
         ),
         UserBoxDTO(
             UUID.randomUUID(),
             "user3",
             "email",
-            "url"
+            "url",
+            address = AddressDTO(
+                street = "123 Main St",
+                city = "New York",
+                country = "USA",
+                zipCode = "10001"
+            )
         ),
         UserBoxDTO(
             UUID.randomUUID(),
             "user4",
             "email",
-            "url"
+            "url",
+            address = AddressDTO(
+                street = "123 Main St",
+                city = "New York",
+                country = "USA",
+                zipCode = "10001"
+            )
         )
     ),
     onClose: () -> Unit = {},

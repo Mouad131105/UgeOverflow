@@ -23,6 +23,9 @@ interface RestController {
 
     suspend fun getAllQuestionsDto(): Response<List<OneQuestionResponse>>
 
+    @GET("api/v1/users")
+    suspend fun getUsersDto(): Response<List<UserBoxDTO>>
+
     @POST("/auth/api/v1/questions")
     suspend fun postQuestion(
         @Header("Authorization") token: String,
