@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -36,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,10 +48,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.R
+import fr.uge.ugeoverflow.api.OneQuestionResponse
 import fr.uge.ugeoverflow.data.QuestionManager
 import fr.uge.ugeoverflow.data.UserDataProvider
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.ImageService
+import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.screens.ForgotPasswordScreen
 import fr.uge.ugeoverflow.ui.screens.LoginScreen
@@ -56,6 +61,7 @@ import fr.uge.ugeoverflow.ui.screens.SignUpScreen
 import fr.uge.ugeoverflow.ui.screens.profile.UserProfileScreen
 import fr.uge.ugeoverflow.ui.screens.question.AskQuestionScreen
 import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
+import fr.uge.ugeoverflow.ui.screens.question.SearchResultsScreen
 
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
@@ -65,7 +71,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 
-val users = UserDataProvider.generateUsers()
 val questionManager = QuestionManager
 
 @Composable
@@ -129,7 +134,6 @@ fun MainComponent() {
             composable(Routes.Users.route) {
                 UserListScreen(navController)
             }
-
             composable(Routes.Profile.route) {
                 UserProfileScreen(navController = navController)
             }
@@ -141,12 +145,6 @@ fun MainComponent() {
             composable(Routes.Tags.route) {
                 TagScreen(navController)
             }
-//            // => Tags/Android
-//            composable("${Routes.Tags.route}/{tag}") { backStackEntry ->
-//                val tag: String = backStackEntry.arguments?.getString("tag")
-//                    ?: throw Exception("Tag is null")
-//                TagScreen(navController, tag)
-//            }
             composable(Routes.Questions.route) {
                 QuestionsHome(navController = navController)
             }
@@ -163,6 +161,10 @@ fun MainComponent() {
                     ?: throw Exception("Id is null")
                 QuestionScreen(navController, id)
             }
+            composable(Routes.SearchResults.route) { backStackEntry ->
+                val keyword: String? = backStackEntry.arguments?.getString("keyword")
+                keyword?.let { SearchResultsScreen(navController, keyword) }
+            }
         }
     }
 }
@@ -175,19 +177,41 @@ fun AppTopBar(
 ) {
     val context = LocalContext.current.applicationContext
     val sessionManager = SessionManagerSingleton.sessionManager
-    val isSearchVisible by remember { mutableStateOf(false) }
-    var searchText by remember { mutableStateOf("") }
-
+    val scope = rememberCoroutineScope()
+    var showSearchField by remember { mutableStateOf(false) }
     val imageData = remember {
-        mutableStateOf<ImageBitmap?>(
+        mutableStateOf(
             ImageService.getImageFromServer(
                 sessionManager.getImage().toString()
             )
         )
     }
-
-
-
+    var searchText by remember { mutableStateOf("") }
+    if (showSearchField){
+    Column() {
+        Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+        TextField(
+            value = searchText,
+            onValueChange = { newText ->
+                searchText = newText
+            },
+            label = { Text(text = "Rechercher") },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxHeight(0.1f)
+                .fillMaxWidth(1f),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    scope.launch {
+                        navController.navigate(Routes.SearchResults.route.replace("{keyword}", searchText))
+                    }
+                }
+            )
+        )
+    }
+        
+   }
     TopAppBar(
         title = {
             Box(
@@ -206,8 +230,7 @@ fun AppTopBar(
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)) {
                 // search icon
                 IconButton(onClick = {
-                    Toast.makeText(context, context.getString(R.string.search), Toast.LENGTH_LONG)
-                        .show()
+                    showSearchField = !showSearchField
                 }, modifier = Modifier.fillMaxWidth(0.2f)) {
                     Icon(
                         imageVector = Icons.Outlined.Search,
@@ -216,7 +239,6 @@ fun AppTopBar(
                 }
                 if (sessionManager.isUserLoggedIn.value) {
                     Log.d("hey", sessionManager.getToken().toString())
-                    // profile icon
                     var expanded by remember { mutableStateOf(false) }
 
                     Box(
@@ -224,7 +246,6 @@ fun AppTopBar(
                             .wrapContentSize(Alignment.TopEnd)
                     )
                     {
-
                         IconButton(onClick = { expanded = true }) {
                             imageData.value?.let {
                                 Image(
@@ -262,7 +283,6 @@ fun AppTopBar(
                             }) {
                                 Text(stringResource(id = R.string.logout))
                             }
-//                            ImageScreen(context)
 
                         }
                     }
@@ -297,7 +317,6 @@ fun AppTopBar(
                         )
                     }
                 }
-
             }
         },
         navigationIcon = {
@@ -312,17 +331,7 @@ fun AppTopBar(
         contentColor = White,
         elevation = 10.dp
     )
-    if (isSearchVisible) {
-        TextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp)
-        )
-    }
 }
-
 
 @Composable
 fun DrawerContent(
@@ -349,7 +358,6 @@ fun DrawerContent(
             fontFamily = poppins_bold
         ), modifier = Modifier.padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
     )
-
 
     Text(text = "Public", fontFamily = poppins_bold, fontSize = 20.sp)
     LazyColumn(modifier) {
