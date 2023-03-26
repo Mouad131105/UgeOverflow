@@ -46,8 +46,6 @@ object OneQuestionGlobals {
 fun QuestionScreen(navController: NavHostController, id: String) {
     val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
-
-
     val question = remember { mutableStateOf(getQuestionById(id)) }
     val sortedAnswers = remember(question.value.answers) {
         mutableStateOf(question.value.answers.sortedByDescending { it.creationTime })

@@ -184,33 +184,6 @@ fun ScaffoldWithTopBar(navController: NavHostController) {
                         .padding(10.dp),
                     componentType = ComponentTypes.Primary
                 )
-
-
-//                Button(
-//                    onClick = {
-//                        navController.navigate(Routes.SignUp.route)
-//                        scope.launch {
-//                            val registerRequest = RegisterRequest(
-//                                firstname.value.text,
-//                                lastname.value.text,
-//                                email.value.text,
-//                                username.value.text,
-//                                password.value.text
-//                            )
-//                            onRegisterClick(registerRequest)
-//                        }
-//                    },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(10.dp),
-//                    shape = RoundedCornerShape(10.dp),
-//                    colors = ButtonDefaults.buttonColors(backgroundColor = Purple700)
-//                ) {
-//                    Text(
-//                        text = "Sign up",
-//                        style = TextStyle(color = Color.White, fontFamily = poppins_medium)
-//                    )
-//                }
             }
         }
     )

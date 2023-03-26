@@ -6,8 +6,6 @@ enum class QuestionFilterType(private val filterName: String) {
         UNANSWERED("UNANSWERED"),
         ANSWERED("ANSWERED"),
         ALL("ALL");
-
-
         fun getFilterName(): String {
                 return filterName
         }
