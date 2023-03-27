@@ -16,11 +16,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import fr.uge.ugeoverflow.api.OneQuestionResponse
 import fr.uge.ugeoverflow.api.QuestionResponse
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.model.Tag
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.session.ApiService
+import fr.uge.ugeoverflow.ui.screens.question.QuestionItem
 import fr.uge.ugeoverflow.ui.screens.question.QuestionListItem
 import fr.uge.ugeoverflow.ui.theme.Blue300
 import getTagsFromDB
@@ -28,7 +30,7 @@ import getTagsFromDB
 @Composable
 fun TagDetails(navController: NavHostController, tagName: String) {
     val server = ApiService.init()
-    var questions by remember { mutableStateOf(emptyList<QuestionResponse>()) }
+    var questions by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
     val  tags = getTagsFromDB()
     val matchingTag = tags.find { tag -> tag.tagType == tagName }
     val tagDescription = matchingTag?.description ?: "No description found"
@@ -73,9 +75,14 @@ fun TagDetails(navController: NavHostController, tagName: String) {
         Spacer(modifier = Modifier
             .fillMaxWidth()
             .size(10.dp))
-        LazyColumn {
-            items(questions) { question ->
-                QuestionListItem(question = question)
+        Column(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 6.dp, vertical = 15.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                items(questions) { question ->
+                    QuestionItem(navController, question)
+                }
             }
         }
     }

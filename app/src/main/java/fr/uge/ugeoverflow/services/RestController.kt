@@ -117,7 +117,7 @@ interface RestController {
 
 
     @GET("/api/v1/tags/{tagName}")
-    suspend fun getQuestionsByTag(@Path("tagName") tagName: String): Response<List<QuestionResponse>>
+    suspend fun getQuestionsByTag(@Path("tagName") tagName: String): Response<List<OneQuestionResponse>>
 
     @DELETE("/auth/api/v1/questions/{questionId}")
     suspend fun deleteQuestion(@Header("Authorization") token: String): Response<Unit>
