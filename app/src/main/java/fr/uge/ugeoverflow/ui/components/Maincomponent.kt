@@ -58,6 +58,7 @@ import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.screens.ForgotPasswordScreen
 import fr.uge.ugeoverflow.ui.screens.LoginScreen
 import fr.uge.ugeoverflow.ui.screens.SignUpScreen
+import fr.uge.ugeoverflow.ui.screens.TagDetails
 import fr.uge.ugeoverflow.ui.screens.profile.UserProfileScreen
 import fr.uge.ugeoverflow.ui.screens.question.AskQuestionScreen
 import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
@@ -127,6 +128,11 @@ fun MainComponent() {
             }
             composable(Routes.AskQuestion.route) {
                 AskQuestionScreen(navController)
+            }
+            composable("${Routes.TagDetails.route}/{tagName}") { backStackEntry ->
+                val tagName: String = backStackEntry.arguments?.getString("tagName")
+                    ?: throw Exception("TagName is null")
+                TagDetails(navController = navController, tagName = tagName)
             }
             composable(Routes.Tags.route) {
                 Text(text = "Tags")

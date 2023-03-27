@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,12 +17,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import fr.uge.ugeoverflow.api.TagResponse
+import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.session.ApiService
 import kotlinx.coroutines.runBlocking
 
 @Composable
-fun TagScreen(navController: NavController) {
+fun TagScreen(navController: NavHostController) {
 
 
     val tags = getTagsFromDB()
@@ -36,22 +40,22 @@ fun TagScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(16.dp)
         )
-        TagList(tags = tags, filter = searchFilter)
+        TagList(tags = tags, filter = searchFilter, navController = navController)
     }
 }
 
 @Composable
-fun TagList(tags: List<TagResponse>, filter: String) {
+fun TagList(tags: List<TagResponse>, filter: String,  navController: NavHostController) {
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
         items(tags.filter { it.tagType?.contains(filter, ignoreCase = true) ?: false }) { tag ->
-            Tag(tag = tag)
+            Tag(tag = tag,  navController = navController)
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
 @Composable
-fun Tag(tag: TagResponse) {
+fun Tag(tag: TagResponse,  navController: NavHostController) {
     var showTooltip by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -91,7 +95,6 @@ fun Tag(tag: TagResponse) {
                         .width(IntrinsicSize.Min)
                         .height(IntrinsicSize.Min)
                         .clickable {
-                            // Toggle the tooltip visibility on click
                             showTooltip = true
                         }
                 )
@@ -127,8 +130,6 @@ fun Tag(tag: TagResponse) {
 
                 )
         }
-
-        // Show the tooltip as an AlertDialog
         if (showTooltip) {
             AlertDialog(
                 onDismissRequest = {
@@ -136,39 +137,44 @@ fun Tag(tag: TagResponse) {
                     showTooltip = false
                 },
                 title = {
-                    Text(
-                        text = tag.tagType ?: "",
-                        color = Color(android.graphics.Color.parseColor("#89CDF9")),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
+                    Text(text = tag.tagType ?: "" ,  color = Color(android.graphics.Color.parseColor("#89CDF9") )
+                        ,fontWeight = FontWeight.Bold
+                        , fontSize = 16.sp )
                 },
                 text = {
                     Column {
                         Text(text = tag.description ?: "")
                     }
                 },
-                confirmButton = {
+                dismissButton = {
                     Button(
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(
-                                android.graphics.Color.parseColor(
-                                    "#89CDF9"
-                                )
-                            )
-                        ),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(android.graphics.Color.parseColor("#E8E8E8") )),
                         onClick = {
                             // Dismiss the tooltip
                             showTooltip = false
 
                         }
                     ) {
-                        Text(text = "OK", color = Color.White)
+                        Text(text = "Cancel"  ,color = Color(android.graphics.Color.parseColor("#89CDF9")) )
+
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(android.graphics.Color.parseColor("#89CDF9") )),
+                        onClick = {
+
+                            navController.navigate("${Routes.TagDetails.route}/${tag.tagType}")
+
+                        }
+                    ) {
+                        Text(text = "See questions"  ,color = Color.White )
 
                     }
                 }
             )
         }
+
     }
 }
 
