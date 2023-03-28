@@ -221,11 +221,7 @@ fun AllQuestionsScreen(navController: NavController, filterOption: String) {
 fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
     val context = LocalContext.current.applicationContext
     val sessionManager = SessionManagerSingleton.sessionManager
-    val location =
-        getCountryAndCityFromLocation(question.location, context = LocalContext.current) ?: Pair(
-            "",
-            ""
-        )
+    val location = getCountryAndCityFromLocation(question.location, context = LocalContext.current)
     MyCard(
         modifier = Modifier
             .fillMaxWidth(),

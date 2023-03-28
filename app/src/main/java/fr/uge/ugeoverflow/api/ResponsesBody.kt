@@ -14,7 +14,7 @@ data class QuestionResponse(
     val tags: List<String>,
     val user: UserBoxDTO,
     val creationTime: String,
-    val myLocation: MyLocation
+    val location: MyLocation
 )
 
 

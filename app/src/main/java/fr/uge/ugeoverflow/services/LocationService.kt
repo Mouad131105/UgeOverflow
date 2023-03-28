@@ -145,8 +145,7 @@ fun getCurrentLocation(context: Context = LocalContext.current): MyLocation? {
 }
 
 
-
-fun getCountryAndCityFromLocation(location:MyLocation,context: Context): Pair<String?, String?> {
+fun getCountryAndCityFromLocation(location: MyLocation, context: Context): Pair<String?, String?> {
     var country: String? = null
     var city: String? = null
 
@@ -161,12 +160,11 @@ fun getCountryAndCityFromLocation(location:MyLocation,context: Context): Pair<St
             }
         }
     } catch (e: Exception) {
-        e.printStackTrace()
+        return Pair("", "")
     }
 
     return Pair(country, city)
 }
-
 
 
 @Preview(showBackground = true)

@@ -61,7 +61,7 @@ fun AskQuestionScreen(navController: NavHostController) {
 
     val showLocationDialog = remember { mutableStateOf(!permissions.allPermissionsGranted) }
 
-    val myCurrentLocation = remember { mutableStateOf<MyLocation?>(null) }
+    val myCurrentLocation = remember { mutableStateOf<MyLocation?>(MyLocation(0.0, 0.0)) }
 
     if (showLocationDialog.value) {
         Dialog(
@@ -150,7 +150,7 @@ fun AskQuestionScreen(navController: NavHostController) {
     val imageBit = remember {
         mutableStateOf<Bitmap?>(null)
     }
-    val image = remember{ mutableStateOf<ImageBitmap?>(null)}
+    val image = remember { mutableStateOf<ImageBitmap?>(null) }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -201,12 +201,17 @@ fun AskQuestionScreen(navController: NavHostController) {
                             onSuccess = { name ->
                                 // A success message like image uploaded successfully
 
-                                Toast.makeText(context, "Image uploaded successfully", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    context,
+                                    "Image uploaded successfully",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                                 body.value += "[img!](${imageName})\n";
                             },
                             onError = {
-                                Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         )
                     }

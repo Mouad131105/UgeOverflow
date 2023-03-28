@@ -119,7 +119,7 @@ fun UserProfilePage(
 
     val imageData = remember {
         mutableStateOf<ImageBitmap?>(
-            ImageService.getImageFromServer(
+            ImageService. getImageFromServer(
                 user.profilePicture.toString()
             )
         )
