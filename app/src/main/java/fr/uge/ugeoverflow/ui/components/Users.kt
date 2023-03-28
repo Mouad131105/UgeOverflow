@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +27,7 @@ import fr.uge.ugeoverflow.ui.screens.question.userImage
 import java.util.*
 
 @Composable
-fun UserView(user: UserBoxDTO, navController: NavController, onItemClick: (UUID) -> Unit) {
+fun UserView(user: UserBoxDTO, navController: NavController, onItemClick: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,6 +37,7 @@ fun UserView(user: UserBoxDTO, navController: NavController, onItemClick: (UUID)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -64,10 +66,16 @@ fun UserView(user: UserBoxDTO, navController: NavController, onItemClick: (UUID)
                         .padding(8.dp),
                     horizontalAlignment = Alignment.End
                 ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = null
-                        )
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clickable {
+                                val r = "${Routes.Profile.route}/${user.username}"
+                                Log.d("UserCard", r)
+                                navController.navigate(r)
+                            }
+                    )
                 }
             }
         }
@@ -99,7 +107,8 @@ fun UserListScreen(navController: NavController) {
     ) {
         items(users) { user ->
             UserView(user = user, navController, onItemClick = {
-                navController.navigate("${Routes.UserDetails.route}/${user.id}")
+
+//                navController.navigate("${Routes.UserDetails.route}/${user.username}")
             })
         }
     }

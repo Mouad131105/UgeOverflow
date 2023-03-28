@@ -1,3 +1,4 @@
+import android.Manifest
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -11,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -18,15 +20,21 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.AnswerRequest
 import fr.uge.ugeoverflow.api.AnswerResponse
 import fr.uge.ugeoverflow.api.OneQuestionResponse
+import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.AnswerService
 import fr.uge.ugeoverflow.services.QuestionService
+import fr.uge.ugeoverflow.services.getCountryAndCityFromLocation
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.ComponentSize
@@ -132,8 +140,98 @@ fun QuestionScreen(navController: NavHostController, id: String) {
     )
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: NavHostController) {
+
+
+    val permissions = rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    )
+
+    val showLocationDialog = remember { mutableStateOf(false) }
+
+    val myCurrentLocation = remember { mutableStateOf<MyLocation?>(null) }
+
+    if (showLocationDialog.value) {
+        Dialog(
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true
+            ),
+            onDismissRequest = {
+                showLocationDialog.value = false
+            },
+            content = {
+                MyCard(
+                    cardType = ComponentTypes.WarningOutline,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    header = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("Location permission", style = MaterialTheme.typography.h3)
+                        }
+                    },
+                    body = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(stringResource(id = R.string.user_location))
+                            Text(stringResource(id = R.string.questions_close_toyou))
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(stringResource(id = R.string.dont_share_location))
+                        }
+                    },
+                    footer = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ) {
+                            MyButton(
+                                componentType = ComponentTypes.Success,
+                                componentSize = ComponentSize.Small,
+                                onClick = {
+                                    permissions.launchMultiplePermissionRequest()
+                                    showLocationDialog.value = false
+                                }
+                            ) {
+                                Text(stringResource(id = R.string.accept))
+                            }
+                            MyButton(
+                                componentType = ComponentTypes.Danger,
+                                componentSize = ComponentSize.Small,
+                                onClick = {
+                                    showLocationDialog.value = false
+                                    myCurrentLocation.value = MyLocation(0.0, 0.0)
+                                }
+                            ) {
+                                Text(stringResource(id = R.string.refuse))
+                            }
+                        }
+                    }
+                )
+            }
+        )
+    }
+
+
     val context = LocalContext.current
     var answerText by remember { mutableStateOf("") }
 
@@ -147,9 +245,19 @@ fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: N
             OutlinedTextField(
                 value = answerText,
                 onValueChange = { answerText = it },
-                label = { Text( context.getString(R.string.add_answer),
-                ) },
-                modifier = Modifier.fillMaxWidth()
+                label = {
+                    Text(
+                        context.getString(R.string.add_answer),
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+//                    .onFocusEvent {
+//                        if (!permissions.allPermissionsGranted) {
+//                            Log.e("OOOOOOOOOOO", permissions.allPermissionsGranted.toString())
+//                            showLocationDialog.value = true
+//                        }
+//                    }
             )
         }
         Box(
@@ -159,7 +267,12 @@ fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: N
             MyButton(
                 // button on the right
                 modifier = Modifier.align(Alignment.CenterEnd),
-                text =context.getString(R.string.post_answer),
+                text = "${context.getString(R.string.post_answer)}+${
+                    getCountryAndCityFromLocation(
+                        question.value.location,
+                        context
+                    )
+                }",
 
                 onClick = {
                     if (answerText.isNotEmpty()) {
@@ -239,7 +352,7 @@ fun QuestionCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(id = R.string.asked) ,
+                    text = stringResource(id = R.string.asked),
                     style = MaterialTheme.typography.caption,
                 )
                 Text(
@@ -257,6 +370,7 @@ fun QuestionCard(
                     },
                 )
                 croppedImageFromDB(question.value.user.profilePicture)
+                Text(text = "${getCountryAndCityFromLocation(question.value.location, context)}")
 
             }
         },
@@ -320,7 +434,8 @@ fun AnswerCard(
                         )
                     }
                 if (answerLines.size > 2 && (!expanded || answerLines.size > 3)) {
-                    val text = if (expanded) stringResource(id = R.string.show_less) else stringResource(id = R.string.show_more)
+                    val text =
+                        if (expanded) stringResource(id = R.string.show_less) else stringResource(id = R.string.show_more)
                     ClickableText(
                         text = AnnotatedString(
                             text = text,
@@ -338,7 +453,7 @@ fun AnswerCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = context.getString( R.string.answered),
+                    text = context.getString(R.string.answered),
 
                     style = MaterialTheme.typography.caption,
                 )
@@ -402,14 +517,14 @@ fun DisplayDialog(
                                 {
                                     Toast.makeText(
                                         context,
-                                        context.getString( R.string.question_deleted_successfully),
+                                        context.getString(R.string.question_deleted_successfully),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 },
                                 {
                                     Toast.makeText(
                                         context,
-                                        context.getString( R.string.failed_to_delete_question),
+                                        context.getString(R.string.failed_to_delete_question),
 
                                         Toast.LENGTH_SHORT
                                     )
@@ -422,7 +537,7 @@ fun DisplayDialog(
                                 {
                                     Toast.makeText(
                                         context,
-                                        context.getString( R.string.answer_deleted_successfully),
+                                        context.getString(R.string.answer_deleted_successfully),
 
                                         Toast.LENGTH_SHORT
                                     ).show()
@@ -430,7 +545,7 @@ fun DisplayDialog(
                                 {
                                     Toast.makeText(
                                         context,
-                                        context.getString( R.string.failed_to_delete_answer),
+                                        context.getString(R.string.failed_to_delete_answer),
                                         Toast.LENGTH_SHORT
                                     )
                                         .show()

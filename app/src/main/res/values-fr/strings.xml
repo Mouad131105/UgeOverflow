@@ -82,6 +82,10 @@
     <string name="image_successfull">Image enregistrer avec succes</string>
     <string name="image_unsuccessfull">Echec enrigestrement image, veuillez réessayer</string>
     <string name="just_now">Just now</string>
+    <string name="newest">Les plus récents</string>
+    <string name="oldest">Les plus anciens</string>
+    <string name="unanswered">Sans réponse</string>
+    <string name="all">Tous</string>
 
 
 </resources>

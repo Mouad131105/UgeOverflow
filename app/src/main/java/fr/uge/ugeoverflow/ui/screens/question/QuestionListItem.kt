@@ -44,6 +44,7 @@ import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.components.*
 import fr.uge.ugeoverflow.ui.theme.White200
+import fr.uge.ugeoverflow.utils.Utils
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -351,21 +352,20 @@ fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
-                    Box(
+                    Column(
                         modifier = Modifier
                             .padding(start = 30.dp),
                     ) {
                         Text(
-                            text = "${stringResource(R.string.asked)} " + question.getTimePassedSinceQuestionCreation(
+                            text = "${stringResource(R.string.asked)}+ ${question.user.username} " + Utils.formatDateUsingTimeAgo(
                                 question.creationTime
                             ),
-                            fontSize = 6.sp,
-
+                            fontSize = 7.sp,
                             color = Color.Gray
                         )
                         Text(
                             text = location.toString(),
-                            fontSize = 6.sp,
+                            fontSize = 7.sp,
                             color = Color.Gray
                         )
 

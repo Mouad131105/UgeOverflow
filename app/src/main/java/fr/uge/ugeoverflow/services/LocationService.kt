@@ -171,42 +171,6 @@ fun getCountryAndCityFromLocation(location:MyLocation,context: Context): Pair<St
 
 @Preview(showBackground = true)
 @Composable
-fun MyPopup() {
-    // Define a state to track whether the popup is shown or not
-    val showDialog = remember { mutableStateOf(false) }
-
-    // Define the content of the popup
-    val dialogContent = @Composable {
-        Column {
-            Text(text = "This is a popup!")
-            Button(onClick = { showDialog.value = false }) {
-                Text(text = "OK")
-            }
-        }
-    }
-
-    // Show the popup when the button is clicked
-    Button(onClick = { showDialog.value = true }) {
-        Text(text = "Show popup")
-    }
-
-    // Show the AlertDialog if showDialog is true
-    if (showDialog.value) {
-        AlertDialog(
-            onDismissRequest = { showDialog.value = false },
-            title = { Text(text = "Popup Title") },
-            text = dialogContent,
-            confirmButton = {
-                Button(onClick = { showDialog.value = false }) {
-                    Text(text = "OK")
-                }
-            }
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
 fun UserBoxCardPopUp(
     user: UserBoxDTO = UserBoxDTO(
         UUID.randomUUID(),

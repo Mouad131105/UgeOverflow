@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">UGEoverflow</string>
     <string name="vote">vote</string>
     <string name="votes">votes</string>
@@ -81,6 +81,11 @@
     <string name="image_successfull">Imgae Successfully uploaded</string>
     <string name="image_unsuccessfull">Image Upload Unsuccessful, Please try again</string>
     <string name="just_now">Just now</string>
+
+    <string name="newest">Newest</string>
+    <string name="oldest">Oldest</string>
+    <string name="unanswered">Unanswered</string>
+    <string name="all">All</string>
 
 
 </resources>
