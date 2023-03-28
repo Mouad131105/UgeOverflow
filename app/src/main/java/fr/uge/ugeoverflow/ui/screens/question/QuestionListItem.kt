@@ -221,7 +221,11 @@ fun AllQuestionsScreen(navController: NavController, filterOption: String) {
 fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
     val context = LocalContext.current.applicationContext
     val sessionManager = SessionManagerSingleton.sessionManager
-    val location = getCountryAndCityFromLocation(question.location, context = LocalContext.current)
+    val location =
+        getCountryAndCityFromLocation(question.location, context = LocalContext.current) ?: Pair(
+            "",
+            ""
+        )
     MyCard(
         modifier = Modifier
             .fillMaxWidth(),
@@ -363,11 +367,13 @@ fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
                             fontSize = 7.sp,
                             color = Color.Gray
                         )
-                        Text(
-                            text = location.toString(),
-                            fontSize = 7.sp,
-                            color = Color.Gray
-                        )
+                        if (location!=null&& location.first != null) {
+                            Text(
+                                text = location.toString(),
+                                fontSize = 7.sp,
+                                color = Color.Gray
+                            )
+                        }
 
                     }
                 }
