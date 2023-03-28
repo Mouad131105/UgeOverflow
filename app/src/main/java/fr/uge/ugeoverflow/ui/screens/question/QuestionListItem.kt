@@ -164,7 +164,7 @@ fun userImage() {
 }
 
 @Composable
-fun AllQuestionsScreen( navController :NavController,filterOption: String) {
+fun AllQuestionsScreen(navController: NavController, filterOption: String) {
     val ugeOverflowApiSerivce = ApiService.init()
     var questions by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
     var questionsToFilter by remember { mutableStateOf(emptyList<OneQuestionResponse>()) }
@@ -174,7 +174,7 @@ fun AllQuestionsScreen( navController :NavController,filterOption: String) {
     questionsFilterManager.init()
 
     LaunchedEffect(filterOption) {
-        Log.i("",filterOption)
+        Log.i("", filterOption)
 
         try {
             // get questions with the selected filter option from backend
@@ -190,8 +190,11 @@ fun AllQuestionsScreen( navController :NavController,filterOption: String) {
                     Log.d(response.code().toString(), response.message())
                 }
             } else {
-                Log.i("i",selectedFilter.name)
-                questions = questionsFilterManager.getQuestionsByFilter(selectedFilter.name, questionsToFilter)
+                Log.i("i", selectedFilter.name)
+                questions = questionsFilterManager.getQuestionsByFilter(
+                    selectedFilter.name,
+                    questionsToFilter
+                )
 
             }
         } catch (e: Exception) {
@@ -205,14 +208,14 @@ fun AllQuestionsScreen( navController :NavController,filterOption: String) {
             modifier = Modifier.weight(1f)
         ) {
             items(questions) { question ->
-                QuestionItem(navController,question)
+                QuestionItem(navController, question)
             }
         }
     }
 }
 
 @Composable
-fun QuestionItem(navController: NavController ,question: OneQuestionResponse) {
+fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
     val context = LocalContext.current.applicationContext
     val sessionManager = SessionManagerSingleton.sessionManager
     MyCard(
@@ -242,33 +245,48 @@ fun QuestionItem(navController: NavController ,question: OneQuestionResponse) {
                         color = MaterialTheme.colors.secondary
                     ),
                     onClick = { navController.navigate("${Routes.OneQuestion.route}/${question.id}") },
-
-                )
+                    )
                 Icon(
                     Icons.Filled.Warning,
                     contentDescription = "Signal",
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable { MainScope().launch {
-                            try {
-                                if(sessionManager.isUserLoggedIn.value){
-                                    MailService.sendEmailToNotifyAdmin(question = question)
-                                    Toast.makeText(context, "Signaled to admin!", Toast.LENGTH_LONG).show()
-                                }else{
-                                    Toast.makeText(context, "You should be logged in to signal a question!", Toast.LENGTH_LONG).show()
-                                    navController.navigate(Routes.Login.route)
+                        .clickable {
+                            MainScope().launch {
+                                try {
+                                    if (sessionManager.isUserLoggedIn.value) {
+                                        MailService.sendEmailToNotifyAdmin(question = question)
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "Signaled to admin!",
+                                                Toast.LENGTH_LONG
+                                            )
+                                            .show()
+                                    } else {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "You should be logged in to signal a question!",
+                                                Toast.LENGTH_LONG
+                                            )
+                                            .show()
+                                        navController.navigate(Routes.Login.route)
+                                    }
+
+                                } catch (e: Exception) {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "Oops, something gone wrong",
+                                            Toast.LENGTH_LONG
+                                        )
+                                        .show()
                                 }
 
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "Oops, something gone wrong", Toast.LENGTH_LONG).show()
                             }
-
-                        } }
+                        }
                 )
-
-
-
-
             }
         },
         body = {
@@ -333,7 +351,7 @@ fun QuestionItem(navController: NavController ,question: OneQuestionResponse) {
                     Box(
                         modifier = Modifier
                             .padding(start = 30.dp),
-                    ){
+                    ) {
                         Text(
                             text = "asked " + question.getTimePassedSinceQuestionCreation(question.creationTime),
                             fontSize = 12.sp,
@@ -341,13 +359,8 @@ fun QuestionItem(navController: NavController ,question: OneQuestionResponse) {
                             color = Color.Gray
                         )
                     }
-
-
                 }
-
-
-                }
-
+            }
         }
     )
 }

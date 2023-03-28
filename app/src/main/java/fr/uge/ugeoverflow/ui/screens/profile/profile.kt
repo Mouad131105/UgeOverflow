@@ -177,7 +177,6 @@ fun UserProfilePage(
                         contentColor = ComponentTypes.Success.contentColor,
                         modifier = Modifier
                             .padding(8.dp),
-//                        .size(80.dp, 40.dp),
                         shape = RoundedCornerShape(20)
                     ) {
                         Text(

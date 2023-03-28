@@ -18,10 +18,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -124,6 +126,11 @@ fun MainComponent() {
             composable(Routes.AskQuestion.route) {
                 AskQuestionScreen(navController)
             }
+            composable("${Routes.TagDetails.route}/{tagName}") { backStackEntry ->
+                val tagName: String = backStackEntry.arguments?.getString("tagName")
+                    ?: throw Exception("TagName is null")
+                TagDetails(navController = navController, tagName = tagName)
+            }
             composable(Routes.Tags.route) {
                 Text(text = "Tags")
             }
@@ -142,12 +149,6 @@ fun MainComponent() {
             composable(Routes.Tags.route) {
                 TagScreen(navController)
             }
-//            // => Tags/Android
-//            composable("${Routes.Tags.route}/{tag}") { backStackEntry ->
-//                val tag: String = backStackEntry.arguments?.getString("tag")
-//                    ?: throw Exception("Tag is null")
-//                TagScreen(navController, tag)
-//            }
             composable(Routes.Questions.route) {
                 QuestionsHome(navController = navController)
             }
@@ -156,13 +157,17 @@ fun MainComponent() {
                 val question = questionId?.let { it1 -> questionManager.getQuestionById(it1) }
 
                 if (question != null) {
-                    QuestionScreen(navController, question.id)
+                    QuestionScreen(navController,question.id)
                 }
             }
             composable("${Routes.Question.route}/{id}") { backStackEntry ->
                 val id: String = backStackEntry.arguments?.getString("id")
                     ?: throw Exception("Id is null")
                 QuestionScreen(navController, id)
+            }
+            composable(Routes.SearchResults.route) { backStackEntry ->
+                val keyword: String? = backStackEntry.arguments?.getString("keyword")
+                keyword?.let { SearchResultsScreen(navController, keyword) }
             }
         }
     }
@@ -176,24 +181,46 @@ fun AppTopBar(
 ) {
     val context = LocalContext.current.applicationContext
     val sessionManager = SessionManagerSingleton.sessionManager
-    val isSearchVisible by remember { mutableStateOf(false) }
-    var searchText by remember { mutableStateOf("") }
-
+    val scope = rememberCoroutineScope()
+    var showSearchField by remember { mutableStateOf(false) }
     val imageData = remember {
-        mutableStateOf<ImageBitmap?>(
+        mutableStateOf(
             ImageService.getImageFromServer(
                 sessionManager.getImage().toString()
             )
         )
     }
-
-
-//if the token or the session manager changes the imageData is updated
+    //if the token or the session manager changes the imageData is updated
     LaunchedEffect(sessionManager) {
         imageData.value = ImageService.getImageFromServer(sessionManager.getImage().toString())
     }
 
+    var searchText by remember { mutableStateOf("") }
+    if (showSearchField){
+    Column() {
+        Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+        TextField(
+            value = searchText,
+            onValueChange = { newText ->
+                searchText = newText
+            },
+            label = { Text(text = "Rechercher") },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxHeight(0.1f)
+                .fillMaxWidth(1f),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    scope.launch {
+                        navController.navigate(Routes.SearchResults.route.replace("{keyword}", searchText))
+                    }
+                }
+            )
+        )
+    }
 
+   }
     TopAppBar(
         title = {
             Box(
@@ -212,8 +239,7 @@ fun AppTopBar(
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth(0.6f)) {
                 // search icon
                 IconButton(onClick = {
-                    Toast.makeText(context, context.getString(R.string.search), Toast.LENGTH_LONG)
-                        .show()
+                    showSearchField = !showSearchField
                 }, modifier = Modifier.fillMaxWidth(0.2f)) {
                     Icon(
                         imageVector = Icons.Outlined.Search,
@@ -222,7 +248,6 @@ fun AppTopBar(
                 }
                 if (sessionManager.isUserLoggedIn.value) {
                     Log.d("hey", sessionManager.getToken().toString())
-                    // profile icon
                     var expanded by remember { mutableStateOf(false) }
 
                     Box(
@@ -323,15 +348,6 @@ fun AppTopBar(
         contentColor = White,
         elevation = 10.dp
     )
-    if (isSearchVisible) {
-        TextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp)
-        )
-    }
 }
 
 
