@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -155,7 +156,7 @@ fun MainComponent() {
                 val question = questionId?.let { it1 -> questionManager.getQuestionById(it1) }
 
                 if (question != null) {
-                    QuestionScreen(navController,question.id)
+                    QuestionScreen(navController, question.id)
                 }
             }
             composable("${Routes.Question.route}/{id}") { backStackEntry ->
@@ -186,6 +187,11 @@ fun AppTopBar(
         )
     }
 
+
+//if the token or the session manager changes the imageData is updated
+    LaunchedEffect(sessionManager) {
+        imageData.value = ImageService.getImageFromServer(sessionManager.getImage().toString())
+    }
 
 
     TopAppBar(
@@ -226,6 +232,11 @@ fun AppTopBar(
                     {
 
                         IconButton(onClick = { expanded = true }) {
+                            Icon(
+                                imageVector = Icons.Outlined.AccountCircle,
+                                contentDescription = "profile",
+                                tint = Gray
+                            )
                             imageData.value?.let {
                                 Image(
                                     bitmap = it,

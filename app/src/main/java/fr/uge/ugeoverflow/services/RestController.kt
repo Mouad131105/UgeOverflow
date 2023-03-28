@@ -2,9 +2,13 @@ package fr.uge.ugeoverflow.services
 
 import android.location.Location
 import android.location.LocationRequest
+import coil.request.ImageRequest
+import coil.request.ImageResult
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.model.Question
 import fr.uge.ugeoverflow.model.VOTE_TYPE
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -64,15 +68,15 @@ interface RestController {
     suspend fun getImage(@Path("name") name: String): Response<ResponseBody>
 
     @GET("/auth/api/v1/users/profile")
-    suspend fun getProfile(@Header("Authorization") token: String): Response<UserProfileDTO>
+    suspend fun getProfile(): Response<UserProfileDTO>
 
     @GET("/auth/api/v1/users/{username}")
     suspend fun getUserProfile(@Path("username") username: String): Response<UserProfileDTO>
 
-    @PUT("/auth/api/v1/users/profile")
+    @POST("/auth/api/v1/users/profile/update")
     suspend fun updateProfile(
         @Header("Authorization") token: String,
-        userProfile: UserProfileDTO
+        @Body user: UpdateProfileDTO
     ): Response<UserProfileDTO>
 
     @GET("/auth/api/v1/users/{username}/follow")
@@ -152,5 +156,10 @@ interface RestController {
         @Body comment: CommentRequest
     ): Response<CommentResponse>
 
+    @Multipart
+    @POST("/auth/images")
+    suspend fun uploadImage(
+        @Part file: MultipartBody.Part
+    ): Response<ResponseBody>
 
 }

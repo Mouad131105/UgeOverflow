@@ -1,6 +1,9 @@
 package fr.uge.ugeoverflow.ui.screens.profile
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -15,10 +18,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.ImageService
@@ -28,6 +42,8 @@ import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.Loading.LoadingScreen
 import fr.uge.ugeoverflow.ui.components.MyError.ErrorScreen
 import fr.uge.ugeoverflow.ui.components.MyTag
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -66,16 +82,16 @@ fun UserProfileScreen(
                 }
             )
         } catch (e: Exception) {
+            Log.e("UserProfileScreen", e.toString())
             isLoading.value = false
             isError.value = true
-
         } finally {
             isLoading.value = false
         }
     }
     if (isError.value) {
         ErrorScreen(
-            errorMessage = "Unknown error"
+            errorMessage = "Cannot load user profile",
         )
     }
 }
@@ -213,6 +229,7 @@ fun UserProfilePage(
                 item {
 
                     Column {
+
                         Row(
                             modifier = Modifier
                                 .padding(16.dp)
@@ -223,7 +240,37 @@ fun UserProfilePage(
                                     .padding(8.dp)
                                     .fillMaxWidth(0.5f)
                             ) {
-
+//                                SubcomposeAsyncImage(
+//                                    model = "http://localhost:8080/images/i/SCR-20230323-us4.png",
+//                                    loading = {
+//                                        CircularProgressIndicator()
+//                                    },
+//                                    modifier = Modifier
+//                                        .fillMaxWidth()
+//                                        .height(200.dp),
+//                                    contentDescription = "Profile",
+//                                )
+//                                AsyncImage(
+//                                    model = "http://localhost:8080/images/i/SCR-20230323-us4.png",
+//                                    contentScale = ContentScale.Crop,
+//                                    modifier = Modifier
+//                                        .fillMaxWidth()
+//                                        .height(200.dp)
+//                                        .clip(CircleShape),
+//                                    contentDescription = "Profile",
+//                                )
+//                                AsyncImage(
+//                                    model = ImageRequest.Builder(LocalContext.current)
+//                                        .data("http://localhost:8080/images/i/SCR-20230323-us4.png")
+//                                        .crossfade(true)
+//                                        .build(),
+//                                    contentDescription = "Profile",
+//                                    contentScale = ContentScale.Crop,
+//                                    modifier = Modifier
+//                                        .fillMaxWidth()
+//                                        .height(200.dp)
+//                                        .clip(CircleShape),
+//                                )
                                 imageData.value?.let {
                                     Image(
                                         bitmap = it,

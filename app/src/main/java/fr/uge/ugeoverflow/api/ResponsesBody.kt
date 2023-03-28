@@ -44,7 +44,26 @@ data class AddressDTO(
     val city: String?,
     val country: String?,
     val zipCode: String?
-)
+) {
+    companion object {
+        fun fromAddress(address: String?): AddressDTO {
+            //every part is divided by a new line
+            val parts = address?.split("\n") ?: return AddressDTO(null, null, null, null)
+            return AddressDTO(
+                parts?.get(0),
+                parts?.get(1),
+                parts?.get(2),
+                parts?.get(3)
+            )
+        }
+    }
+
+    override fun toString(): String {
+        return "$street\n $city\n $country\n $zipCode"
+    }
+
+
+}
 
 data class UserBoxDTO(
     val id: UUID,
@@ -88,6 +107,16 @@ class UserProfileDTO(
     val tags: Map<String, Int>?
 )
 
+class UpdateProfileDTO(
+    val firstName: String,
+    val lastName: String,
+    val username: String,
+    val email: String,
+    val bio: String?,
+    val address: String?,
+    val profilePicture: String?
+)
+
 class AnswerDTO(
     val id: UUID,
     val body: String,
@@ -118,6 +147,7 @@ data class CommentResponse(
     val user: UserBoxDTO,
     val creationTime: String
 )
+
 data class OneQuestionResponse(
     val id: String,
     val title: String,
@@ -129,7 +159,7 @@ data class OneQuestionResponse(
     val comments: List<CommentResponse>,
     val answers: List<AnswerResponse>,
     val location: Location
-    ){
+) {
     fun getTimePassedSinceQuestionCreation(creationTime: String): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault())
         val date = dateFormat.parse(creationTime)
@@ -170,4 +200,10 @@ data class VoteResponse(
     val user: UserBoxDTO,
     val downvote: Boolean,
     val upvote: Boolean
+)
+
+data class ImageResponse(
+    val id: String,
+    val name: String,
+    val data: ByteArray
 )
