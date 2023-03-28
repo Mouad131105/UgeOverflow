@@ -67,7 +67,7 @@ fun QuestionListItem(question: QuestionResponse) {
             ) {
                 userImage()
                 Text(
-                    text = "UserName",
+                    text = stringResource(id = R.string.username),
                     style = TextStyle(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 12.sp,
@@ -259,7 +259,7 @@ fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
                                         Toast
                                             .makeText(
                                                 context,
-                                                "Signaled to admin!",
+                                                context.getString(R.string.signaled_to_admin),
                                                 Toast.LENGTH_LONG
                                             )
                                             .show()
@@ -267,7 +267,7 @@ fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
                                         Toast
                                             .makeText(
                                                 context,
-                                                "You should be logged in to signal a question!",
+                                                context.getString(R.string.login_to_signal),
                                                 Toast.LENGTH_LONG
                                             )
                                             .show()
@@ -278,7 +278,7 @@ fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
                                     Toast
                                         .makeText(
                                             context,
-                                            "Oops, something gone wrong",
+                                            context.getString(R.string.something_wrong),
                                             Toast.LENGTH_LONG
                                         )
                                         .show()
@@ -353,7 +353,7 @@ fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
                             .padding(start = 30.dp),
                     ) {
                         Text(
-                            text = "asked " + question.getTimePassedSinceQuestionCreation(question.creationTime),
+                            text = "${stringResource(R.string.asked)} " + question.getTimePassedSinceQuestionCreation(question.creationTime),
                             fontSize = 12.sp,
 
                             color = Color.Gray

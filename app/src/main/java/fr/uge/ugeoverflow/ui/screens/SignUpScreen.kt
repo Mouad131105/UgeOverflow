@@ -1,6 +1,7 @@
 package fr.uge.ugeoverflow.ui.screens
 
 import android.content.Context
+import android.provider.Settings.Secure.getString
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -201,7 +202,7 @@ private suspend fun onRegisterClick(
         withContext(Dispatchers.Main) {
             if (response.isSuccessful) {
                 Log.d("register Ok", sessionManager.getToken().toString())
-                Toast.makeText(context, "Successfully registered", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getString(R.string.success_register), Toast.LENGTH_SHORT).show();
                 navController.navigate(Routes.Login.route)
             } else {
                 Log.d("register error", sessionManager.getToken().toString())

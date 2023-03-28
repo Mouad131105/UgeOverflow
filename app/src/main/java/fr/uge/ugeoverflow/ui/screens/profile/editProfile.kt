@@ -161,7 +161,6 @@ fun EditProfilePage(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-
                         image.value?.let {
                             Image(
                                 bitmap = it,
@@ -220,7 +219,7 @@ fun EditProfilePage(
                         TextField(
                             value = firstName.value,
                             onValueChange = { firstName.value = it },
-                            label = { Text(text = "First Name") },
+                            label = { Text(text = stringResource(id = R.string.firstname)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
@@ -228,7 +227,7 @@ fun EditProfilePage(
                         TextField(
                             value = lastName.value,
                             onValueChange = { lastName.value = it },
-                            label = { Text(text = "Last Name") },
+                            label = { Text(text = stringResource(id = R.string.lastname)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
@@ -253,7 +252,7 @@ fun EditProfilePage(
                         }
 
                         MyButton(
-                            text = "Save",
+                            text = stringResource(id = R.string.save),
                             componentType = ComponentTypes.SuccessOutline,
                             onClick = {
                                 ProfileService.updateProfile(
@@ -282,7 +281,7 @@ fun EditProfilePage(
                         )
 
                         MyButton(
-                            text = "Cancel",
+                            text = stringResource(id = R.string.cancel),
                             componentType = ComponentTypes.DangerOutline,
                             onClick = {
                                 onClosed()
