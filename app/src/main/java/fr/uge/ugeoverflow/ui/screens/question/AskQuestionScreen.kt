@@ -1,15 +1,30 @@
 package fr.uge.ugeoverflow.ui.screens.question
 
 import android.Manifest
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -23,12 +38,10 @@ import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.*
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
-import fr.uge.ugeoverflow.ui.components.ComponentSize
-import fr.uge.ugeoverflow.ui.components.ComponentTypes
-import fr.uge.ugeoverflow.ui.components.MyButton
-import fr.uge.ugeoverflow.ui.components.MyCard
+import fr.uge.ugeoverflow.ui.components.*
 import fr.uge.ugeoverflow.utils.SearchableMultiSelect
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -132,6 +145,10 @@ fun AskQuestionScreen(navController: NavHostController) {
     val title = remember { mutableStateOf("") }
     val body = remember { mutableStateOf("") }
     var tags = TagService.getTags()
+    val imageBit = remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+    val image = remember{ mutableStateOf<ImageBitmap?>(null)}
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -164,6 +181,57 @@ fun AskQuestionScreen(navController: NavHostController) {
                     label = { Text("Content") },
                     modifier = Modifier.fillMaxWidth()
                 )
+                val launcher = rememberLauncherForActivityResult(
+                    contract =
+                    ActivityResultContracts.GetContent()
+                ) { uri: Uri? ->
+                    uri?.let {
+                        val imageName = java.util.UUID.randomUUID().toString()
+                        imageBit.value = MediaStore.Images
+                            .Media.getBitmap(context.contentResolver, it)
+                        image.value = imageBit.value?.asImageBitmap()
+                        ProfileService.uploadImage(
+                            name = imageName,
+                            imageBit = imageBit.value!!,
+                            onSuccess = { name ->
+                                // A success message like image uploaded successfully
+
+                                Toast.makeText(context, "Image uploaded successfully", Toast.LENGTH_SHORT)
+                                    .show()
+                                body.value += "[img!](${imageName})\n";
+                            },
+                            onError = {
+                                Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    }
+                }
+                image.value?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = "Profile",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .clickable {
+                                launcher.launch("image/*")
+                            },
+                        contentScale = ContentScale.Crop,
+                    )
+                }
+                if (image.value == null) {
+                    Icon(
+                        imageVector = androidx.compose.material.icons.Icons.Default.Add,
+                        contentDescription = "Edit",
+                        modifier = Modifier
+                            .size(64.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .clickable {
+                                launcher.launch("image/*")
+                            }
+                    )
+                }
+
 
                 SearchableMultiSelect(
                     options = tags,

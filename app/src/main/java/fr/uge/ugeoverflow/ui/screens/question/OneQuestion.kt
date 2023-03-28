@@ -25,6 +25,7 @@ import fr.uge.ugeoverflow.api.AnswerResponse
 import fr.uge.ugeoverflow.api.OneQuestionResponse
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.AnswerService
+import fr.uge.ugeoverflow.services.ImageService.getImageFromServer
 import fr.uge.ugeoverflow.services.QuestionService
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
@@ -210,11 +211,26 @@ fun QuestionCard(
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
+                val pattern = "\\[img!\\]\\((.*?)\\)".toRegex()
+                val matchResult = pattern.find(question.value.body)
+                val imageName = matchResult?.groupValues?.get(1)
+
                 Text(
-                    text = question.value.body,
+                    text = question.value.body ,
                     style = MaterialTheme.typography.body2,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
+                imageName?.let { getImageFromServer(it)}?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = "content",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .align(Alignment.Start),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
 
                 if (question.value.tags.isNotEmpty()) {
                     Row(modifier = Modifier.padding(bottom = 4.dp)) {

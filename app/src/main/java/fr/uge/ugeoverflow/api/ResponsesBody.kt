@@ -151,7 +151,7 @@ data class CommentResponse(
 data class OneQuestionResponse(
     val id: String,
     val title: String,
-    val body: String,
+    var body: String,
     val tags: List<String>,
     val user: UserBoxDTO,
     val creationTime: String,
