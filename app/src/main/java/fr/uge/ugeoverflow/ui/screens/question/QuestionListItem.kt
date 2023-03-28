@@ -31,12 +31,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.android.gms.location.LocationServices
 import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.filters.QuestionFilterType
 import fr.uge.ugeoverflow.filters.QuestionsFilterManager
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.MailService
+import fr.uge.ugeoverflow.services.getCountryAndCityFromLocation
 
 import fr.uge.ugeoverflow.session.ApiService
 import fr.uge.ugeoverflow.session.SessionManagerSingleton
@@ -218,6 +220,7 @@ fun AllQuestionsScreen(navController: NavController, filterOption: String) {
 fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
     val context = LocalContext.current.applicationContext
     val sessionManager = SessionManagerSingleton.sessionManager
+    val location = getCountryAndCityFromLocation(question.location, context = LocalContext.current)
     MyCard(
         modifier = Modifier
             .fillMaxWidth(),
@@ -245,7 +248,7 @@ fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
                         color = MaterialTheme.colors.secondary
                     ),
                     onClick = { navController.navigate("${Routes.OneQuestion.route}/${question.id}") },
-                    )
+                )
                 Icon(
                     Icons.Filled.Warning,
                     contentDescription = "Signal",
@@ -353,11 +356,19 @@ fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
                             .padding(start = 30.dp),
                     ) {
                         Text(
-                            text = "${stringResource(R.string.asked)} " + question.getTimePassedSinceQuestionCreation(question.creationTime),
-                            fontSize = 12.sp,
+                            text = "${stringResource(R.string.asked)} " + question.getTimePassedSinceQuestionCreation(
+                                question.creationTime
+                            ),
+                            fontSize = 6.sp,
 
                             color = Color.Gray
                         )
+                        Text(
+                            text = location.toString(),
+                            fontSize = 6.sp,
+                            color = Color.Gray
+                        )
+
                     }
                 }
             }

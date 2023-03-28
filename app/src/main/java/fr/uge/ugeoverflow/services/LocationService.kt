@@ -35,6 +35,8 @@ import fr.uge.ugeoverflow.api.UserBoxDTO
 import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.session.ApiService
 import java.util.*
+import android.location.Geocoder
+import java.util.*
 
 
 fun getMyLocation(context: Context): MyLocation? {
@@ -141,6 +143,30 @@ fun getCurrentLocation(context: Context = LocalContext.current): MyLocation? {
         MyLocation(it.latitude, it.longitude)
     }
 }
+
+
+
+fun getCountryAndCityFromLocation(location:MyLocation,context: Context): Pair<String?, String?> {
+    var country: String? = null
+    var city: String? = null
+
+    try {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+        if (addresses != null) {
+            if (addresses.isNotEmpty()) {
+                val address = addresses[0]
+                country = address.countryName
+                city = address.locality
+            }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
+    return Pair(country, city)
+}
+
 
 
 @Preview(showBackground = true)

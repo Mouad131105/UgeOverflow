@@ -73,11 +73,11 @@ fun EditProfilePage(
                 onSuccess = { name ->
                     // A success message like image uploaded successfully
                     Log.i("EditProfilePage", name)
-                    Toast.makeText(context, "Image uploaded successfully", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, context.getString(R.string.image_successfull), Toast.LENGTH_SHORT)
                         .show()
                 },
                 onError = {
-                    Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.image_unsuccessfull), Toast.LENGTH_SHORT).show()
                 }
             )
         }

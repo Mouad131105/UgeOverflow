@@ -342,7 +342,7 @@ fun UserProfilePage(
 
                     //Questions and Answers Tabs
 
-                    val tabs = listOf("Questions", "Answers")
+                    val tabs = listOf(stringResource(id=R.string.questions), stringResource(id = R.string.answers))
 
                     var selectedTabIndex by remember { mutableStateOf(0) }
 

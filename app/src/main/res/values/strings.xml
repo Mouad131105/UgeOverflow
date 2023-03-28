@@ -77,40 +77,10 @@
     <string name="success_register">Successfully registered !</string>
     <string name="add_question">Add question </string>
     <string name="search_tag">Search tag </string>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <string name="questions">questions</string>
+    <string name="image_successfull">Imgae Successfully uploaded</string>
+    <string name="image_unsuccessfull">Image Upload Unsuccessful, Please try again</string>
+    <string name="just_now">Just now</string>
 
 
 </resources>
