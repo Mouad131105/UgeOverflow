@@ -283,6 +283,7 @@ fun QuestionItem(navController: NavController, question: OneQuestionResponse) {
                                     }
 
                                 } catch (e: Exception) {
+                                    Log.i("",e.toString())
                                     Toast
                                         .makeText(
                                             context,
