@@ -79,7 +79,7 @@ fun LoginScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            label = { Text(text = "Password", fontFamily = poppins_light) },
+            label = { Text(text = context.getString(R.string.password), fontFamily = poppins_light) },
             value = password.value,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

@@ -15,7 +15,9 @@ import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.UserProfileDTO
 import fr.uge.ugeoverflow.services.ProfileService
 
@@ -29,10 +31,10 @@ fun ReputationModal(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Select Reputation") },
+        title = { Text(stringResource(id = R.string.select_reputation)) },
         text = {
             Column {
-                Text("Rating: $rating")
+                Text("${stringResource(id = R.string.rating)}: $rating")
 
                 Row(modifier = Modifier.padding(16.dp)) {
                     for (i in 0 until 10) {
@@ -64,12 +66,12 @@ fun ReputationModal(
                     }
                 )
             }) {
-                Text("Submit")
+                Text(stringResource(id = R.string.submit))
             }
         },
         dismissButton = {
             Button(onClick = onDismiss) {
-                Text("Cancel")
+                Text( stringResource(id = R.string.cancel) )
             }
         }
     )

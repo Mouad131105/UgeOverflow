@@ -22,10 +22,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.UserProfileDTO
 import fr.uge.ugeoverflow.ui.components.ComponentTypes
 import fr.uge.ugeoverflow.ui.components.MyButton
@@ -123,7 +125,7 @@ fun EditProfilePage(
                         TextField(
                             value = firstName.value!!,
                             onValueChange = { firstName.value = it },
-                            label = { Text(text = "First Name") },
+                            label = { Text(text = stringResource(id = R.string.firstname)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
@@ -131,7 +133,7 @@ fun EditProfilePage(
                         TextField(
                             value = lastName.value!!,
                             onValueChange = { lastName.value = it },
-                            label = { Text(text = "Last Name") },
+                            label = { Text(text = stringResource(id = R.string.lastname)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
@@ -139,7 +141,7 @@ fun EditProfilePage(
                         TextField(
                             value = username.value,
                             onValueChange = { username.value = it },
-                            label = { Text(text = "Username") },
+                            label = { Text(text = stringResource(id = R.string.username)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
@@ -162,7 +164,7 @@ fun EditProfilePage(
                         )
 
                         MyButton(
-                            text = "Save",
+                            text = stringResource(id = R.string.save),
                             componentType = ComponentTypes.SuccessOutline,
                             onClick = {
 //                                user.value = UserProfileDTO(
@@ -182,7 +184,7 @@ fun EditProfilePage(
                         )
 
                         MyButton(
-                            text = "Cancel",
+                            text = stringResource(id = R.string.cancel),
                             componentType = ComponentTypes.DangerOutline,
                             onClick = {
                                 onClosed()

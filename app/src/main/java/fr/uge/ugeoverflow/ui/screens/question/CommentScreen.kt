@@ -17,10 +17,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import croppedImageFromDB
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.AnswerResponse
 import fr.uge.ugeoverflow.api.CommentRequest
 import fr.uge.ugeoverflow.api.CommentResponse
@@ -66,7 +68,7 @@ fun CommentOnFadeModal(
                             OutlinedTextField(
                                 value = commentText,
                                 onValueChange = { commentText = it },
-                                label = { Text("Add a comment") },
+                                label = { Text(stringResource(id = R.string.add_comment)) },
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
@@ -89,7 +91,7 @@ fun CommentOnFadeModal(
                                     question.value = q
                                     Toast.makeText(
                                         context,
-                                        "Comment posted successfully",
+                                        context.getString(R.string.comment_posted_successfully),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     //navController.navigate("Question/${OneQuestionGlobals.questionId}")
@@ -97,35 +99,35 @@ fun CommentOnFadeModal(
                                 {
                                     Toast.makeText(
                                         context,
-                                        "Failed to post comment",
+                                        context.getString(R.string.failed_to_post_comment),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
                             )
                             commentText = ""
                         } else {
-                            Toast.makeText(context, "Comment cannot be empty", Toast.LENGTH_SHORT)
+                            Toast.makeText(context, context.getString(R.string.comment_cannot_be_empty), Toast.LENGTH_SHORT)
                                 .show()
                         }
 
                     } else {
                         Toast.makeText(
                             context,
-                            "You must be logged in to comment",
+                            context.getString(R.string.must_be_logged_in_to_comment),
                             Toast.LENGTH_SHORT
                         )
                             .show()
                         navController.navigate("Login")
                     }
                 },
-                text = "Post",
+                text = context.getString(R.string.post),
                 componentType = ComponentTypes.Primary
             )
         },
         dismissButton = {
             MyButton(
                 onClick = { onDismissRequest() },
-                text = "Close",
+                text = context.getString(R.string.cancel),
                 componentType = ComponentTypes.Danger,
                 modifier = Modifier.padding(end = 8.dp)
             )
@@ -216,14 +218,14 @@ fun CommentsCard(
 
             Text(
                 //TERNARY OPERATOR on comment size or add comment
-                text = if (comments.value.isNotEmpty()) "${comments.value.size} comments" else "Add comment",
+                text = if (comments.value.isNotEmpty()) "${comments.value.size} comments" else context.getString(R.string.add_comment),
                 modifier = Modifier.clickable {
                     if (SessionManagerSingleton.sessionManager.isUserLoggedIn.value) {
                         openCommentDialog()
                     } else {
                         Toast.makeText(
                             context,
-                            "You must be logged in to comment",
+                            context.getString(R.string.must_be_logged_in_to_comment),
                             Toast.LENGTH_SHORT
                         )
                             .show()

@@ -16,9 +16,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.*
 import fr.uge.ugeoverflow.routes.Routes
 import fr.uge.ugeoverflow.services.ImageService
@@ -383,7 +385,8 @@ fun QuestionItem(question: QuestionResponse, onClick: (() -> Unit)? = null) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = "Asked by ${question.user.username}",
+
+                text = "${stringResource(id = R.string.asked)} ${question.user.username}",
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
@@ -412,7 +415,7 @@ fun AnswerItem(answer: AnswerDTO, onClick: (() -> Unit)? = null) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = "Answered by ${answer.user.username}",
+                text = "${stringResource(id = R.string.answered)} ${answer.user.username}",
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
