@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,8 @@ import fr.uge.ugeoverflow.api.AddressDTO
 import fr.uge.ugeoverflow.api.UserBoxDTO
 import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.session.ApiService
+import java.util.*
+import android.location.Geocoder
 import java.util.*
 
 
@@ -74,7 +77,7 @@ fun getCurrentLocation(context: Context = LocalContext.current): MyLocation? {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Please grant location permission to use this feature")
+            Text(stringResource(id = R.string.auth_localisation))
             Button(
                 onClick = {
                     permissions.launchMultiplePermissionRequest()
@@ -140,6 +143,30 @@ fun getCurrentLocation(context: Context = LocalContext.current): MyLocation? {
         MyLocation(it.latitude, it.longitude)
     }
 }
+
+
+
+fun getCountryAndCityFromLocation(location:MyLocation,context: Context): Pair<String?, String?> {
+    var country: String? = null
+    var city: String? = null
+
+    try {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+        if (addresses != null) {
+            if (addresses.isNotEmpty()) {
+                val address = addresses[0]
+                country = address.countryName
+                city = address.locality
+            }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
+    return Pair(country, city)
+}
+
 
 
 @Preview(showBackground = true)

@@ -26,12 +26,14 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.QuestionRequest
 import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.routes.Routes
@@ -95,10 +97,10 @@ fun AskQuestionScreen(navController: NavHostController) {
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text("We like to improve our service by knowing where you are, please allow us to use your location.")
-                            Text("Giving us your location will allow us to show you questions that are close to you.")
+                            Text(stringResource(id = R.string.user_location))
+                            Text(stringResource(id = R.string.questions_close_toyou))
                             Spacer(modifier = Modifier.height(16.dp))
-                            Text("We will never share your location with anyone.")
+                            Text(stringResource(id = R.string.dont_share_location))
                         }
                     },
                     footer = {
@@ -117,7 +119,7 @@ fun AskQuestionScreen(navController: NavHostController) {
                                     showLocationDialog.value = false
                                 }
                             ) {
-                                Text("Accept")
+                                Text(stringResource(id = R.string.accept))
                             }
                             MyButton(
                                 componentType = ComponentTypes.Danger,
@@ -127,7 +129,7 @@ fun AskQuestionScreen(navController: NavHostController) {
                                     myCurrentLocation.value = MyLocation(0.0, 0.0)
                                 }
                             ) {
-                                Text("Refuse")
+                                Text(stringResource(id = R.string.refuse))
                             }
                         }
                     }
@@ -154,10 +156,13 @@ fun AskQuestionScreen(navController: NavHostController) {
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("Ask a Question") },
+                title = { Text(stringResource(id = R.string.ask_a_question)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.back)
+                        )
                     }
                 }
             )
@@ -171,14 +176,14 @@ fun AskQuestionScreen(navController: NavHostController) {
                 OutlinedTextField(
                     value = title.value,
                     onValueChange = { title.value = it },
-                    label = { Text("Title") },
+                    label = { Text(stringResource(id = R.string.title)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 // Content field
                 OutlinedTextField(
                     value = body.value,
                     onValueChange = { body.value = it },
-                    label = { Text("Content") },
+                    label = { Text(stringResource(id = R.string.content)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 val launcher = rememberLauncherForActivityResult(
@@ -239,7 +244,7 @@ fun AskQuestionScreen(navController: NavHostController) {
                 )
                 // Post button
                 MyButton(
-                    text = "Post",
+                    text = stringResource(id = R.string.post),
                     onClick = {
 
                         val token = SessionManagerSingleton.sessionManager.getToken()
@@ -260,7 +265,7 @@ fun AskQuestionScreen(navController: NavHostController) {
                                             {
                                                 Toast.makeText(
                                                     context,
-                                                    "Question posted successfully",
+                                                    context.getString(R.string.question_posted_successfully),
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                                 navController.popBackStack()
@@ -268,7 +273,8 @@ fun AskQuestionScreen(navController: NavHostController) {
                                             {
                                                 Toast.makeText(
                                                     context,
-                                                    "Failed to post question",
+                                                    context.getString(R.string.failed_to_post_question),
+
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -277,17 +283,17 @@ fun AskQuestionScreen(navController: NavHostController) {
 
 //                                    }
                                 } catch (e: Exception) {
-                                    scaffoldState.snackbarHostState.showSnackbar("Failed to post question")
+                                    scaffoldState.snackbarHostState.showSnackbar(context.getString(R.string.failed_to_post_question))
                                 }
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "User not authenticated",
+                                    context.getString(R.string.user_not_authenticated),
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()
                                 Log.e("AskQuestionScreen", "User not authenticated")
-                                scaffoldState.snackbarHostState.showSnackbar("User not authenticated")
+                                scaffoldState.snackbarHostState.showSnackbar(context.getString(R.string.user_not_authenticated))
                                 navController.navigate(Routes.Login.route)
                             }
                         }

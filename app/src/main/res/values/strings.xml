@@ -26,19 +26,61 @@
     <string name="post">Post</string>
     <string name="Failed_post_question">Failed to post question</string>
     <string name="user_not_authenticated">User not authenticated</string>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <string name="auth_localisation">Please grant location permission to use this feature</string>
+    <string name="error_occurred">An error has occurred</string>
+    <string name="error_icon">Error Icon</string>
+    <string name="retry">Retry</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="asked">Asked by</string>
+    <string name="answered">Answered by</string>
+    <string name="submit">Submit</string>
+    <string name="rating">rating</string>
+    <string name="select_reputation">Select Reputation</string>
+    <string name="user_location">We like to improve our service by knowing where you are, please allow us to use your location.</string>
+    <string name="questions_close_toyou">Giving us your location will allow us to show you questions that are close to you.</string>
+    <string name="dont_share_location">We will never share your location with anyone.</string>
+    <string name="accept">Accept</string>
+    <string name="refuse">Refuse</string>
+    <string name="back">back</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="Post">Post</string>
+    <string name="sending">Sending...</string>
+    <string name="question_posted_successfully">Question posted successfully.</string>
+    <string name="failed_to_post_question">Failed to post question.</string>
+    <string name="must_be_logged_in_to_comment">You must be logged in to comment.</string>
+    <string name="add_comment">Add comment</string>
+    <string name="comments">comments</string>
+    <string name="toggle_comment_expansion">Toggle comment expansion</string>
+    <string name="comment_cannot_be_empty">Comment cannot be empty.</string>
+    <string name="failed_to_post_comment">Failed to post comment.</string>
+    <string name="comment_posted_successfully">Comment posted successfully.</string>
+    <string name="add_answer">Add answer</string>
+    <string name="sort_by">Sort by</string>
+    <string name="post_answer">Post answer</string>
+    <string name="answer_posted_successfully">Answer posted successfully.</string>
+    <string name="failed_to_post_answer">Failed to post answer.</string>
+    <string name="asked_by">Asked by</string>
+    <string name="show_less">show less</string>
+    <string name="show_more">show more</string>
+    <string name="question_deleted_successfully">Question deleted successfully.</string>
+    <string name="failed_to_delete_question">Failed to delete question.</string>
+    <string name="answer_deleted_successfully">Answer deleted successfully.</string>
+    <string name="failed_to_delete_answer">Failed to delete answer.</string>
+    <string name="delete_answer">Delete Answer</string>
+    <string name="edit_answer">Edit Answer</string>
+    <string name="login_to_signal">You should be logged in to signal a question!</string>
+    <string name="something_wrong">"Oops, something gone wrong"</string>
+    <string name="signaled_to_admin">Signaled to admin! </string>
+    <string name="success_register">Successfully registered !</string>
+    <string name="add_question">Add question </string>
+    <string name="search_tag">Search tag </string>
+    <string name="questions">questions</string>
+    <string name="image_successfull">Imgae Successfully uploaded</string>
+    <string name="image_unsuccessfull">Image Upload Unsuccessful, Please try again</string>
+    <string name="just_now">Just now</string>
 
 
 </resources>

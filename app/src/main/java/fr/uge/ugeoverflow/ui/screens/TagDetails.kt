@@ -12,10 +12,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.OneQuestionResponse
 import fr.uge.ugeoverflow.api.QuestionResponse
 import fr.uge.ugeoverflow.model.Question
@@ -56,7 +58,7 @@ fun TagDetails(navController: NavHostController, tagName: String) {
             ) {
                 Text(
                     modifier = Modifier.clickable { navController.navigate("AskQuestion") },
-                    text = "Add Question",
+                    text = stringResource(id = R.string.add_question) ,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.button.copy(fontSize = 10.sp, color = Color.White)
                 )

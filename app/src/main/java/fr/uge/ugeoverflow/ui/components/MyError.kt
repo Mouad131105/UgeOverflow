@@ -11,14 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import fr.uge.ugeoverflow.R
 
 object MyError {
 
     @Composable
     fun ErrorScreen(
-        errorMessage: String = "An error has occurred",
+        errorMessage: String = stringResource(id = R.string.error_occurred),
         onRetry: (() -> Unit)? = null,
         onDismiss: (() -> Unit)? = null
     ) {
@@ -39,7 +41,7 @@ object MyError {
                     ) {
                         Icon(
                             imageVector = Icons.Default.Refresh,
-                            contentDescription = "Error Icon",
+                            contentDescription = stringResource(id = R.string.error_icon),
                             modifier = Modifier.size(64.dp)
                         )
                         Text(
@@ -65,7 +67,7 @@ object MyError {
                                 onClick = onRetry,
                                 componentType = ComponentTypes.SecondaryOutline,
                             ) {
-                                Text(text = "Retry")
+                                Text(text = stringResource(id = R.string.retry))
                             }
                         }
                         if (onDismiss != null) {
@@ -74,7 +76,7 @@ object MyError {
                                 componentType = ComponentTypes.Warning,
                                 modifier = Modifier.padding(start = 8.dp)
                             ) {
-                                Text(text = "Dismiss")
+                                Text(text = stringResource(id = R.string.dismiss))
                             }
                         }
                     }

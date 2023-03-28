@@ -1,31 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-        <string name="lastname">Nom</string>
-        <string name="firstname">Prénom</string>
-        <string name="username">Nom d\'utilisateur</string>
-        <string name="password">Mot de passe</string>
-        <string name="confirm_password">Confirmer le mot de passe</string>
-        <string name="email">Email</string>
-        <string name="signup">S\'inscrire</string>
-        <string name="login">Connexion</string>
-        <string name="forgot_password">Mot de passe oublié</string>
-        <string name="signup_here">Inscrivez-vous ici</string>
-        <string name="login_successful">Connexion réussie</string>
-        <string name="invalid_credentials">Identifiants de connexion invalides</string>
-        <string name="users">Utulisateurs</string>
-        <string name="logout"> Se déconnecter</string>
-        <string name="home">Accueil</string>
-        <string name="inscription">Inscription</string>
-        <string name="search">Recherche</string>
-        <string name="tags">Recherche de tags</string>
-        <string name="ask_a_question">Poser une question</string>
-        <string name="post">Poster</string>
-        <string name="Failed_post_question">La question n\'a pas été envoyée</string>
-        <string name="user_not_authenticated">Utilisateur non authentifié</string>
+    <string name="lastname">Nom</string>
+    <string name="firstname">Prénom</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="password">Mot de passe</string>
+    <string name="confirm_password">Confirmer le mot de passe</string>
+    <string name="email">Email</string>
+    <string name="signup">S\'inscrire</string>
+    <string name="login">Connexion</string>
+    <string name="forgot_password">Mot de passe oublié</string>
+    <string name="signup_here">Inscrivez-vous ici</string>
+    <string name="login_successful">Connexion réussie</string>
+    <string name="invalid_credentials">Identifiants de connexion invalides</string>
+    <string name="users">Utulisateurs</string>
+    <string name="logout"> Se déconnecter</string>
+    <string name="home">Accueil</string>
+    <string name="inscription">Inscription</string>
+    <string name="search">Recherche</string>
+    <string name="tags">Recherche de tags</string>
+    <string name="ask_a_question">Poser une question</string>
+    <string name="post">Poster</string>
+    <string name="Failed_post_question">La question n\'a pas été envoyée</string>
+    <string name="user_not_authenticated">Utilisateur non authentifié</string>
+    <string name="auth_localisation">Veuillez accorder l\'autorisation de localisation pour utiliser cette fonctionnalité</string>
+    <string name="error_occurred">Une erreur est survenue</string>
+    <string name="error_icon">icone d\'erreur</string>
+    <string name="retry">Ressayer</string>
+    <string name="dismiss">Fermer</string>
+    <string name="save">Enregister</string>
+    <string name="cancel">Fermer</string>
+    <string name="asked">Question posée</string>
+    <string name="answered">répondu par</string>
+    <string name="submit">Soumettre</string>
+    <string name="rating">Evaluation</string>
+    <string name="select_reputation">Sélectionner une réputation</string>
+    <string name="user_location">Nous aimons améliorer notre service en sachant où vous trouvez, veuillez nous autoriser à utiliser votre localisation.</string>
+    <string name="questions_close_toyou">En nous indiquant votre lieu de résidence, nous pourrons vous proposer des questions proches de chez vous.</string>
+    <string name="dont_share_location">Nous ne communiquerons jamais votre localisation à qui que ce soit.</string>
+    <string name="accept">Accepter</string>
+    <string name="refuse">Refuser</string>
+    <string name="back">Retour</string>
+    <string name="title">Titre</string>
+    <string name="content">Contenu</string>
+    <string name="Post">Poster</string>
+    <string name="sending">Envoi en cours...</string>
+    <string name="question_posted_successfully">Question publiée avec succès.</string>
+    <string name="failed_to_post_question">Échec de la publication de la question.</string>
+    <string name="must_be_logged_in_to_comment">Vous devez être connecté pour commenter.</string>
+    <string name="add_comment">Ajouter un commentaire</string>
+    <string name="comments">commentaires</string>
+    <string name="toggle_comment_expansion">Afficher/cacher les commentaires</string>
+    <string name="comment_cannot_be_empty">Le commentaire ne peut pas être vide.</string>
+    <string name="failed_to_post_comment">Échec de la publication du commentaire.</string>
+    <string name="comment_posted_successfully">Commentaire publié avec succès.</string>
+
+    <string name="add_answer">Ajouter une réponse</string>
+    <string name="answers">réponses</string>
+    <string name="sort_by">Trier par</string>
+    <string name="post_answer">Publier une réponse</string>
+    <string name="answer_posted_successfully">Réponse publiée avec succès.</string>
+    <string name="failed_to_post_answer">Échec de la publication de la réponse.</string>
+    <string name="asked_by">Posée par</string>
+    <string name="show_less">afficher moins</string>
+    <string name="show_more">afficher plus</string>
+    <string name="question_deleted_successfully">Question supprimée avec succès.</string>
+    <string name="failed_to_delete_question">Échec de la suppression de la question.</string>
+    <string name="answer_deleted_successfully">Réponse supprimée avec succès.</string>
+    <string name="failed_to_delete_answer">Échec de la suppression de la réponse.</string>
+    <string name="delete_answer">Supprimer la réponse</string>
+    <string name="edit_answer">Modifier la réponse</string>
 
 
-
+    <string name="login_to_signal">Vous devez être connecté pour signaler une question !</string>
+    <string name="something_wrong">Oups, quelque chose s\'est mal passé.</string>
+    <string name="signaled_to_admin">Signalé à l\'administrateur !</string>
+    <string name="success_register">Inscription réussie !</string>
+    <string name="add_question">Ajouter une question </string>
+    <string name="search_tag">Rechercher un tag </string>
+    <string name="questions">questions</string>
+    <string name="image_successfull">Image enregistrer avec succes</string>
+    <string name="image_unsuccessfull">Echec enrigestrement image, veuillez réessayer</string>
+    <string name="just_now">Just now</string>
 
 
 </resources>

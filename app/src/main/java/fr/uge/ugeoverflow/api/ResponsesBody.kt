@@ -4,12 +4,7 @@ package fr.uge.ugeoverflow.api
 import android.location.Location
 import fr.uge.ugeoverflow.model.MyLocation
 import fr.uge.ugeoverflow.model.VOTE_TYPE
-
-import fr.uge.ugeoverflow.model.User
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 data class QuestionResponse(
@@ -158,7 +153,7 @@ data class OneQuestionResponse(
     val answersCounter: Int,
     val comments: List<CommentResponse>,
     val answers: List<AnswerResponse>,
-    val location: Location
+    val location: MyLocation
 ) {
     fun getTimePassedSinceQuestionCreation(creationTime: String): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault())

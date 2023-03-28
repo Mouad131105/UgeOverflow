@@ -12,8 +12,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import fr.uge.ugeoverflow.R
 import fr.uge.ugeoverflow.api.OneQuestionResponse
 import fr.uge.ugeoverflow.api.QuestionResponse
 import fr.uge.ugeoverflow.filters.QuestionFilterType
@@ -33,7 +35,7 @@ fun QuestionsHome(navController: NavHostController) {
         contentAlignment = Alignment.TopEnd
     ) {
         MyButton(
-            text = "Ask Question",
+            text = stringResource(id = R.string.ask_a_question) ,
             onClick = {
                 navController.navigate("AskQuestion")
             },

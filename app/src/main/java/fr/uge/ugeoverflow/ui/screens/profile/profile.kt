@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.core.graphics.drawable.toBitmap
@@ -85,6 +86,7 @@ fun UserProfileScreen(
             Log.e("UserProfileScreen", e.toString())
             isLoading.value = false
             isError.value = true
+
         } finally {
             isLoading.value = false
         }
@@ -228,7 +230,6 @@ fun UserProfilePage(
                 item {
 
                     Column {
-
                         Row(
                             modifier = Modifier
                                 .padding(16.dp)
@@ -341,7 +342,7 @@ fun UserProfilePage(
 
                     //Questions and Answers Tabs
 
-                    val tabs = listOf("Questions", "Answers")
+                    val tabs = listOf(stringResource(id=R.string.questions), stringResource(id = R.string.answers))
 
                     var selectedTabIndex by remember { mutableStateOf(0) }
 
@@ -430,7 +431,8 @@ fun QuestionItem(question: QuestionResponse, onClick: (() -> Unit)? = null) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = "Asked by ${question.user.username}",
+
+                text = "${stringResource(id = R.string.asked)} ${question.user.username}",
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
@@ -459,7 +461,7 @@ fun AnswerItem(answer: AnswerDTO, onClick: (() -> Unit)? = null) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = "Answered by ${answer.user.username}",
+                text = "${stringResource(id = R.string.answered)} ${answer.user.username}",
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }

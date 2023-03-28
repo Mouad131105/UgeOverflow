@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -77,7 +78,7 @@ fun QuestionScreen(navController: NavHostController, id: String) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "${sortedAnswers.value.size} Answers",
+                                text = "${sortedAnswers.value.size} ${stringResource(id = R.string.answers)}",
                                 style = MaterialTheme.typography.h5
                             )
 
@@ -88,7 +89,7 @@ fun QuestionScreen(navController: NavHostController, id: String) {
                             Spacer(modifier = Modifier.width(64.dp))
                             Box(modifier = Modifier.clickable(onClick = { expanded = true })) {
                                 Text(
-                                    text = "Sort by $selectedOption",
+                                    text = "${stringResource(id = R.string.sort_by)} $selectedOption",
                                     style = MaterialTheme.typography.subtitle2
                                 )
                                 DropdownMenu(
@@ -147,7 +148,8 @@ fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: N
             OutlinedTextField(
                 value = answerText,
                 onValueChange = { answerText = it },
-                label = { Text("Add your answer") },
+                label = { Text( context.getString(R.string.add_answer),
+                ) },
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -158,7 +160,8 @@ fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: N
             MyButton(
                 // button on the right
                 modifier = Modifier.align(Alignment.CenterEnd),
-                text = "Post pour answer",
+                text =context.getString(R.string.post_answer),
+
                 onClick = {
                     if (answerText.isNotEmpty()) {
                         val answerRequest = AnswerRequest(answerText, question.value.id)
@@ -170,7 +173,8 @@ fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: N
                                     question.value = newQuestion
                                     Toast.makeText(
                                         context,
-                                        "Answer posted successfully",
+                                        context.getString(R.string.answer_posted_successfully),
+
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     //navController.navigate("Question/${OneQuestionGlobals.questionId}")
@@ -178,7 +182,7 @@ fun PostAnswerCard(question: MutableState<OneQuestionResponse>, navController: N
                                 {
                                     Toast.makeText(
                                         context,
-                                        "Failed to post answer",
+                                        context.getString(R.string.failed_to_post_answer),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -251,7 +255,7 @@ fun QuestionCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Asked ",
+                    text = stringResource(id = R.string.asked) ,
                     style = MaterialTheme.typography.caption,
                 )
                 Text(
@@ -332,7 +336,7 @@ fun AnswerCard(
                         )
                     }
                 if (answerLines.size > 2 && (!expanded || answerLines.size > 3)) {
-                    val text = if (expanded) "show less" else "... show more"
+                    val text = if (expanded) stringResource(id = R.string.show_less) else stringResource(id = R.string.show_more)
                     ClickableText(
                         text = AnnotatedString(
                             text = text,
@@ -350,7 +354,8 @@ fun AnswerCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Answered ",
+                    text = context.getString( R.string.answered),
+
                     style = MaterialTheme.typography.caption,
                 )
                 Text(
@@ -413,14 +418,15 @@ fun DisplayDialog(
                                 {
                                     Toast.makeText(
                                         context,
-                                        "Question deleted successfully",
+                                        context.getString( R.string.question_deleted_successfully),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 },
                                 {
                                     Toast.makeText(
                                         context,
-                                        "Failed to delete question",
+                                        context.getString( R.string.failed_to_delete_question),
+
                                         Toast.LENGTH_SHORT
                                     )
                                         .show()
@@ -432,14 +438,15 @@ fun DisplayDialog(
                                 {
                                     Toast.makeText(
                                         context,
-                                        "Answer deleted successfully",
+                                        context.getString( R.string.answer_deleted_successfully),
+
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 },
                                 {
                                     Toast.makeText(
                                         context,
-                                        "Failed to delete answer",
+                                        context.getString( R.string.failed_to_delete_answer),
                                         Toast.LENGTH_SHORT
                                     )
                                         .show()
@@ -448,7 +455,7 @@ fun DisplayDialog(
                         }
                     }) {
                         if (SessionManagerSingleton.sessionManager.currentUsername.value == answer?.user?.username) {
-                            Text(text = "Delete Answer")
+                            Text(text = stringResource(id = R.string.delete_answer))
                         } else {
                             Text(text = "Vote Up")
                         }
@@ -490,7 +497,7 @@ fun DisplayDialog(
                         }
                     }) {
                         if (SessionManagerSingleton.sessionManager.currentUsername.value == answer?.user?.username) {
-                            Text(text = "Edit Answer")
+                            Text(text = stringResource(id = R.string.edit_answer))
                         } else {
                             Text(text = "Vote Down")
                         }

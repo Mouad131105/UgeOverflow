@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ApiService {
     private val BASE_URL =
 //        NetworkService.getBaseURL()
-        "http://10.2.25.203:8080" //Ici il faut mettre l'address ipv4 local
+        "http://172.20.10.7:8080" //Ici il faut mettre l'address ipv4 local
 
     fun init(): RestController {
         val httpClient = OkHttpClient.Builder().apply {
