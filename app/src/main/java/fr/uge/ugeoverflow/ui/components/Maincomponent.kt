@@ -23,6 +23,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -56,9 +57,11 @@ import fr.uge.ugeoverflow.session.SessionManagerSingleton
 import fr.uge.ugeoverflow.ui.screens.ForgotPasswordScreen
 import fr.uge.ugeoverflow.ui.screens.LoginScreen
 import fr.uge.ugeoverflow.ui.screens.SignUpScreen
+import fr.uge.ugeoverflow.ui.screens.TagDetails
 import fr.uge.ugeoverflow.ui.screens.profile.UserProfileScreen
 import fr.uge.ugeoverflow.ui.screens.question.AskQuestionScreen
 import fr.uge.ugeoverflow.ui.screens.question.QuestionsHome
+import fr.uge.ugeoverflow.ui.screens.question.SearchResultsScreen
 
 import fr.uge.ugeoverflow.ui.theme.Blue200
 import fr.uge.ugeoverflow.ui.theme.Gray200
@@ -262,19 +265,19 @@ fun AppTopBar(
                                 contentDescription = "profile",
                                 tint = Gray
                             )
-                            imageData.value?.let {
-                                Image(
-                                    bitmap = it,
-                                    contentDescription = "Profile",
-                                    modifier = Modifier
-                                        .padding(3.dp)
-                                        .fillMaxWidth(0.2f)
-                                        .size(30.dp)
-                                        .clip(CircleShape)
-                                        .border(1.dp, Gray, CircleShape),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
+//                            imageData.value?.let {
+//                                Image(
+//                                    bitmap = it,
+//                                    contentDescription = "Profile",
+//                                    modifier = Modifier
+//                                        .padding(3.dp)
+//                                        .fillMaxWidth(0.2f)
+//                                        .size(30.dp)
+//                                        .clip(CircleShape)
+//                                        .border(1.dp, Gray, CircleShape),
+//                                    contentScale = ContentScale.Crop
+//                                )
+//                            }
                         }
                         DropdownMenu(
                             expanded = expanded,

@@ -68,8 +68,8 @@ fun EditProfilePage(
                 .Media.getBitmap(context.contentResolver, it)
             image.value = imageBit.value?.asImageBitmap()
             ProfileService.uploadImage(
-                name = SessionManagerSingleton.sessionManager.currentUsername.toString(),
-                imageBit.value!!,
+                name = SessionManagerSingleton.sessionManager.getUsername().toString(),
+                imageBit = imageBit.value!!,
                 onSuccess = { name ->
                     // A success message like image uploaded successfully
                     Log.i("EditProfilePage", name)
